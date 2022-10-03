@@ -3,9 +3,13 @@ layout: post
 title:  "VR Portfolio"
 date: 2022-10-03 02:50:33
 categories: [SchoolWork, Umich]
-tags: [Portfolio]     # TAG names should always be lowercase
+tags: [portfolio]     # TAG names should always be lowercase
+math: true
+pin: false
+comments: false
+toc: false
+mermaid: false
 ---
-
 
 # Welcome
 
