@@ -13,6 +13,6 @@ mermaid: false
 
 # Welcome
 
-This is my portfolio for my AR class. I and a teammate created a tree-planting AR game. The [Link](https://youtu.be/YerayK96dG4) is here.
+This is my portfolio for my AR class. I and a teammate created a tree-planting AR game. The [Link](https://youtu.be/vEHaCMk6F6A) is here.
 
 I hope you like it!
