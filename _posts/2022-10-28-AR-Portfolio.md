@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "VR Portfolio"
-date: 2022-10-03 02:50:33
+title:  "AR Portfolio"
+date: 2022-10-28 02:50:33
 categories: [Umich, Courswork]
 tags: [portfolio]     # TAG names should always be lowercase
 math: true
