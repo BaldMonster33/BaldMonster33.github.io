@@ -11,6 +11,9 @@ toc: false
 mermaid: false
 ---
 
-# Week 1: Nov 6th to Nov 13th
+# Virtual Navigator:
+
+Please follow this link:
+[link](http://virtualnavigator.ml/)
 
 
