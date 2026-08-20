@@ -1,46 +1,84 @@
-# Chirpy Starter [![Gem Version](https://img.shields.io/gem/v/jekyll-theme-chirpy)](https://rubygems.org/gems/jekyll-theme-chirpy) [![GitHub license](https://img.shields.io/github/license/cotes2020/chirpy-starter.svg?color=blue)][mit]
+# www.qinle.ltd
 
-When installing the [**Chirpy**][chirpy] theme through [RubyGems.org][gem], Jekyll can only read files in the folders `_includes`, `_layout`, `_sass` and `assets`, as well as a small part of options of the `_config.yml` file from the theme's gem. If you have ever installed this theme gem, you can use the command `bundle info --path jekyll-theme-chirpy` to locate these files.
+Personal site. [Astro](https://astro.build) compiled to static HTML, built by
+GitHub Actions, served from GitHub Pages.
 
-The Jekyll organization claims that this is to leave the ball in the user’s court, but this also results in users not being able to enjoy the out-of-the-box experience when using feature-rich themes.
+There is no server, no database, and no client-side framework. The JavaScript
+that ships is the theme toggle, the home-page front door, and — only if a counter
+is configured — one `fetch` for view counts.
 
-To fully use all the features of **Chirpy**, you need to copy the other critical files from the theme's gem to your Jekyll site. The following is a list of targets:
+## Running it
 
-```shell
-.
-├── _config.yml
-├── _data
-├── _plugins
-├── _tabs
-└── index.html
+```sh
+npm ci
+npm run dev      # http://localhost:4321
+npm run check    # astro check: types and content schemas
+npm run build    # -> dist/
 ```
 
-In order to save your time, and to prevent you from missing some files when copying, we extract those files/configurations of the latest version of the **Chirpy** theme and the [CD][CD] workflow to here, so that you can start writing in minutes.
+Node 22. `npm ci` rather than `npm install`, so the lockfile decides.
 
-## Prerequisites
-
-Follow the instructions in the [Jekyll Docs](https://jekyllrb.com/docs/installation/) to complete the installation of `Ruby`, `RubyGems`, `Jekyll` and `Bundler`.
-
-## Installation
-
-[**Use this template**][use-template] to generate a brand new repository and name it `<GH_USERNAME>.github.io`, where `GH_USERNAME` represents your GitHub username.
-
-Then clone it to your local machine and run:
+## Layout
 
 ```
-$ bundle
+src/
+  consts.ts            site metadata; the one place a URL or endpoint is set
+  content/
+    blog/              posts, Markdown + typed frontmatter
+    projects/          project entries, same idea
+  content.config.ts    the schemas those two are validated against
+  layouts/             page shells
+  components/          cards, sidebar, theme toggle, front door
+  pages/               routes, including rss.xml.js and the tag pages
+  utils/               date formatting, path normalising
+public/                copied verbatim into dist/, including CNAME
+counter/               optional view counter, deployed separately
 ```
 
-## Usage
+Adding a post means adding a Markdown file under `src/content/blog/`. The
+frontmatter is schema-checked at build time, so a missing description or a
+malformed date fails the build rather than rendering as `undefined` in
+production.
 
-Please see the [theme's docs](https://github.com/cotes2020/jekyll-theme-chirpy#documentation).
+## Deploying
 
-## License
+Push to `main`. The workflow runs `npm ci`, `npm run check`, `npm run build` and
+publishes `dist/` to Pages. `workflow_dispatch` is enabled so a failed build can
+be re-run without an empty commit.
 
-This work is published under [MIT][mit] License.
+The custom domain is `public/CNAME`, which Astro copies into `dist/`. It lives in
+the build output rather than only in the repository's Pages settings so that the
+domain survives being redeployed by something other than this workflow.
 
-[gem]: https://rubygems.org/gems/jekyll-theme-chirpy
-[chirpy]: https://github.com/cotes2020/jekyll-theme-chirpy/
-[use-template]: https://github.com/cotes2020/chirpy-starter/generate
-[CD]: https://en.wikipedia.org/wiki/Continuous_deployment
-[mit]: https://github.com/cotes2020/chirpy-starter/blob/master/LICENSE
+## View counts
+
+Off by default, and the site is designed to work that way rather than to tolerate
+it. Static hosting has nowhere to record a number, so with no endpoint set the
+front end issues no request and every count stays hidden — the same as a page
+nobody has opened.
+
+Turning it on is one repository variable, `PUBLIC_VIEWS_ENDPOINT`. Nothing in
+`src/` names an endpoint, so switching backends or hosts never edits a component.
+See [`counter/README.md`](counter/README.md) for a deployable reference
+implementation and the contract it satisfies.
+
+## Things left to decide
+
+Carried over deliberately, so they stay visible:
+
+- `src/pages/resume.astro` has placeholder bullets marked for review, and the
+  skills list needs a pass.
+- The degree designation is unconfirmed: B.S.E. or B.S.
+- The home-page bio in `src/pages/index.astro` is a first draft.
+- `public/avatar.svg` is the monogram the photo replaced. Point `Sidebar.astro`
+  back at it to undo that.
+- There is no downloadable resume. The previous site served a 2022 PDF
+  containing a phone number and a university address, which is not worth
+  republishing; `/resume` is the page that replaces it. If a PDF is wanted,
+  generate a fresh one with contact details you are happy to publish.
+
+## Note on history
+
+Commits before this one built a Jekyll blog. The Astro rewrite replaced it
+wholesale; the old `_posts` and Chirpy theme are in the history if they are ever
+wanted.

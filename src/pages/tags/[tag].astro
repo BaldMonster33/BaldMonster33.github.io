@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+// getStaticPaths runs in an isolated scope, so its props are not inferred here.
+interface Props {
+  tag: string;
+  posts: CollectionEntry<'blog'>[];
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const tags = [...new Set(posts.flatMap((post) => post.data.tags))];
+
+  return tags.map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts
+        .filter((post) => post.data.tags.includes(tag))
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
+    },
+  }));
+};
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`#${tag}`} description={`Posts tagged ${tag}.`}>
+  <div class="page-head">
+    <h1>#{tag}</h1>
+    <p>
+      {posts.length}
+      {posts.length === 1 ? 'post' : 'posts'} · <a href="/tags">all tags</a>
+    </p>
+  </div>
+
+  <div class="stack">
+    {
+      posts.map((post) => (
+        <PostCard
+          href={`/blog/${post.id}`}
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          tags={post.data.tags}
+        />
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .stack {
+    display: grid;
+    gap: 0.75rem;
+  }
+</style>

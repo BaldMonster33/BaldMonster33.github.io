@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Placeholder monogram avatar. Replace with a real photo:
+  drop `avatar.jpg` into `public/` and update the `src` in
+  src/components/Sidebar.astro.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" role="img" aria-label="LQ monogram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#252c38"/>
+      <stop offset="1" stop-color="#171b22"/>
+    </linearGradient>
+  </defs>
+  <rect width="160" height="160" fill="url(#bg)"/>
+  <text
+    x="80" y="80"
+    fill="#6ea8fe"
+    font-family="ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace"
+    font-size="58"
+    font-weight="500"
+    letter-spacing="2"
+    text-anchor="middle"
+    dominant-baseline="central"
+  >LQ</text>
+</svg>

@@ -1,0 +1,9 @@
+name = "qinle-views"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+# Create the namespace first, then paste the id it prints here:
+#   npx wrangler kv namespace create VIEWS
+[[kv_namespaces]]
+binding = "VIEWS"
+id = "PASTE_NAMESPACE_ID_HERE"

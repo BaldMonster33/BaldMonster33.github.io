@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+const counts = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    counts.set(tag, (counts.get(tag) ?? 0) + 1);
+  }
+}
+
+/** Most-used first; alphabetical within a count so ordering is stable. */
+const tags = [...counts.entries()].sort(
+  (a, b) => b[1] - a[1] || a[0].localeCompare(b[0])
+);
+---
+
+<BaseLayout title="Tags" description="Browse posts by tag.">
+  <div class="page-head">
+    <h1>Tags</h1>
+    <p>{tags.length} tags across {posts.length} posts.</p>
+  </div>
+
+  {
+    tags.length === 0 ? (
+      <p class="empty">No tags yet.</p>
+    ) : (
+      <div class="chip-row">
+        {tags.map(([tag, count]) => (
+          <a class="chip" href={`/tags/${tag}`}>
+            #{tag} <span class="count">{count}</span>
+          </a>
+        ))}
+      </div>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .chip-row {
+    gap: 0.5rem;
+  }
+
+  .chip {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.8125rem;
+  }
+
+  .count {
+    margin-left: 0.2rem;
+    color: var(--text-faint);
+  }
+
+  .empty {
+    color: var(--text-dim);
+  }
+</style>

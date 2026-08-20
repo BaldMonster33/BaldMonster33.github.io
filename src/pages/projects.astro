@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import FittsRevenge from '../components/FittsRevenge.astro';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+// A `component` demo opens the real piece rather than a copy of it, so the
+// piece has to be on the page — dormant, waiting for its event.
+const needsFrontDoor = projects.some(
+  (p) => p.data.demo?.type === 'component' && p.data.demo.id === 'fitts-revenge'
+);
+---
+
+<BaseLayout
+  title="Projects"
+  description="Research and side projects — extended reality, computer vision, and accessibility."
+>
+  {needsFrontDoor && <FittsRevenge auto={false} />}
+
+  <div class="page-head">
+    <h1>Projects</h1>
+    <p>
+      Research and coursework from Michigan, plus things I've built since. My
+      work at Amazon is sketched rather than described — the specifics stay
+      internal. Where there is something to try or watch, the panel on the card
+      opens it.
+    </p>
+  </div>
+
+  <div class="grid">
+    {
+      projects.map((project) => (
+        <ProjectCard
+          title={project.data.title}
+          description={project.data.description}
+          period={project.data.period}
+          stack={project.data.stack}
+          links={project.data.links}
+          href={`/projects/${project.id}`}
+          demo={project.data.demo}
+        />
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .grid {
+    display: grid;
+    gap: 1rem;
+  }
+</style>

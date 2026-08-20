@@ -1,0 +1,364 @@
+---
+/**
+ * A project's demo stage, and the modal it opens.
+ *
+ * The stage is a real link to the project's page. Script upgrades that click
+ * into a modal <dialog>, so the demo gets the whole window and Escape always
+ * gets you out — but middle-click, ⌘-click, a crawler, and a browser with no
+ * JavaScript all still land somewhere real. The modal is an enhancement over a
+ * working page, never the only way in.
+ *
+ * Deliberately not a clickable card. Cards already contain links, and a link
+ * inside a link is invalid HTML that screen readers read incoherently; the
+ * usual `<div onclick>` fix is not reachable by keyboard at all. So the stage
+ * is one link, the title is another, and they do not overlap.
+ */
+import type { CollectionEntry } from 'astro:content';
+
+type Demo = NonNullable<CollectionEntry<'projects'>['data']['demo']>;
+
+interface Props {
+  demo: Demo;
+  /** The project page this stage links to when script is unavailable. */
+  href: string;
+  title: string;
+  /** Detail pages give the stage more room than cards do. */
+  size?: 'card' | 'page';
+}
+
+const { demo, href, title, size = 'card' } = Astro.props;
+
+// A `component` demo opens its own piece at full viewport size, so it needs no
+// modal here — only the event that wakes it.
+const framed = demo.type !== 'component';
+const aspect = demo.type === 'scene' ? demo.aspect : '16/9';
+const controls = demo.type === 'scene' ? demo.controls : undefined;
+// A `component` demo has no still: it is on this page already.
+const poster = demo.type === 'component' ? undefined : demo.poster;
+---
+
+<project-demo
+  data-type={demo.type}
+  data-title={title}
+  data-youtube={demo.type === 'video' ? demo.youtube : undefined}
+  data-path={demo.type === 'scene' ? demo.path : undefined}
+  data-component={demo.type === 'component' ? demo.id : undefined}
+>
+  <a class:list={['stage', size]} href={href} data-stage style={`--aspect: ${aspect}`}>
+    {
+      poster ? (
+        <img src={poster} alt="" loading="lazy" decoding="async" />
+      ) : (
+        <span class="wash" aria-hidden="true"></span>
+      )
+    }
+    <span class="cta">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7.5v9l7-4.5z" /></svg>
+      {demo.cta}
+    </span>
+  </a>
+
+  {
+    framed && (
+      <dialog class="demo-modal" aria-label={`${title} — demo`}>
+        {/* The close button comes first in the DOM on purpose. A WebGL canvas
+            captures Tab and arrow keys, and can swallow Escape before the
+            dialog sees it, so there has to be a visible exit that is reachable
+            without ever entering the frame. */}
+        <div class="bar">
+          <p class="name">{title}</p>
+          <button type="button" class="close" data-close>
+            Close <kbd>Esc</kbd>
+          </button>
+        </div>
+        <div class="frame" data-frame style={`--aspect: ${aspect}`}></div>
+        {controls && <p class="controls meta">{controls}</p>}
+      </dialog>
+    )
+  }
+</project-demo>
+
+<style>
+  project-demo {
+    display: block;
+  }
+
+  .stage {
+    position: relative;
+    display: block;
+    aspect-ratio: var(--aspect, 16/9);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-inset);
+    text-decoration: none;
+    transition:
+      border-color 0.18s var(--ease),
+      box-shadow 0.18s var(--ease);
+  }
+
+  /* In a card the stage is a strip, not a screen. Five projects each holding a
+     16/9 panel turns the index into a slideshow; the full-size stage belongs on
+     the project's own page, which is where the click goes anyway. */
+  .stage.card {
+    aspect-ratio: auto;
+    height: 5.25rem;
+  }
+
+  .stage.page {
+    border-radius: var(--radius);
+  }
+
+  .stage:hover,
+  .stage:focus-visible {
+    border-color: var(--accent-ring);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .stage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Stands in for a poster still. Cheaper than a screenshot to keep current,
+     and it makes no network request — a YouTube thumbnail would call Google
+     before anyone had asked for the video. */
+  .wash {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+        60% 70% at 50% 45%,
+        var(--accent-wash) 0%,
+        transparent 70%
+      ),
+      linear-gradient(150deg, var(--bg-card) 0%, var(--bg-inset) 100%);
+  }
+
+  .wash::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 44px 44px;
+    opacity: 0.5;
+    mask-image: radial-gradient(70% 70% at 50% 50%, #000 0%, transparent 75%);
+  }
+
+  .cta {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+  }
+
+  .cta svg {
+    width: 26px;
+    height: 26px;
+    fill: currentColor;
+    border: 1px solid var(--accent-ring);
+    border-radius: 50%;
+    background: var(--accent-wash);
+    transition: transform 0.18s var(--ease);
+  }
+
+  .stage:hover .cta svg {
+    transform: scale(1.12);
+  }
+
+  /*
+   * The dialog is closed at rest, so `display: none` means no JavaScript
+   * produces no overlay at all — same contract as the front door.
+   *
+   * Both of the odd declarations here are global CSS leaking in, which scoped
+   * styles do nothing to prevent. `margin: auto` is a <dialog> UA default that
+   * `global.css`'s `* { margin: 0 }` reset destroys, and without it the modal
+   * pins to the top-left corner instead of centring. The class name is
+   * `demo-modal` rather than the obvious `shell` because `.shell` is already
+   * the page layout — sidebar column plus content — and a dialog wearing that
+   * class became a two-column grid with the title bar in the sidebar slot.
+   */
+  .demo-modal {
+    margin: auto;
+    width: min(96vw, 1200px);
+    max-width: 96vw;
+    max-height: 92dvh;
+    padding: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--bg-card);
+    color: var(--text);
+    box-shadow: var(--shadow-lift);
+    overflow: auto;
+  }
+
+  .demo-modal::backdrop {
+    background: rgb(0 0 0 / 0.66);
+    backdrop-filter: blur(2px);
+  }
+
+  .bar {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 0.85rem 0.7rem 1.1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+
+  .name {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  .close {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    background: var(--bg-inset);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .close:hover {
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+
+  .close kbd {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--text-faint);
+  }
+
+  .frame {
+    aspect-ratio: var(--aspect, 16/9);
+    background: #000;
+  }
+
+  .frame :global(iframe) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .controls {
+    margin: 0;
+    padding: 0.7rem 1.1rem 0.9rem;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stage,
+    .cta svg {
+      transition: none;
+    }
+
+    .stage:hover .cta svg {
+      transform: none;
+    }
+
+    .demo-modal::backdrop {
+      backdrop-filter: none;
+    }
+  }
+</style>
+
+<script>
+  class ProjectDemo extends HTMLElement {
+    #dialog: HTMLDialogElement | null = null;
+    #frame: HTMLElement | null = null;
+    #stage: HTMLAnchorElement | null = null;
+
+    connectedCallback() {
+      this.#stage = this.querySelector<HTMLAnchorElement>('[data-stage]');
+      this.#dialog = this.querySelector<HTMLDialogElement>('dialog');
+      this.#frame = this.querySelector<HTMLElement>('[data-frame]');
+      if (!this.#stage) return;
+
+      this.#stage.addEventListener('click', (e) => {
+        // Leave the real navigation alone when someone has asked for it:
+        // ⌘/ctrl-click, shift-click, middle-click. The page exists; opening it
+        // in a tab must keep working.
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        this.open();
+      });
+
+      this.querySelector('[data-close]')?.addEventListener('click', () => {
+        this.#dialog?.close();
+      });
+
+      // Tearing the iframe out on close is what actually stops a video: a
+      // hidden dialog keeps playing audio otherwise. It also unloads a WebGL
+      // context rather than leaving it burning in the background.
+      this.#dialog?.addEventListener('close', () => {
+        if (this.#frame) this.#frame.replaceChildren();
+        this.#stage?.focus();
+      });
+    }
+
+    open() {
+      const type = this.dataset.type;
+      const title = this.dataset.title ?? 'Demo';
+
+      if (type === 'component') {
+        // The piece opens itself, at full viewport size. Nothing is mimicked
+        // here — this is the same code the front door runs.
+        document.dispatchEvent(
+          new CustomEvent('demo:open', { detail: { id: this.dataset.component } }),
+        );
+        return;
+      }
+
+      if (!this.#dialog || !this.#frame) return;
+      const iframe = document.createElement('iframe');
+
+      if (type === 'video') {
+        iframe.src = `https://www.youtube-nocookie.com/embed/${this.dataset.youtube}?autoplay=1&rel=0`;
+        iframe.title = `${title} — demo video`;
+        iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      } else if (type === 'scene') {
+        iframe.src = `/demos/${this.dataset.path}/`;
+        iframe.title = `${title} — interactive demo`;
+        iframe.allow = 'autoplay; fullscreen; xr-spatial-tracking';
+        // Worth being straight about: with `allow-same-origin` on same-origin
+        // content this sandbox is not a real boundary. It is here to withhold
+        // top-level navigation and popups, not to contain hostile code — the
+        // code is ours.
+        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-fullscreen');
+      } else {
+        return;
+      }
+
+      this.#frame.replaceChildren(iframe);
+      this.#dialog.showModal();
+    }
+  }
+
+  if (!customElements.get('project-demo')) {
+    customElements.define('project-demo', ProjectDemo);
+  }
+</script>

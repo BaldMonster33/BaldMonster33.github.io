@@ -1,0 +1,67 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - README.md
+      - LICENSE
+      - counter/**
+  # So a broken build can be re-run without an empty commit.
+  workflow_dispatch:
+
+# Least privilege: the job needs to publish Pages and prove its identity to the
+# deploy action, and nothing else. `contents: read` is not the default here — a
+# workflow with write access to the repo is a much larger blast radius than a
+# static site build needs.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# A second push while the first is deploying should supersede it, not queue
+# behind it, but never cancel a deploy already in flight.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` and not `npm install`: the lockfile is the point. An install
+      # that silently resolves a newer transitive dependency turns a green build
+      # into an unreproducible one.
+      - run: npm ci
+
+      - run: npm run check
+
+      - run: npm run build
+        env:
+          # Empty until a counter is deployed. See counter/README.md — setting
+          # this as a repository variable is the only change needed to switch it
+          # on, because nothing else in the source names an endpoint.
+          PUBLIC_VIEWS_ENDPOINT: ${{ vars.PUBLIC_VIEWS_ENDPOINT }}
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

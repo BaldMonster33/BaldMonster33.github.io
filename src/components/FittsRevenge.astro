@@ -1,0 +1,409 @@
+---
+/**
+ * "Fitts's Revenge" — the front door, and the one piece on this site that is
+ * making an argument. Fitts's Law says the time to acquire a target falls out of
+ * its size and its distance. This target refuses both: it does not merely flinch
+ * when the cursor gets close, it constantly relocates to whichever part of the
+ * viewport is furthest from where the cursor is heading, and teleports outright
+ * if the cursor closes in.
+ *
+ * The point is the role reversal. Plenty of people arrive at a product and
+ * discover the mouse simply will not do it, while a keyboard or an assistive
+ * technology gets through fine. Here that is inverted for the majority: pointing
+ * is futile, and Tab then Enter walks straight in — a law that never governed
+ * the keyboard cannot be used against it.
+ *
+ * So the ways through are deliberate and always open: Tab then Enter, the Escape
+ * key, and a skip link that surfaces as soon as it is clear you are being toyed
+ * with. `prefers-reduced-motion` disables the whole act. None of those depend on
+ * hand-eye coordination — otherwise this stops being a point and just becomes an
+ * inaccessible website, which would rather undercut it.
+ *
+ * Rendered as a closed <dialog>, so with JavaScript disabled it never appears
+ * and the page underneath is simply the page. showModal() handles the top
+ * layer, focus trapping, and Escape for us.
+ */
+import { SITE } from '../consts';
+
+interface Props {
+  /**
+   * Open on page load. True on the home page, where it is the front door;
+   * false where it is only a demo waiting to be asked for, in which case a
+   * `demo:open` event starts it — see ProjectDemo.astro.
+   */
+  auto?: boolean;
+}
+
+const { auto = true } = Astro.props;
+---
+
+<dialog class="gate" aria-label="Enter the site" data-auto={auto ? 'true' : 'false'}>
+  <div class="inner">
+    <p class="eyebrow meta">{SITE.title}</p>
+    <!-- Deliberately not an <h1>: the page underneath already has one, and the
+         dialog is named by aria-label. -->
+    <p class="title">Come in.</p>
+    <div class="pad">
+      <button type="button" class="enter">Enter</button>
+    </div>
+    <p class="hint meta" aria-live="polite">Go on then.</p>
+    <button type="button" class="skip meta" hidden>skip this</button>
+  </div>
+</dialog>
+
+<style>
+  .gate {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    /* Opaque: the point is that you have not arrived yet. */
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  .gate[open] {
+    display: grid;
+    place-items: center;
+  }
+
+  .gate::backdrop {
+    background: var(--bg);
+  }
+
+  .inner {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.85rem;
+  }
+
+  .title {
+    font-size: clamp(1.75rem, 6vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  /* Reserves the button's row so the layout never reflows as it moves. */
+  .pad {
+    height: 6.5rem;
+    display: grid;
+    place-items: center;
+  }
+
+  .enter {
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    padding: 0.7rem 2rem;
+    color: var(--accent);
+    background: var(--accent-wash);
+    border: 1px solid var(--accent-ring);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    /* No CSS transition: the animation loop writes transform every frame, so
+       the hit area always matches what you can see. A lagging transition would
+       let you click where the button looks like it still is. */
+    will-change: transform;
+  }
+
+  .enter:hover {
+    background: var(--accent-ring);
+  }
+
+  .hint {
+    min-height: 1.4em;
+    margin: 0;
+  }
+
+  .skip {
+    margin-top: 2.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-faint);
+    background: none;
+    border: 0;
+    padding: 0.25rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .skip:hover {
+    color: var(--text-dim);
+  }
+
+  /* Dodging *is* the motion. Someone who has asked for less of it gets a
+     button that simply sits there and works. */
+  @media (prefers-reduced-motion: reduce) {
+    .enter {
+      will-change: auto;
+    }
+  }
+</style>
+
+<script>
+  const KEY = 'lq:gate-seen';
+  /** Cursor this close to the button and it stops easing and simply vanishes. */
+  const PANIC = 150;
+  /** Start relocating well before the cursor is anywhere near. */
+  const WARY = 320;
+  /** Frames of cursor velocity to extrapolate, so it dodges where you are
+      going rather than where you are. This is what makes aiming hopeless. */
+  const LOOKAHEAD = 8;
+  /** Candidate resting places per axis. A grid, not pure repulsion, because
+      repulsion can be walked into a corner and pinned. */
+  const GRID = 5;
+  const EDGE = 20;
+  /** Evasions before the skip link appears. */
+  const MERCY = 3;
+
+  const gate = document.querySelector<HTMLDialogElement>('dialog.gate');
+  const btn = gate?.querySelector<HTMLButtonElement>('.enter');
+  const hint = gate?.querySelector<HTMLElement>('.hint');
+  const skip = gate?.querySelector<HTMLButtonElement>('.skip');
+
+  const QUIPS = [
+    'Go on then.',
+    'No.',
+    'Not with a mouse, no.',
+    'Tab, then Enter. That one works.',
+    'Mouse: no. Keyboard: yes.',
+    'You are welcome to keep trying.',
+    'This is the whole joke, by the way.',
+  ];
+
+  if (gate && btn && hint && skip) {
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // ?nogate skips the whole thing — handy for screenshots and for me.
+    const bypass =
+      sessionStorage.getItem(KEY) === '1' ||
+      new URLSearchParams(location.search).has('nogate');
+
+    /** Current and target offsets from the button's resting position. */
+    let dx = 0;
+    let dy = 0;
+    let tx = 0;
+    let ty = 0;
+    /** Cursor position and per-event velocity. Off-screen until it moves. */
+    let px = -1e5;
+    let py = -1e5;
+    let vx = 0;
+    let vy = 0;
+    let moved = false;
+    let evasions = 0;
+    let lastCount = -1e5;
+    let raf = 0;
+    let timer = 0;
+    let home = btn.getBoundingClientRect();
+
+    /** The button's resting rect, measured with no transform applied. */
+    const remeasure = () => {
+      const t = btn.style.transform;
+      btn.style.transform = 'none';
+      home = btn.getBoundingClientRect();
+      btn.style.transform = t;
+    };
+
+    /** How far the button may travel, in offset space, staying on screen. */
+    const bounds = () => {
+      let minX = EDGE - home.left;
+      let maxX = innerWidth - EDGE - home.right;
+      let minY = EDGE - home.top;
+      let maxY = innerHeight - EDGE - home.bottom;
+      // A viewport too small to move in: pin to the middle of the range.
+      if (maxX < minX) minX = maxX = (minX + maxX) / 2;
+      if (maxY < minY) minY = maxY = (minY + maxY) / 2;
+      return { minX, maxX, minY, maxY };
+    };
+
+    /**
+     * The candidate resting place furthest from a threat point, with enough
+     * noise to pick among near-equals. Scoring every cell of a grid is what
+     * makes cornering impossible: pinning the button against an edge only makes
+     * the far side of the screen the obvious answer.
+     */
+    const pickTarget = (threatX: number, threatY: number) => {
+      const b = bounds();
+      const cx = home.left + home.width / 2;
+      const cy = home.top + home.height / 2;
+      let bestX = 0;
+      let bestY = 0;
+      let best = -1;
+      for (let i = 0; i < GRID; i++) {
+        for (let j = 0; j < GRID; j++) {
+          const ox = b.minX + ((b.maxX - b.minX) * i) / (GRID - 1);
+          const oy = b.minY + ((b.maxY - b.minY) * j) / (GRID - 1);
+          const d = Math.hypot(cx + ox - threatX, cy + oy - threatY);
+          const score = d + Math.random() * 110;
+          if (score > best) {
+            best = score;
+            bestX = ox;
+            bestY = oy;
+          }
+        }
+      }
+      return { x: bestX, y: bestY };
+    };
+
+    const apply = () => {
+      btn.style.transform = dx || dy ? `translate(${dx}px, ${dy}px)` : '';
+    };
+
+    /** Count an evasion, throttled so one mouse sweep is not fifty of them. */
+    const count = (now: number) => {
+      if (now - lastCount < 450) return;
+      lastCount = now;
+      evasions += 1;
+      hint.textContent = QUIPS[Math.min(evasions, QUIPS.length - 1)];
+      if (evasions >= MERCY) skip.hidden = false;
+    };
+
+    const teleport = (threatX: number, threatY: number, now: number) => {
+      const t = pickTarget(threatX, threatY);
+      tx = t.x;
+      ty = t.y;
+      dx = tx;
+      dy = ty;
+      apply();
+      count(now);
+    };
+
+    const frame = (now: number) => {
+      raf = requestAnimationFrame(frame);
+
+      const cx = home.left + home.width / 2 + dx;
+      const cy = home.top + home.height / 2 + dy;
+      // Flee from where the cursor is heading, not where it is...
+      const threatX = px + vx * LOOKAHEAD;
+      const threatY = py + vy * LOOKAHEAD;
+      // ...but judge danger by whichever is nearer, present or predicted. Using
+      // the prediction alone reads a cursor moving fast straight at the button
+      // as "heading past me, no danger", which a simulated pursuer exploited to
+      // sit inside the button 7% of the time.
+      const threat = Math.min(
+        Math.hypot(cx - px, cy - py),
+        Math.hypot(cx - threatX, cy - threatY),
+      );
+
+      // Any cursor movement at all provokes a rethink — that is the brief.
+      const arrived = Math.hypot(tx - dx, ty - dy) < 12;
+      if (moved || threat < WARY || (arrived && Math.random() < 0.02)) {
+        moved = false;
+        const t = pickTarget(threatX, threatY);
+        tx = t.x;
+        ty = t.y;
+      }
+
+      if (threat < PANIC) {
+        // Too close to risk easing: be elsewhere, this frame.
+        dx = tx;
+        dy = ty;
+        count(now);
+      } else {
+        const alpha = threat < 500 ? 0.34 : 0.14;
+        dx += (tx - dx) * alpha;
+        dy += (ty - dy) * alpha;
+      }
+      apply();
+    };
+
+    const onMove = (e: PointerEvent) => {
+      if (px > -1e4) {
+        vx = e.clientX - px;
+        vy = e.clientY - py;
+      }
+      px = e.clientX;
+      py = e.clientY;
+      moved = true;
+    };
+
+    /** Every teardown path goes through the dialog's own close event, so
+        Escape cannot leave the animation loop running behind a hidden dialog. */
+    const dismiss = () => gate.close();
+
+    const start = () => {
+      if (gate.open) return;
+      dx = dy = tx = ty = 0;
+      px = py = -1e5;
+      vx = vy = 0;
+      moved = false;
+      evasions = 0;
+      lastCount = -1e5;
+      apply();
+      gate.showModal();
+      remeasure();
+
+      if (reduced) {
+        hint.textContent = 'The door is unlocked.';
+        skip.hidden = false;
+        return;
+      }
+
+      hint.textContent = QUIPS[0];
+      skip.hidden = true;
+      addEventListener('pointermove', onMove);
+      raf = requestAnimationFrame(frame);
+      // Nobody should sit here stuck because they never touched the mouse.
+      timer = window.setTimeout(() => {
+        skip.hidden = false;
+      }, 6000);
+    };
+
+    // Closes the one remaining mouse exploit: land the cursor on the button
+    // without ever moving, then click. Pressing on it is itself a provocation.
+    btn.addEventListener('pointerdown', (e) => {
+      if (reduced) return;
+      teleport(e.clientX, e.clientY, performance.now());
+    });
+
+    btn.addEventListener('click', (e) => {
+      // detail === 0 means the activation came from the keyboard, which always
+      // works — a joke people can beat, not a trap for anyone tabbing through.
+      if (e.detail === 0 || reduced) {
+        dismiss();
+        return;
+      }
+      teleport(e.clientX || innerWidth / 2, e.clientY || innerHeight / 2, performance.now());
+    });
+
+    skip.addEventListener('click', dismiss);
+
+    // Escape closes a modal dialog on its own, so this is the single teardown:
+    // it records the visit and stops the loop however the dialog was closed.
+    gate.addEventListener('close', () => {
+      sessionStorage.setItem(KEY, '1');
+      cancelAnimationFrame(raf);
+      raf = 0;
+      clearTimeout(timer);
+      removeEventListener('pointermove', onMove);
+    });
+
+    addEventListener('resize', () => {
+      if (!gate.open) return;
+      remeasure();
+      const t = pickTarget(px, py);
+      tx = t.x;
+      ty = t.y;
+    });
+
+    // A deliberate replay from the projects page. It ignores sessionStorage:
+    // asking to see it again is not the same as arriving at the front door.
+    document.addEventListener('demo:open', (e) => {
+      if ((e as CustomEvent).detail?.id === 'fitts-revenge') start();
+    });
+
+    if (gate.dataset.auto === 'true' && !bypass) start();
+  }
+</script>
