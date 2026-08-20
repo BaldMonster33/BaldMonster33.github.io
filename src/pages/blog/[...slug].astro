@@ -1,0 +1,26 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import PostLayout from '../../layouts/PostLayout.astro';
+
+// getStaticPaths runs in an isolated scope, so its props are not inferred here.
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+};
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<PostLayout post={post}>
+  <Content />
+</PostLayout>

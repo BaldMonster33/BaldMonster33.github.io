@@ -1,0 +1,47 @@
+---
+/**
+ * A page's view count, filled in by script after load.
+ *
+ * Renders empty and hidden. A page nobody has opened yet, a failed request, and
+ * a browser with no JavaScript all look the same — nothing — rather than an
+ * apologetic "0 views". The number itself arrives from the single fetch in
+ * BaseLayout, which is what lets an index page show counts for every card it
+ * lists without a request per card.
+ */
+import { normalizePath } from '../utils/path';
+
+interface Props {
+  /** The page being counted. Must be the path that page is served at. */
+  path: string;
+}
+
+const { path } = Astro.props;
+---
+
+<span class="views" data-views={normalizePath(path)} hidden></span>
+
+<style>
+  .views {
+    color: var(--text-faint);
+  }
+
+  /* The separator belongs to the count, not to the row it sits in. Rendered
+     separately it would leave a stray dot behind on every page with no views
+     yet — which, on a new site, is most of them.
+
+     Margins rather than spaces inside `content`, because this lands both in a
+     flex row that already has a gap and in a plain inline run of text, and a
+     literal space collapses differently in the two. */
+  .views::before {
+    content: '·';
+    margin-inline: 0.3rem;
+    color: var(--border-strong);
+  }
+
+  /* `hidden` is only a UA-stylesheet `display: none`, so any `display` rule
+     would silently beat it and reveal an empty span. Stated explicitly because
+     this component is dropped into flex rows that set `display` on children. */
+  .views[hidden] {
+    display: none;
+  }
+</style>

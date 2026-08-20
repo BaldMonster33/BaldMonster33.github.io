@@ -1,0 +1,157 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectDemo from '../../components/ProjectDemo.astro';
+import FittsRevenge from '../../components/FittsRevenge.astro';
+import ViewCount from '../../components/ViewCount.astro';
+
+// getStaticPaths runs in an isolated scope, so its props are not inferred here.
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project },
+  }));
+};
+
+const { project } = Astro.props;
+const { title, description, period, stack, links, demo } = project.data;
+const { Content } = await render(project);
+
+// Empty for most entries so far. The body is where a long write-up belongs now
+// that there is a page to render it on.
+const hasBody = (project.body?.trim().length ?? 0) > 0;
+const isFrontDoor = demo?.type === 'component' && demo.id === 'fitts-revenge';
+---
+
+<BaseLayout title={title} description={description} ogType="article">
+  {isFrontDoor && <FittsRevenge auto={false} />}
+
+  <article>
+    <div class="page-head">
+      <p class="eyebrow meta">{period}<ViewCount path={Astro.url.pathname} /></p>
+      <h1>{title}</h1>
+      <p class="lede">{description}</p>
+    </div>
+
+    {
+      demo && (
+        <div class="stage-slot">
+          <ProjectDemo demo={demo} href={`/projects/${project.id}`} title={title} size="page" />
+        </div>
+      )
+    }
+
+    {
+      stack.length > 0 && (
+        <div class="chip-row">
+          {stack.map((item) => (
+            <span class="chip">{item}</span>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      hasBody && (
+        <div class="prose">
+          <Content />
+        </div>
+      )
+    }
+
+    {
+      links.length > 0 && (
+        <div class="links">
+          {links.map(({ label, href }) => (
+            <a href={href} rel="noopener">
+              {label}
+              <svg viewBox="0 0 14 14" aria-hidden="true">
+                <path d="M4 10 10 4M5 4h5v5" />
+              </svg>
+            </a>
+          ))}
+        </div>
+      )
+    }
+
+    <p class="back">
+      <a href="/projects">← All projects</a>
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.6rem;
+  }
+
+  .lede {
+    color: var(--text-dim);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+
+  .stage-slot {
+    margin: 2rem 0 1.5rem;
+  }
+
+  .chip-row + .prose {
+    margin-top: 2rem;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+  }
+
+  .links a:hover {
+    text-decoration: underline;
+  }
+
+  .links svg {
+    width: 11px;
+    height: 11px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .back {
+    margin-top: 2.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+
+  .back a {
+    text-decoration: none;
+  }
+
+  .back a:hover {
+    text-decoration: underline;
+  }
+</style>

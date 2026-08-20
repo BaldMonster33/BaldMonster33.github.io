@@ -1,0 +1,285 @@
+---
+import { SITE, NAV } from '../consts';
+import ThemeToggle from './ThemeToggle.astro';
+
+const { pathname } = Astro.url;
+
+/** `/blog` should stay lit while reading `/blog/some-post`. */
+const isActive = (href: string) =>
+  href === '/'
+    ? pathname === '/' || pathname === '/index.html'
+    : pathname === href || pathname.startsWith(`${href}/`) ||
+      pathname.startsWith(`${href}.html`);
+---
+
+<aside class="sidebar">
+  <div class="inner">
+    <a href="/" class="identity">
+      <!--
+        Rescued from the previous version of this site. Stored at 240px for a
+        80px slot (42px on mobile) so it still looks right on a dense display
+        without shipping the 1002px original. `avatar.svg` is the monogram it
+        replaced, kept as a one-line revert.
+      -->
+      <img
+        src="/avatar.jpg"
+        alt=""
+        width="80"
+        height="80"
+        class="avatar"
+      />
+      <div>
+        <span class="name">{SITE.name}</span>
+        <span class="role">{SITE.role}</span>
+      </div>
+    </a>
+
+    <nav aria-label="Primary">
+      <ul>
+        {
+          NAV.map(({ href, label }) => (
+            <li>
+              <a href={href} aria-current={isActive(href) ? 'page' : undefined}>
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="foot">
+      <ul class="social" aria-label="Elsewhere">
+        <li>
+          <a href={SITE.social.github} rel="me noopener" aria-label="GitHub">
+            <svg viewBox="0 0 16 16" aria-hidden="true"
+              ><path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-2.92-.89-2.92-2.86 0-.83.3-1.5.79-2.03-.08-.2-.35-1 .08-2.07 0 0 .66-.21 2.2.79a7.4 7.4 0 0 1 2 0c1.54-1 2.2-.79 2.2-.79.43 1.07.16 1.87.08 2.07.49.53.79 1.2.79 2.03 0 1.98-1.15 2.66-2.93 2.86.3.26.56.76.56 1.54 0 1.11-.01 2-.01 2.27 0 .21.15.46.55.38A7.99 7.99 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+              ></path></svg
+            >
+          </a>
+        </li>
+        <li>
+          <a href={SITE.social.linkedin} rel="me noopener" aria-label="LinkedIn">
+            <svg viewBox="0 0 16 16" aria-hidden="true"
+              ><path
+                d="M3.6 5.3H.7V15h2.9V5.3ZM2.15 1a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 0 0 0-3.4ZM15.3 9.5c0-2.6-1.4-3.9-3.3-3.9-1.5 0-2.2.8-2.6 1.4V5.3H6.5c.04.8 0 9.7 0 9.7h2.9V9.7c0-.26.02-.52.1-.7.2-.5.66-1.05 1.44-1.05 1.02 0 1.43.78 1.43 1.9V15h2.9V9.5Z"
+              ></path></svg
+            >
+          </a>
+        </li>
+        <li>
+          <a href={`mailto:${SITE.social.email}`} aria-label="Email">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" aria-hidden="true"
+              ><rect x="1" y="3" width="14" height="10" rx="1.5"></rect><path
+                d="m1.6 4 6.4 4.6L14.4 4"></path></svg
+            >
+          </a>
+        </li>
+      </ul>
+      <ThemeToggle />
+    </div>
+  </div>
+</aside>
+
+<style>
+  .sidebar {
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+  }
+
+  .inner {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 2.5rem 1.5rem 1.5rem;
+  }
+
+  .identity {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    /* Faint accent halo so the avatar reads as deliberate, not a fallback. */
+    box-shadow: 0 0 0 4px var(--accent-wash);
+  }
+
+  .name {
+    display: block;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .role {
+    display: block;
+    margin-top: 0.15rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.45;
+    letter-spacing: 0.02em;
+    color: var(--text-faint);
+  }
+
+  nav {
+    margin-top: 2.25rem;
+  }
+
+  nav ul,
+  .social {
+    list-style: none;
+    padding: 0;
+  }
+
+  nav a {
+    display: block;
+    position: relative;
+    padding: 0.4rem 0.5rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-dim);
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition:
+      color 0.15s var(--ease),
+      background 0.15s var(--ease);
+  }
+
+  nav a:hover {
+    color: var(--text);
+    background: var(--bg-inset);
+  }
+
+  nav a[aria-current='page'] {
+    color: var(--text);
+    font-weight: 500;
+    background: var(--accent-wash);
+  }
+
+  /* Accent bar marking the current section. */
+  nav a[aria-current='page']::before {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 1.1rem;
+    border-radius: 0 2px 2px 0;
+    background: var(--accent);
+  }
+
+  .foot {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .social {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .social a {
+    display: grid;
+    place-items: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-faint);
+    transition:
+      color 0.15s var(--ease),
+      background 0.15s var(--ease);
+  }
+
+  .social a:hover {
+    color: var(--accent);
+    background: var(--bg-inset);
+  }
+
+  .social svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  /* The mail glyph is drawn with strokes, not fills. */
+  .social svg[fill='none'] {
+    fill: none;
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Below the breakpoint the rail becomes a normal page header. */
+  @media (max-width: 60rem) {
+    .sidebar {
+      border-right: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .inner {
+      position: static;
+      height: auto;
+      padding: 1.25rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem 0.75rem;
+      align-items: center;
+    }
+
+    .identity {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      box-shadow: 0 0 0 3px var(--accent-wash);
+    }
+
+    nav {
+      margin-top: 0;
+      grid-column: 1 / -1;
+    }
+
+    nav ul {
+      display: flex;
+      gap: 0.25rem;
+      overflow-x: auto;
+    }
+
+    nav a[aria-current='page']::before {
+      display: none;
+    }
+
+    .foot {
+      margin-top: 0;
+      padding-top: 0;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .foot :global(#theme-toggle) {
+      width: auto;
+    }
+
+    .foot :global(#theme-toggle .label) {
+      display: none;
+    }
+  }
+</style>

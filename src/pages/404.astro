@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Not found" description="That page does not exist.">
+  <div class="page-head">
+    <p class="code meta">404</p>
+    <h1>That page doesn't exist.</h1>
+    <p>
+      The link may be stale, or I may have moved something. Try the
+      <a href="/blog">blog index</a> or head <a href="/">home</a>.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .code {
+    margin-bottom: 0.75rem;
+    color: var(--accent);
+    font-size: 0.875rem;
+    letter-spacing: 0.12em;
+  }
+</style>

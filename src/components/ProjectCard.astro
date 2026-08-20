@@ -1,0 +1,160 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ProjectDemo from './ProjectDemo.astro';
+import ViewCount from './ViewCount.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  period: string;
+  stack?: string[];
+  links?: { label: string; href: string }[];
+  /** The project's own page. Title and stage both point here. */
+  href: string;
+  demo?: CollectionEntry<'projects'>['data']['demo'];
+}
+
+const {
+  title,
+  description,
+  period,
+  stack = [],
+  links = [],
+  href,
+  demo,
+} = Astro.props;
+---
+
+<article class="card">
+  <header>
+    <h3><a href={href}>{title}</a></h3>
+    <span class="meta">{period}<ViewCount path={href} /></span>
+  </header>
+
+  <p>{description}</p>
+
+  {demo && <div class="stage-slot"><ProjectDemo demo={demo} href={href} title={title} /></div>}
+
+  {
+    stack.length > 0 && (
+      <div class="chip-row">
+        {stack.map((item) => (
+          <span class="chip">{item}</span>
+        ))}
+      </div>
+    )
+  }
+
+  {
+    links.length > 0 && (
+      <div class="links">
+        {links.map(({ label, href: to }) => (
+          <a href={to} rel="noopener">
+            {label}
+            <svg viewBox="0 0 14 14" aria-hidden="true">
+              <path d="M4 10 10 4M5 4h5v5" />
+            </svg>
+          </a>
+        ))}
+      </div>
+    )
+  }
+</article>
+
+<style>
+  .card {
+    padding: 1.25rem 1.35rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-card);
+    transition:
+      border-color 0.18s var(--ease),
+      box-shadow 0.18s var(--ease);
+  }
+
+  .card:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-lift);
+  }
+
+  header {
+    display: flex;
+    /* Wraps because the meta line is `white-space: nowrap` and grew a view
+       count: on a narrow screen the title and "2023 — present · 1,234 views"
+       together no longer fit, and without this the card pushes past the
+       viewport and the whole page scrolls sideways. */
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.35rem 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h3 {
+    font-size: 1.0625rem;
+  }
+
+  h3 a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  h3 a:hover {
+    color: var(--accent);
+  }
+
+  header .meta {
+    white-space: nowrap;
+    /* Keeps the meta hard right once it has wrapped onto its own line, where
+       space-between would otherwise leave it at the start. */
+    margin-left: auto;
+  }
+
+  p {
+    color: var(--text-dim);
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  .stage-slot {
+    margin-top: 1rem;
+  }
+
+  .chip-row {
+    margin-top: 0.85rem;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+  }
+
+  .links a:hover {
+    text-decoration: underline;
+  }
+
+  .links svg {
+    width: 11px;
+    height: 11px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+</style>

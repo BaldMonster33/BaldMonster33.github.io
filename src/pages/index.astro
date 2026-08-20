@@ -1,0 +1,171 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import FittsRevenge from '../components/FittsRevenge.astro';
+import { SITE } from '../consts';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const featured = (await getCollection('projects', ({ data }) => data.featured))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+---
+
+<BaseLayout>
+  <FittsRevenge />
+
+  <section class="intro">
+    <p class="eyebrow meta">{SITE.location}</p>
+    <h1>
+      I build and operate observability systems at&nbsp;AWS.
+    </h1>
+    <p>
+      I'm {SITE.name}, a software engineer on {SITE.team}, where I work on the
+      services that turn raw telemetry into something people can actually reason
+      about. Before Amazon I studied computer science at the University of
+      Michigan and spent a summer at UMTRI doing research on 3D body-shape
+      estimation.
+    </p>
+    <p>
+      I care most about the seam where distributed systems meet human
+      interfaces — the part where a correct answer still has to be legible to a
+      tired on-call engineer at 3&nbsp;a.m. I also have a long-standing interest
+      in accessibility and extended reality, which is where most of my
+      university work ended up.
+    </p>
+    <p class="links">
+      <a href="/resume">Resume</a>
+      <span class="dot">·</span>
+      <a href={SITE.social.github} rel="me noopener">GitHub</a>
+      <span class="dot">·</span>
+      <a href={SITE.social.linkedin} rel="me noopener">LinkedIn</a>
+      <span class="dot">·</span>
+      <a href={`mailto:${SITE.social.email}`}>Email</a>
+    </p>
+  </section>
+
+  {
+    posts.length > 0 && (
+      <section class="block">
+        <div class="section-head">
+          <h2>Recent</h2>
+          <a href="/blog">All posts →</a>
+        </div>
+        <div class="stack">
+          {posts.map((post) => (
+            <PostCard
+              href={`/blog/${post.id}`}
+              title={post.data.title}
+              description={post.data.description}
+              date={post.data.date}
+              tags={post.data.tags}
+            />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    featured.length > 0 && (
+      <section class="block">
+        <div class="section-head">
+          <h2>Selected work</h2>
+          <a href="/projects">All projects →</a>
+        </div>
+        <ul class="compact">
+          {featured.map((project) => (
+            <li>
+              <a href={`/projects/${project.id}`}>{project.data.title}</a>
+              <span class="meta">{project.data.period}</span>
+              <p>{project.data.description}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .intro {
+    margin-bottom: 3.5rem;
+  }
+
+  .eyebrow {
+    margin-bottom: 0.85rem;
+    text-transform: uppercase;
+  }
+
+  .intro h1 {
+    font-size: clamp(1.875rem, 5vw, 2.625rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .intro p:not(.eyebrow):not(.links) {
+    color: var(--text-dim);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  .intro p + p {
+    margin-top: 1rem;
+  }
+
+  .links {
+    margin-top: 1.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+
+  .links a {
+    text-decoration: none;
+  }
+
+  .links a:hover {
+    text-decoration: underline;
+  }
+
+  .dot {
+    margin: 0 0.5rem;
+    color: var(--border-strong);
+  }
+
+  .block + .block {
+    margin-top: 3rem;
+  }
+
+  .stack {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .compact {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 1.15rem;
+  }
+
+  .compact li > a {
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .compact li > a:hover {
+    text-decoration: underline;
+  }
+
+  .compact .meta {
+    margin-left: 0.6rem;
+  }
+
+  .compact p {
+    margin-top: 0.2rem;
+    color: var(--text-dim);
+    font-size: 0.9375rem;
+  }
+</style>

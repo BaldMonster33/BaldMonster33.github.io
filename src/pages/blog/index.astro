@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+/** Group into descending years so the archive reads as a timeline. */
+const byYear = new Map<number, typeof posts>();
+for (const post of posts) {
+  const year = post.data.date.getUTCFullYear();
+  byYear.set(year, [...(byYear.get(year) ?? []), post]);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+---
+
+<BaseLayout
+  title="Blog"
+  description="Notes on observability, distributed systems, and side projects."
+>
+  <div class="page-head">
+    <h1>Blog</h1>
+    <p>
+      Notes on observability, distributed systems, and whatever I happen to be
+      building. <a href="/rss.xml">RSS</a>.
+    </p>
+  </div>
+
+  {
+    posts.length === 0 ? (
+      <p class="empty">Nothing published yet.</p>
+    ) : (
+      years.map((year) => (
+        <section class="year">
+          <div class="section-head">
+            <h2>{year}</h2>
+          </div>
+          <div class="stack">
+            {byYear.get(year)!.map((post) => (
+              <PostCard
+                href={`/blog/${post.id}`}
+                title={post.data.title}
+                description={post.data.description}
+                date={post.data.date}
+                tags={post.data.tags}
+              />
+            ))}
+          </div>
+        </section>
+      ))
+    )
+  }
+
+  <p class="all-tags"><a href="/tags">Browse by tag →</a></p>
+</BaseLayout>
+
+<style>
+  .year + .year {
+    margin-top: 2.5rem;
+  }
+
+  .stack {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .empty {
+    color: var(--text-dim);
+  }
+
+  .all-tags {
+    margin-top: 3rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+
+  .all-tags a {
+    text-decoration: none;
+  }
+
+  .all-tags a:hover {
+    text-decoration: underline;
+  }
+</style>

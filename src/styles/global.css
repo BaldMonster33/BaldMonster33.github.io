@@ -1,0 +1,454 @@
+/* ==========================================================================
+   Design tokens
+   Dark is the default; light is an opt-in overlay applied via [data-theme].
+   ========================================================================== */
+
+:root {
+  --font-sans: 'Inter Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+
+  /* Surfaces, lowest to highest. */
+  --bg: #14171c;
+  --bg-sidebar: #11141a;
+  --bg-card: #1a1e25;
+  --bg-inset: #21262f;
+
+  --border: #272d38;
+  --border-strong: #333b49;
+
+  /* Text, most to least prominent. */
+  --text: #e4e7ec;
+  --text-dim: #9aa3b2;
+  --text-faint: #6b7483;
+
+  --accent: #6ea8fe;
+  --accent-hover: #8fbcff;
+  /* Accent at low alpha, for tinted fills and focus rings. */
+  --accent-wash: rgb(110 168 254 / 0.12);
+  --accent-ring: rgb(110 168 254 / 0.4);
+
+  --radius: 10px;
+  --radius-sm: 6px;
+
+  --sidebar-w: 17.5rem;
+  --content-w: 44rem;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-lift: 0 6px 20px -6px rgb(0 0 0 / 0.5);
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --bg: #fbfcfd;
+  --bg-sidebar: #f4f6f8;
+  --bg-card: #ffffff;
+  --bg-inset: #f1f3f6;
+
+  --border: #e2e6ec;
+  --border-strong: #cdd4de;
+
+  --text: #171a1f;
+  --text-dim: #596273;
+  --text-faint: #838c9c;
+
+  --accent: #1f5fc4;
+  --accent-hover: #17489a;
+  --accent-wash: rgb(31 95 196 / 0.08);
+  --accent-ring: rgb(31 95 196 / 0.35);
+
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 0.05);
+  --shadow-lift: 0 6px 20px -6px rgb(16 24 40 / 0.14);
+
+  color-scheme: light;
+}
+
+/* ==========================================================================
+   Reset and base
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-color: var(--accent-ring);
+  text-underline-offset: 0.2em;
+  transition: color 0.15s var(--ease);
+}
+
+a:hover {
+  color: var(--accent-hover);
+  text-decoration-color: currentColor;
+}
+
+/* Visible only for keyboard users, but unmissable when it is. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+::selection {
+  background: var(--accent-wash);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--font-mono);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   Shared utilities
+   ========================================================================== */
+
+/* Reachable by keyboard and screen readers, invisible otherwise. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+  border-radius: 0 0 var(--radius-sm) 0;
+  transform: translateY(-110%);
+  transition: transform 0.15s var(--ease);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  color: var(--bg);
+}
+
+/* Small uppercase mono label — dates, tags, section eyebrows. */
+.meta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
+/* Section heading with a hairline rule filling the remaining width. */
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.section-head h2 {
+  font-size: 0.8125rem;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.section-head::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.section-head a {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.section-head a:hover {
+  text-decoration: underline;
+}
+
+/* Pill used for tags and tech-stack chips. */
+.chip {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-inset);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.03em;
+  color: var(--text-dim);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+a.chip:hover {
+  border-color: var(--accent-ring);
+  color: var(--accent);
+  background: var(--accent-wash);
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+/* ==========================================================================
+   App shell — sidebar + content
+   ========================================================================== */
+
+.shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.content {
+  padding: 4.5rem 3rem 6rem;
+  min-width: 0;
+}
+
+.content > * {
+  max-width: var(--content-w);
+}
+
+/* Page title block at the top of interior pages. */
+.page-head {
+  margin-bottom: 2.5rem;
+}
+
+.page-head h1 {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+}
+
+.page-head p {
+  margin-top: 0.5rem;
+  color: var(--text-dim);
+}
+
+@media (max-width: 60rem) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .content {
+    padding: 2rem 1.25rem 4rem;
+  }
+}
+
+/* ==========================================================================
+   Prose — long-form markdown output
+   ========================================================================== */
+
+.prose {
+  max-width: var(--content-w);
+}
+
+.prose > * + * {
+  margin-top: 1.15rem;
+}
+
+.prose h2 {
+  font-size: 1.375rem;
+  margin-top: 2.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.prose h3 {
+  font-size: 1.125rem;
+  margin-top: 2rem;
+}
+
+.prose h4 {
+  font-size: 1rem;
+  margin-top: 1.75rem;
+  color: var(--text-dim);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.25rem;
+}
+
+.prose li + li {
+  margin-top: 0.4rem;
+}
+
+.prose li::marker {
+  color: var(--text-faint);
+}
+
+.prose strong {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.prose blockquote {
+  padding: 0.25rem 0 0.25rem 1.15rem;
+  border-left: 2px solid var(--accent);
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.prose :not(pre) > code {
+  padding: 0.15em 0.4em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-inset);
+  font-size: 0.875em;
+  color: var(--text);
+}
+
+.prose pre {
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card) !important;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+  line-height: 1.65;
+}
+
+.prose img,
+.prose video {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-inline: auto;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  display: block;
+  overflow-x: auto;
+}
+
+.prose th,
+.prose td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.prose th {
+  background: var(--bg-inset);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* Responsive 16:9 wrapper for embedded video in posts. */
+.prose .video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.prose .video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/*
+ * Shiki is configured with two themes. Astro inlines the *light* theme as the
+ * literal `color` and exposes the dark value as `--shiki-dark`, so dark mode has
+ * to opt in explicitly. Dark is this site's default (no `data-theme` set at all
+ * until the visitor or their OS asks for light), hence the `:not()` rather than
+ * a `[data-theme='dark']` match. The class is `.astro-code`, not `.shiki`.
+ */
+:root:not([data-theme='light']) .prose .astro-code,
+:root:not([data-theme='light']) .prose .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: transparent !important;
+}
+
+/* The inline `background-color` on <pre> would otherwise override our surface. */
+.prose .astro-code {
+  background-color: var(--bg-card) !important;
+}

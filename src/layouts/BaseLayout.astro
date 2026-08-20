@@ -1,0 +1,145 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/500.css';
+import '../styles/global.css';
+
+import Sidebar from '../components/Sidebar.astro';
+import { SITE, VIEWS_ENDPOINT } from '../consts';
+import { normalizePath } from '../utils/path';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Set on article pages so crawlers get the right OG type. */
+  ogType?: 'website' | 'article';
+}
+
+const {
+  title,
+  description = SITE.description,
+  ogType = 'website',
+} = Astro.props;
+
+const pageTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} — ${SITE.role}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
+
+// Rendered at build time rather than read from location.pathname at runtime, so
+// the only paths that can ever be counted are pages this site actually built.
+// The 404 page reports /404 no matter which bad URL summoned it, which keeps a
+// mistyped link from creating a row of its own — and incidentally makes broken
+// inbound links visible as a single number.
+const viewPath = normalizePath(Astro.url.pathname);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${SITE.name} — Blog`}
+      href="/rss.xml"
+    />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title ?? SITE.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta name="twitter:card" content="summary" />
+
+    <meta name="generator" content={Astro.generator} />
+
+    <!--
+      Resolve the theme before first paint. Anything async here would let the
+      dark default flash on a light-mode visitor's screen.
+    -->
+    <script is:inline>
+      (() => {
+        try {
+          const saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') {
+            document.documentElement.dataset.theme = saved;
+            return;
+          }
+        } catch {
+          // localStorage unavailable — fall through to the media query.
+        }
+        if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
+  </head>
+
+  <body data-view-path={viewPath} data-views-endpoint={VIEWS_ENDPOINT || undefined}>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <div class="shell">
+      <Sidebar />
+      <main id="main" class="content">
+        <slot />
+      </main>
+    </div>
+
+    <!--
+      One request per page load. It records this page and returns every count,
+      so a card on an index page can show its number without a request of its
+      own and without inflating the post it points at.
+
+      The endpoint arrives on <body> rather than being written in here, so that
+      moving the counter between hosts — or removing it — never touches this
+      file. With nothing configured the script returns immediately: no fetch, no
+      failed request in the console, and every count stays hidden, which is
+      already what a page nobody has opened looks like.
+    -->
+    <script>
+      import { normalizePath } from '../utils/path';
+
+      const base = document.body.dataset.viewsEndpoint;
+      const here = document.body.dataset.viewPath;
+
+      // Counting refreshes would make the number meaningless. This is a
+      // courtesy rather than a control — anyone can clear session storage, and
+      // the count is an approximate tally, not an audited figure.
+      let record = true;
+      if (here) {
+        try {
+          const key = `lq:viewed:${here}`;
+          record = !sessionStorage.getItem(key);
+          if (record) sessionStorage.setItem(key, '1');
+        } catch {
+          // Storage blocked. Count the view and move on.
+        }
+      } else {
+        record = false;
+      }
+
+      if (base) {
+        const endpoint = record ? `${base}?p=${encodeURIComponent(here!)}` : base;
+
+        fetch(endpoint, { headers: { accept: 'application/json' } })
+          .then((res) => (res.ok ? res.json() : Promise.reject(new Error(String(res.status)))))
+          .then((data: { views?: Record<string, number> }) => {
+            const views = data.views ?? {};
+            for (const el of document.querySelectorAll<HTMLElement>('[data-views]')) {
+              const count = views[normalizePath(el.dataset.views ?? '')];
+              if (typeof count !== 'number' || count < 1) continue;
+              el.textContent = count === 1 ? '1 view' : `${count.toLocaleString()} views`;
+              el.hidden = false;
+            }
+          })
+          .catch(() => {
+            // A view count is decoration. If it fails it stays invisible and the
+            // page is exactly what it was without it.
+          });
+      }
+    </script>
+  </body>
+</html>

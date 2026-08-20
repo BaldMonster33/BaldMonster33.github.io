@@ -1,0 +1,318 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../consts';
+
+/**
+ * Public-facing CV. Everything here is world-readable, so it deliberately omits
+ * internal project names, metrics, service names, and contact details beyond a
+ * personal email.
+ *
+ * Bullets marked `todo: true` render with a visible REVIEW badge. Fill them in
+ * or delete them — do not ship them as-is.
+ */
+type Bullet = { text: string; todo?: boolean };
+
+const experience = [
+  {
+    org: 'Amazon Web Services',
+    role: 'Software Development Engineer II',
+    period: 'Jul 2023 – present',
+    place: 'Vancouver, BC',
+    note: 'Observability Analytics',
+    bullets: [
+      {
+        text: 'Build and operate services in the AWS observability stack, working across ingestion, query, and the consoles engineers use during incidents.',
+      },
+      {
+        text: 'Add two or three bullets describing scope and impact in public-safe terms — no internal service names, no unpublished metrics.',
+        todo: true,
+      },
+    ] satisfies Bullet[],
+  },
+  {
+    org: 'University of Michigan Transportation Research Institute',
+    role: 'Research Assistant',
+    period: 'May 2022 – Aug 2022',
+    place: 'Ann Arbor, MI',
+    note: 'Advised by Dr. Byoungkeon Daniel Park',
+    bullets: [
+      {
+        text: 'Built a standalone tool that estimates body dimensions from clothed 3D scans, removing the need to scan subjects in fitted clothing.',
+      },
+    ] satisfies Bullet[],
+  },
+];
+
+const education = [
+  {
+    org: 'University of Michigan',
+    role: 'B.S.E. Computer Science',
+    period: 'Graduated May 2023',
+    place: 'Ann Arbor, MI',
+    note: null,
+    bullets: [
+      {
+        text: 'Confirm the exact degree designation (B.S.E. vs B.S.) and add honors or GPA if you want them shown.',
+        todo: true,
+      },
+      {
+        text: 'Relevant coursework: Machine Learning, Natural Language Processing, Web Systems, Extended Reality, Foundations of Computer Vision.',
+      },
+    ] satisfies Bullet[],
+  },
+];
+
+const skills = [
+  {
+    label: 'Languages',
+    items: ['Java', 'Python', 'TypeScript', 'C++', 'SQL'],
+    todo: true,
+  },
+  {
+    label: 'Infrastructure',
+    items: ['AWS', 'Distributed systems', 'Observability', 'CI/CD'],
+    todo: true,
+  },
+  {
+    label: 'Interests',
+    items: ['Computer vision', 'HCI', 'Accessibility', 'Extended reality'],
+  },
+];
+---
+
+<BaseLayout
+  title="Resume"
+  description={`${SITE.name} — software engineer, ${SITE.team}. Experience, education, and skills.`}
+>
+  <div class="page-head">
+    <h1>Resume</h1>
+    <p>
+      A short version lives below. For the full history, see
+      <a href={SITE.social.linkedin} rel="me noopener">LinkedIn</a>, or
+      <a href={`mailto:${SITE.social.email}`}>email me</a> and I'll send a PDF.
+    </p>
+  </div>
+
+  <section class="block">
+    <div class="section-head"><h2>Experience</h2></div>
+    {
+      experience.map((entry) => (
+        <article class="entry">
+          <div class="entry-head">
+            <div>
+              <h3>{entry.role}</h3>
+              <p class="org">
+                {entry.org}
+                {entry.note && <span class="note"> · {entry.note}</span>}
+              </p>
+            </div>
+            <div class="when">
+              <span class="meta">{entry.period}</span>
+              <span class="meta place">{entry.place}</span>
+            </div>
+          </div>
+          <ul>
+            {entry.bullets.map((bullet) => (
+              <li class={bullet.todo ? 'todo' : undefined}>
+                {bullet.todo && <span class="badge">review</span>}
+                {bullet.text}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+  </section>
+
+  <section class="block">
+    <div class="section-head"><h2>Education</h2></div>
+    {
+      education.map((entry) => (
+        <article class="entry">
+          <div class="entry-head">
+            <div>
+              <h3>{entry.role}</h3>
+              <p class="org">{entry.org}</p>
+            </div>
+            <div class="when">
+              <span class="meta">{entry.period}</span>
+              <span class="meta place">{entry.place}</span>
+            </div>
+          </div>
+          <ul>
+            {entry.bullets.map((bullet) => (
+              <li class={bullet.todo ? 'todo' : undefined}>
+                {bullet.todo && <span class="badge">review</span>}
+                {bullet.text}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+  </section>
+
+  <section class="block">
+    <div class="section-head"><h2>Skills</h2></div>
+    <dl class="skills">
+      {
+        skills.map((group) => (
+          <div class="skill-row">
+            <dt>
+              {group.label}
+              {group.todo && <span class="badge">review</span>}
+            </dt>
+            <dd>
+              <div class="chip-row">
+                {group.items.map((item) => (
+                  <span class="chip">{item}</span>
+                ))}
+              </div>
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+</BaseLayout>
+
+<style>
+  .block + .block {
+    margin-top: 3rem;
+  }
+
+  .entry + .entry {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .entry-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 0.85rem;
+  }
+
+  h3 {
+    font-size: 1.0625rem;
+  }
+
+  .org {
+    margin-top: 0.15rem;
+    color: var(--text-dim);
+    font-size: 0.9375rem;
+  }
+
+  .note {
+    color: var(--text-faint);
+  }
+
+  .when {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .place {
+    color: var(--text-faint);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  li {
+    position: relative;
+    padding-left: 1rem;
+    color: var(--text-dim);
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.68em;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--border-strong);
+  }
+
+  /* Unmissable on purpose: these lines are not ready to publish. */
+  .todo {
+    padding: 0.5rem 0.75rem 0.5rem 0.85rem;
+    border-left: 2px solid #d99a2b;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: rgb(217 154 43 / 0.08);
+    font-style: italic;
+  }
+
+  .todo::before {
+    display: none;
+  }
+
+  .badge {
+    display: inline-block;
+    margin-right: 0.5rem;
+    padding: 0.05rem 0.35rem;
+    border-radius: 3px;
+    background: #d99a2b;
+    color: #1a1300;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    vertical-align: 1px;
+  }
+
+  .skills {
+    display: grid;
+    gap: 1.15rem;
+  }
+
+  .skill-row {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  dt {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    padding-top: 0.2rem;
+  }
+
+  @media (max-width: 40rem) {
+    .entry-head {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .when {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 0.6rem;
+      text-align: left;
+    }
+
+    .skill-row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+  }
+</style>
