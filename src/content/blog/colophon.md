@@ -1,8 +1,8 @@
 ---
 title: How this site is built
 description: >-
-  Astro compiled to static HTML, built by CI, served from GitHub Pages at a
-  domain I own. No server, no database, no framework shipped to the browser.
+  Astro compiled to static HTML, built by CI, served from GitHub Pages. No
+  server, no database, no framework shipped to the browser.
 date: 2026-08-20
 tags: ['infra', 'meta']
 ---
@@ -21,10 +21,17 @@ build instead of rendering as `undefined` in production.
 ## Hosting
 
 The built output is committed nowhere and uploaded nowhere by hand. A push to
-`main` runs the build in CI and publishes the `dist/` directory to GitHub Pages;
-the domain is a `CNAME` in that output. The whole deployment is a static file
-tree, which is the cheapest thing on the internet to serve and the least
-interesting thing to attack.
+`main` runs the build in CI and publishes the `dist/` directory to GitHub Pages.
+The whole deployment is a static file tree, which is the cheapest thing on the
+internet to serve and the least interesting thing to attack.
+
+A custom domain is one file — a `CNAME` in the build output — and it is worth
+knowing what that file does before you add it. It doesn't just *attach* the
+domain, it makes GitHub redirect the `github.io` address to it. So a DNS record
+pointing at the wrong host doesn't cost you the custom domain, it costs you both
+addresses: the one that's broken and the one that would have worked. Mine spent a
+few days pointing at `github.com` instead of `github.io`, which is exactly the
+kind of typo that reads as correct every time you look at it.
 
 One wrinkle worth knowing if you ever move a static site between hosts: how the
 host resolves a URL that names a directory rather than a file. Astro's

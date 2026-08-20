@@ -23,9 +23,11 @@ Two properties matter and are easy to get wrong:
   show twenty numbers from one request, and must not count a view for each post
   it merely links to. Only the path in `?p=` is incremented.
 - **CORS.** The site and the counter are on different origins now, which was not
-  true when this ran behind a CDN path on the same domain. Without an
-  `Access-Control-Allow-Origin` for `https://www.qinle.ltd` the browser discards
-  the response and every count silently stays hidden.
+  true when this ran behind a CDN path on the same domain. `ORIGIN` in
+  `worker.js` must equal `SITE.url` in `src/consts.ts`; without a matching
+  `Access-Control-Allow-Origin` the browser discards the response and every
+  count silently stays hidden. Changing the site's hostname means redeploying
+  this too.
 
 ## Deploying it on Cloudflare
 

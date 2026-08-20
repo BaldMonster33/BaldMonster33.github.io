@@ -16,8 +16,14 @@
  * On another runtime, replace the two `store` calls: everything else ports.
  */
 
-/** Where the site is served. Anything else gets no CORS grant and no write. */
-const ORIGIN = 'https://www.qinle.ltd';
+/**
+ * Where the site is served. Anything else gets no CORS grant and no write.
+ *
+ * Must match SITE.url in src/consts.ts exactly — scheme, `www.` and all. A
+ * mismatch is silent: the browser drops the response, the counts stay hidden,
+ * and nothing logs an error anywhere the site can see.
+ */
+const ORIGIN = 'https://baldmonster33.github.io';
 
 /**
  * A single key holding the whole map, rather than one key per path.

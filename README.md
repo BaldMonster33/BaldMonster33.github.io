@@ -1,7 +1,10 @@
-# www.qinle.ltd
+# qinle.ltd
 
 Personal site. [Astro](https://astro.build) compiled to static HTML, built by
 GitHub Actions, served from GitHub Pages.
+
+Currently live at **https://baldmonster33.github.io** — see
+[Deploying](#deploying) for why, and for how to move back to the custom domain.
 
 There is no server, no database, and no client-side framework. The JavaScript
 that ships is the theme toggle, the home-page front door, and — only if a counter
@@ -29,9 +32,9 @@ src/
   content.config.ts    the schemas those two are validated against
   layouts/             page shells
   components/          cards, sidebar, theme toggle, front door
-  pages/               routes, including rss.xml.js and the tag pages
+  pages/               routes, including rss.xml.js, robots.txt.ts, tag pages
   utils/               date formatting, path normalising
-public/                copied verbatim into dist/, including CNAME
+public/                copied verbatim into dist/
 counter/               optional view counter, deployed separately
 ```
 
@@ -46,9 +49,31 @@ Push to `main`. The workflow runs `npm ci`, `npm run check`, `npm run build` and
 publishes `dist/` to Pages. `workflow_dispatch` is enabled so a failed build can
 be re-run without an empty commit.
 
-The custom domain is `public/CNAME`, which Astro copies into `dist/`. It lives in
-the build output rather than only in the repository's Pages settings so that the
-domain survives being redeployed by something other than this workflow.
+### The address it serves on
+
+There is no `public/CNAME` right now, so Pages serves the default
+`baldmonster33.github.io`. That file is what makes GitHub attach a custom domain,
+and it also makes GitHub `301` the `github.io` address to that domain — so while
+`www.qinle.ltd` was pointing at the wrong host, both addresses were unreachable
+rather than one.
+
+The hostname is set in two places and they have to agree, because `SITE.url`
+(`src/consts.ts`) is what canonical links, Open Graph tags, the sitemap and
+`robots.txt` are built from. To move back to the custom domain:
+
+1. Point `www.qinle.ltd` at `baldmonster33.github.io` with a CNAME record. For
+   the apex as well, add A records to `185.199.108.153`, `185.199.109.153`,
+   `185.199.110.153`, `185.199.111.153`. Confirm with
+   `dig +short www.qinle.ltd` before continuing.
+2. Set `SITE.url` to `https://www.qinle.ltd`.
+3. Recreate `public/CNAME` containing `www.qinle.ltd`, and set the same value
+   under Settings → Pages → Custom domain. It lives in the build output rather
+   than only in the settings so the domain survives a redeploy by something
+   other than this workflow.
+4. Once GitHub has issued the certificate, tick Enforce HTTPS.
+
+Doing 3 without 2 leaves every link in the markup claiming a host GitHub is
+redirecting away from.
 
 ## View counts
 

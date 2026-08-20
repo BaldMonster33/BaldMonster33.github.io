@@ -1,6 +1,20 @@
 /** Single source of truth for site-wide metadata. */
 export const SITE = {
-  url: 'https://www.qinle.ltd',
+  /**
+   * Where the site is served. Canonical links, Open Graph tags, the sitemap and
+   * the RSS feed are all built from this, so it has to be the address visitors
+   * actually reach — a canonical pointing at a hostname that does not resolve is
+   * worse than none at all.
+   *
+   * Temporarily the GitHub Pages address. To move back to the custom domain,
+   * both halves have to change together:
+   *   1. set this to 'https://www.qinle.ltd'
+   *   2. restore public/CNAME containing `www.qinle.ltd`, and set the same value
+   *      under Settings -> Pages -> Custom domain
+   * Doing only (2) makes GitHub redirect the Pages address to the custom domain
+   * while every link in the markup still claims the old one.
+   */
+  url: 'https://baldmonster33.github.io',
   title: 'Le Qin',
   /** Used in <title> suffixes and the RSS feed. */
   name: 'Le Qin',
