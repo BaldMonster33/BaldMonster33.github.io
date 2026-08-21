@@ -10,6 +10,22 @@ const blog = defineCollection({
     updated: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
+    /**
+     * Who this post is for. `internal` keeps it out of the public export
+     * entirely — see publish/export.mjs.
+     *
+     * Defaults to `public`, deliberately the opposite of what a leak-averse
+     * default would be, because the marker that matters is enforced elsewhere:
+     * the export runs a forbidden-string scan over everything it emits and
+     * aborts on a hit. Defaulting to `internal` instead would mean a forgotten
+     * field silently drops a post from the public site, a failure nobody
+     * notices. This way a forgotten field is caught by the scan if the post
+     * actually contains anything internal, and is harmless if it doesn't.
+     *
+     * For a post that is mostly shareable, prefer marking the sensitive
+     * passages in the body over hiding the whole thing.
+     */
+    audience: z.enum(['public', 'internal']).default('public'),
   }),
 });
 

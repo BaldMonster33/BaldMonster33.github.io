@@ -25,13 +25,18 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+# Pinned to major versions, so patch fixes arrive but a breaking change does not.
+# These were last raised together in response to the runner warning that Node 20
+# actions were being force-run on Node 24; keeping them in step avoids the
+# upload/deploy pair drifting apart, which is the one incompatibility here that
+# would fail at deploy time rather than at build time.
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -50,9 +55,9 @@ jobs:
           # on, because nothing else in the source names an endpoint.
           PUBLIC_VIEWS_ENDPOINT: ${{ vars.PUBLIC_VIEWS_ENDPOINT }}
 
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -64,4 +69,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

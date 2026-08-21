@@ -9,10 +9,11 @@ export default defineConfig({
   trailingSlash: 'ignore',
   integrations: [sitemap()],
   build: {
-    // `directory` emits `blog/index.html` rather than `blog.html`, which is what
-    // lets a plain static host resolve `/blog` with no rewrite rules of its own.
-    // Worth keeping if this ever moves off GitHub Pages: hosts that serve
-    // objects by exact key need either this layout or a redirect shim.
+    // `directory` emits `blog/index.html` rather than `blog.html`, which is
+    // what lets an ordinary static host resolve `/blog` with no rewrite rules
+    // of its own. Hosts that serve objects by exact key are the exception and
+    // need a rewrite that appends `index.html`; both deployment targets here
+    // are set up for that, so keep this layout rather than assuming either one.
     format: 'directory',
   },
   markdown: {
