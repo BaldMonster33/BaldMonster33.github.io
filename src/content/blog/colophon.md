@@ -1,7 +1,7 @@
 ---
 title: How this site is built
 description: >-
-  Astro compiled to static HTML, built by CI, served from GitHub Pages. No
+  Astro compiled to static HTML, built by CI, deployed to a static host. No
   server, no database, no framework shipped to the browser.
 date: 2026-08-20
 tags: ['infra', 'meta']
@@ -20,27 +20,19 @@ build instead of rendering as `undefined` in production.
 
 ## Hosting
 
-The built output is committed nowhere and uploaded nowhere by hand. A push to
-`main` runs the build in CI and publishes the `dist/` directory to GitHub Pages.
-The whole deployment is a static file tree, which is the cheapest thing on the
-internet to serve and the least interesting thing to attack.
-
-A custom domain is one file — a `CNAME` in the build output — and it is worth
-knowing what that file does before you add it. It doesn't just *attach* the
-domain, it makes GitHub redirect the `github.io` address to it. So a DNS record
-pointing at the wrong host doesn't cost you the custom domain, it costs you both
-addresses: the one that's broken and the one that would have worked. Mine spent a
-few days pointing at `github.com` instead of `github.io`, which is exactly the
-kind of typo that reads as correct every time you look at it.
+The built output is committed nowhere and uploaded nowhere by hand. A push runs
+the build in CI and publishes the `dist/` directory. The whole deployment is a
+static file tree, which is the cheapest thing on the internet to serve and the
+least interesting thing to attack.
 
 One wrinkle worth knowing if you ever move a static site between hosts: how the
-host resolves a URL that names a directory rather than a file. Astro's
+host resolves a URL naming a directory rather than a file. Astro's
 `build.format: 'directory'` emits `blog/index.html` instead of `blog.html`, and
 most static hosts will serve that for a request to `/blog`. Hosts that serve
-objects strictly by key — an ordinary object store fronted by a CDN, for
-instance — will not, and answer 404 or 403 instead. The fix is either this file
-layout or a rewrite rule at the edge that appends `index.html`. Choosing the
-layout means the site is portable and the edge stays empty:
+objects strictly by key will not, and answer 404 or 403 instead. The fix is
+either this file layout or a rewrite rule at the edge that appends
+`index.html`. Choosing the layout means the site stays portable and the edge
+stays empty:
 
 ```js
 // The rewrite you need only if your host won't do the above for you.
@@ -57,6 +49,21 @@ function handler(event) {
   return request;
 }
 ```
+
+A custom domain on GitHub Pages is one file — a `CNAME` in the build output —
+and it is worth knowing what that file does before you add it. It doesn't just
+*attach* the domain, it makes GitHub redirect the `github.io` address to it. So a
+DNS record pointing at the wrong host doesn't cost you the custom domain, it
+costs you both addresses: the one that's broken and the one that would have
+worked. Mine spent a few days pointing at `github.com` instead of `github.io`,
+which is exactly the kind of typo that reads as correct every time you look at
+it.
+
+The sequel, for anyone stuck on the same thing: clearing the custom domain in
+the repository settings did nothing, because the setting is populated *from* the
+`CNAME` file in the configured publishing source — and mine was still a
+leftover `gh-pages` branch from 2022 that had one. I was fighting a file, not a
+field.
 
 ## The front door
 
@@ -99,29 +106,28 @@ That isn't a caveat bolted onto the joke, it *is* the point. A page that shut ou
 the keyboard too wouldn't be saying anything about accessibility. It would just
 be inaccessible.
 
-## The view counter that isn't here
+## The view counter
 
-Pages have a slot for a view count, and on a purely static host it is always
-empty. Counting views needs somewhere to write a number down, and there is no
-"somewhere" in a file tree.
+There may or may not be a number under each post, and which one you get depends
+on where you're reading this.
 
-Rather than fake it or bolt the site to one vendor, the count reads from a single
-configured endpoint. Leave it unset — as it is now — and no request is made at
-all and every count stays hidden, which is indistinguishable from a page nobody
-has opened yet. Point it at a deployed function and the same build starts showing
-numbers. The repo carries a small reference implementation for that, about forty
-lines against a key-value store, which is a free tier away from working on
-several providers.
+A static host has nowhere to record a view, so the front end treats the counter
+as optional in the strict sense: one build-time value names the endpoint, and
+with it empty no request is made and every count stays hidden — which looks the
+same as a page nobody has opened. Nothing in `src/` names a backend, so moving
+the counter, or removing it, never edits a component.
 
 The design constraint I cared about was that the site must not *need* it. A view
 count is decoration. If the request fails, the page is exactly what it was
-without it.
+without it. That is also why one request returns every count at once: an index
+page listing twenty cards shows twenty numbers without twenty requests, and
+without counting a view for each post it merely links to.
 
 ## Cost
 
-The domain, and nothing else. Static hosting for a personal site fits inside a
-free tier on every provider I looked at, and the counter would too.
+Static hosting for a personal site fits inside a free tier on every provider I
+looked at, and a counter would too. The domain is the only line item.
 
-The previous version of this site ran on a plan that involved an always-on VM,
-which would have cost real money every month and come with an operating system to
-patch. Static files don't have a CVE backlog.
+The previous version of this site ran on a plan that involved an always-on EC2
+instance, which would have cost roughly ten times as much and come with an
+operating system to patch. Static files don't have a CVE backlog.
