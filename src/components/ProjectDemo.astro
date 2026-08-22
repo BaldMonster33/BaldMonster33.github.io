@@ -341,7 +341,10 @@ const poster = demo.type === 'component' ? undefined : demo.poster;
         iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
         iframe.referrerPolicy = 'strict-origin-when-cross-origin';
       } else if (type === 'scene') {
-        iframe.src = `/demos/${this.dataset.path}/`;
+        // Use the concrete object rather than relying on the host to resolve a
+        // directory. GitHub Pages does, but Astro's development server and
+        // object-store hosts are deliberately less magical.
+        iframe.src = `/demos/${this.dataset.path}/index.html`;
         iframe.title = `${title} — interactive demo`;
         iframe.allow = 'autoplay; fullscreen; xr-spatial-tracking';
         // Worth being straight about: with `allow-same-origin` on same-origin
