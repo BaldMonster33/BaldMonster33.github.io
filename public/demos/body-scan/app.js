@@ -27,7 +27,7 @@
     seated:{shoulder:.96,torso:1,stance:.28,seated:true,metrics:['43.2 cm','60.7 cm','38.1 cm','172.9 cm']}
   };
 
-  const state = {stage:'scan', yaw:0, pitch:-.04, zoom:1, mode:'points', viewIndex:0, threshold:.3, model:'standing', points:[], joints:[], drag:false, lastX:0, lastY:0, running:false, auto:false, raf:0, toastTimer:0};
+  const state = {stage:'scan', yaw:0, pitch:-.04, zoom:1, mode:'surface', viewIndex:0, threshold:.3, model:'jacket', points:[], joints:[], drag:false, lastX:0, lastY:0, running:false, auto:false, raf:0, toastTimer:0};
 
   function seeded(index, salt = 0) {
     const x = Math.sin(index * 91.173 + salt * 17.31) * 43758.5453;
@@ -86,6 +86,21 @@
     }
   }
 
+  function addLooseShirt(points, joints) {
+    for(let ring=0;ring<=22;ring++){
+      const t=ring/22,y=.02+t*1.02;
+      const shoulderEase=Math.pow(t,2.4),width=.31+shoulderEase*.11;
+      const depth=.235+(1-t)*.018;
+      for(let index=0;index<38;index++){
+        const angle=index/38*Math.PI*2;
+        const fold=(seeded(index+ring*38,16)-.5)*.018+(Math.sin(angle*5+ring*.55)*.009);
+        points.push({x:Math.cos(angle)*(width+fold),y,z:Math.sin(angle)*(depth+fold*.45),band:t,garment:true});
+      }
+    }
+    addLimb(points,joints[2],{x:(joints[2].x+joints[3].x)*.5,y:(joints[2].y+joints[3].y)*.5,z:0},.145,8,17);
+    addLimb(points,joints[5],{x:(joints[5].x+joints[6].x)*.5,y:(joints[5].y+joints[6].y)*.5,z:0},.145,8,18);
+  }
+
   function buildModel(kind) {
     const variant=variants[kind];
     const joints=makeJointSet(kind),points=[];
@@ -96,7 +111,7 @@
     addLimb(points,joints[5],joints[6],.10,12,6); addLimb(points,joints[6],joints[7],.075,12,7);
     addLimb(points,joints[9],joints[10],.135,15,8); addLimb(points,joints[10],joints[11],.105,15,9);
     addLimb(points,joints[12],joints[13],.135,15,10); addLimb(points,joints[13],joints[14],.105,15,11);
-    if(kind==='jacket') for(let index=0;index<220;index++){const angle=seeded(index,13)*Math.PI*2,y=.04+seeded(index,14)*1.16,radius=.34+(seeded(index,15)-.5)*.06;points.push({x:Math.cos(angle)*radius,y,z:Math.sin(angle)*.24,band:.5});}
+    if(kind==='jacket') addLooseShirt(points,joints);
     state.points=points;state.joints=joints;
     const metrics=variant.metrics;$('#shoulder').textContent=metrics[0];$('#torso').textContent=metrics[1];$('#hip').textContent=metrics[2];$('#height').textContent=metrics[3];
     renderJointList();drawCameraStrip();draw();
@@ -125,11 +140,38 @@
     ctx.strokeStyle='rgba(75,63,53,.16)';ctx.beginPath();ctx.moveTo(0,height*.83);ctx.lineTo(width,height*.83);ctx.stroke();
   }
 
+  function drawSmoothBodySurface() {
+    const scale=Math.min(canvas.clientWidth,canvas.clientHeight)*.245*state.zoom;
+    const screenRadius=(xRadius,zRadius)=>Math.hypot(xRadius*Math.cos(state.yaw),zRadius*Math.sin(state.yaw))*scale;
+    const capsule=(a,b,radius,color)=>{const start=project(state.joints[a]),end=project(state.joints[b]);ctx.strokeStyle=color;ctx.lineWidth=radius*scale*2;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(start.x,start.y);ctx.lineTo(end.x,end.y);ctx.stroke();};
+    const ellipse=(center,xRadius,yRadius,zRadius,color)=>{const point=project({x:center[0],y:center[1],z:center[2]});ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(point.x,point.y,screenRadius(xRadius,zRadius),yRadius*scale,0,0,Math.PI*2);ctx.fill();};
+    ctx.save();
+    capsule(9,10,.135,'#aaa69f');capsule(10,11,.105,'#aaa69f');capsule(12,13,.135,'#b4b0a9');capsule(13,14,.105,'#b4b0a9');
+    capsule(2,3,.10,'#aaa69f');capsule(3,4,.075,'#aaa69f');capsule(5,6,.10,'#b4b0a9');capsule(6,7,.075,'#b4b0a9');
+    ellipse([0,.02,0],.29,.31,.23,'#aaa69f');
+    ellipse([0,.56,0],.34*variants[state.model].shoulder,.66,.22*variants[state.model].torso,'#aaa69f');
+    if(state.model==='jacket'){
+      const center=project({x:0,y:.53,z:0}),topY=project({x:0,y:1.06,z:0}).y,bottomY=project({x:0,y:.04,z:0}).y;
+      const topWidth=screenRadius(.43,.25),bottomWidth=screenRadius(.33,.25);
+      ctx.fillStyle='#bab3aa';ctx.beginPath();ctx.moveTo(center.x-topWidth,topY);ctx.quadraticCurveTo(center.x-topWidth*1.04,(topY+bottomY)/2,center.x-bottomWidth,bottomY);ctx.lineTo(center.x+bottomWidth,bottomY);ctx.quadraticCurveTo(center.x+topWidth*1.04,(topY+bottomY)/2,center.x+topWidth,topY);ctx.closePath();ctx.fill();
+      capsule(2,3,.145,'#bab3aa');capsule(5,6,.145,'#bab3aa');
+    }
+    ellipse([0,1.32,0],.15,.20,.145,'#b8b4ad');
+    ctx.restore();
+  }
+
   function drawPointCloud() {
     const sorted=state.points.map(point=>({point,projected:project(point)})).sort((a,b)=>a.projected.z-b.projected.z);
     if(state.mode==='surface'){
-      ctx.globalAlpha=.14;ctx.fillStyle='#9d4c34';ctx.beginPath();
-      sorted.forEach(({projected},index)=>{if(index%3===0){ctx.moveTo(projected.x+2,projected.y);ctx.arc(projected.x,projected.y,2.2,0,Math.PI*2)}});ctx.fill();ctx.globalAlpha=1;
+      drawSmoothBodySurface();ctx.globalAlpha=.34;
+      sorted.forEach(({point,projected},index)=>{
+        if(index%2)return;
+        const shade=Math.round(151+Math.max(-.25,Math.min(.34,projected.z)) * 72);
+        ctx.fillStyle=point.garment?`rgb(${shade+12},${shade+7},${shade})`:`rgb(${shade},${shade-3},${shade-7})`;
+        const size=point.garment?3.8:3.2;
+        ctx.fillRect(projected.x-size/2,projected.y-size/2,size,size);
+      });
+      ctx.globalAlpha=1;
     } else {
       sorted.forEach(({projected},index)=>{
         const depth=Math.max(.16,Math.min(.74,.42+projected.z*.45));
@@ -153,10 +195,10 @@
 
   function accepted(joint){return joint.c>=state.threshold;}
 
-  function drawSkeleton(color='#ae793f',lineColor='rgba(174,121,63,.74)') {
-    const points=state.joints.map(project);ctx.lineWidth=2.2;ctx.strokeStyle=lineColor;
+  function drawSkeleton(color='#9d4c34',lineColor='rgba(157,76,52,.94)') {
+    const points=state.joints.map(project);ctx.lineWidth=3.4;ctx.strokeStyle=lineColor;
     bones.forEach(([a,b])=>{if(!accepted(state.joints[a])||!accepted(state.joints[b]))return;ctx.beginPath();ctx.moveTo(points[a].x,points[a].y);ctx.lineTo(points[b].x,points[b].y);ctx.stroke();});
-    points.forEach((point,index)=>{if(!accepted(state.joints[index]))return;ctx.beginPath();ctx.arc(point.x,point.y,3.8,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.lineWidth=1.4;ctx.strokeStyle='#faf8f3';ctx.stroke();});
+    points.forEach((point,index)=>{if(!accepted(state.joints[index]))return;ctx.beginPath();ctx.arc(point.x,point.y,5,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.lineWidth=1.6;ctx.strokeStyle='#faf8f3';ctx.stroke();});
   }
 
   function drawPoseFrame() {
@@ -200,12 +242,21 @@
     return {x:width/2+x*scale,y:height*.54-point.y*scale,z};
   }
 
+  function drawMiniSkeleton(miniContext, angle, width, height) {
+    const joints=state.joints.map(joint=>miniProject(joint,angle,width,height));
+    miniContext.lineWidth=1.15;miniContext.strokeStyle='rgba(174,121,63,.9)';
+    bones.forEach(([a,b])=>{if(!accepted(state.joints[a])||!accepted(state.joints[b]))return;miniContext.beginPath();miniContext.moveTo(joints[a].x,joints[a].y);miniContext.lineTo(joints[b].x,joints[b].y);miniContext.stroke();});
+    miniContext.fillStyle='#a85d38';joints.forEach((joint,index)=>{if(!accepted(state.joints[index]))return;miniContext.beginPath();miniContext.arc(joint.x,joint.y,1.35,0,Math.PI*2);miniContext.fill();});
+  }
+
   function drawCameraStrip() {
     const wrap=$('#camera-strip');wrap.innerHTML='';
     for(let index=0;index<9;index++){
       const button=document.createElement('button');button.type='button';button.className='camera-view';button.dataset.camera=String(index);button.setAttribute('aria-label',`Rendered camera view ${index+1}, ${index*45} degrees`);button.setAttribute('aria-pressed',String(index===state.viewIndex));button.innerHTML=`<canvas width="94" height="72"></canvas><span>${index*45}°</span>`;wrap.append(button);
       const mini=button.querySelector('canvas'),miniContext=mini.getContext('2d'),angle=index*Math.PI/4;
-      state.points.filter((_,pointIndex)=>pointIndex%7===0).map(point=>miniProject(point,angle,94,72)).sort((a,b)=>a.z-b.z).forEach(point=>{miniContext.fillStyle='rgba(157,76,52,.5)';miniContext.fillRect(point.x,point.y,1,1)});
+      const projected=state.points.filter((_,pointIndex)=>pointIndex%3===0).map(point=>miniProject(point,angle,94,72)).sort((a,b)=>a.z-b.z);
+      projected.forEach(point=>{const shade=Math.round(154+Math.max(-.25,Math.min(.3,point.z))*70);miniContext.fillStyle=`rgb(${shade},${shade-3},${shade-7})`;miniContext.fillRect(point.x-1.25,point.y-1.25,2.5,2.5)});
+      if(['pose','rays','solve','export'].includes(state.stage))drawMiniSkeleton(miniContext,angle,94,72);
     }
   }
 
@@ -215,7 +266,7 @@
 
   function setStage(stage, fromRun=false) {
     state.stage=stage;$$('[data-stage]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.stage===stage)));const data=stages[stage];$('#stage-kicker').textContent=data.kicker;$('#stage-title').textContent=data.title;$('#stage-copy').textContent=data.copy;$('#viewer-hint').textContent=stage==='render'?'Choose any generated viewpoint':stage==='rays'?'Purple lines show 2D picks projected into 3D':'Drag to orbit · scroll to zoom';
-    if(!fromRun) $(`[data-stage="${stage}"]`).scrollIntoView({block:'nearest'});draw();
+    if(!fromRun) $(`[data-stage="${stage}"]`).scrollIntoView({block:'nearest'});drawCameraStrip();draw();
   }
 
   function renderJointList() {
@@ -275,5 +326,5 @@
   canvas.addEventListener('pointerup',()=>state.drag=false);canvas.addEventListener('pointercancel',()=>state.drag=false);
   canvas.addEventListener('wheel',event=>{event.preventDefault();state.zoom=Math.max(.68,Math.min(1.6,state.zoom-event.deltaY*.0008));draw();},{passive:false});
 
-  new ResizeObserver(resize).observe(canvas);buildModel('standing');setStage('scan');updateSelection();setProgress(0,'Ready');addLog('Recovered application ready · synthetic data only');resize();
+  new ResizeObserver(resize).observe(canvas);buildModel('jacket');setStage('scan');updateSelection();setProgress(0,'Ready');addLog('Recovered application ready · synthetic clothed scan selected');resize();
 })();

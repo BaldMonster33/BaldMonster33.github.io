@@ -21,12 +21,21 @@ featured: true
 order: 20
 ---
 
-The original private repository and an August 2022 application email were still
-recoverable. They show that this was more than an analysis script: I shipped a
-Tkinter desktop interface, a command-line workflow, and separate PyInstaller
-packages for macOS and Windows. The interface supported model-folder discovery,
-batch selection, configurable OpenPose and output folders, optional result
-visualization, CSV writing, run progress, and logs.
+The original private repository and the May–August 2022 development email trail
+were still recoverable. They show that this was more than an analysis script: I
+shipped a Tkinter desktop interface, a command-line workflow, and separate
+PyInstaller packages for macOS and Windows. The final application email linked
+both platform builds and explained that OpenPose was their only external
+requirement. The interface supported model-folder discovery, batch selection,
+configurable OpenPose and output folders, optional result visualization, CSV
+writing, run progress, and logs.
+
+The correspondence also preserves the visual development sequence itself: an
+early point-cloud/wireframe render, the switch to VTK surface shading so clothing
+folds remained visible, the first 45° and 90° rotation captures, and OpenPose
+landmarks over the clothed surface. That evidence directly informed the browser
+reconstruction's default clothed subject, shaded surface mode, nine-view strip,
+and pose overlays.
 
 Underneath that interface was a nine-view reconstruction pipeline. A PLY scan
 was rendered with VTK at 45° intervals from 0° through 360°. OpenPose produced
