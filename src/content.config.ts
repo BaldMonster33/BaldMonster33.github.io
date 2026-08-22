@@ -50,7 +50,7 @@ const demo = z.discriminatedUnion('type', [
   /** A YouTube recording. Embedded only once the modal opens. */
   z.object({
     type: z.literal('video'),
-    /** Bare video id, not a URL — `mFiywZ0S4WU`. */
+    /** Bare video id, not a URL — `YerayK96dG4`. */
     youtube: z.string().regex(/^[\w-]{11}$/, 'expected an 11-character YouTube id'),
     cta: z.string().default('Watch the demo'),
     /** Optional local still, e.g. `/posters/foo.jpg`. Never remote: a remote
@@ -58,9 +58,8 @@ const demo = z.discriminatedUnion('type', [
     poster: z.string().startsWith('/').optional(),
   }),
   /**
-   * A playable build served from `public/demos/<path>/`. Nothing uses this
-   * yet — it is here so the space is genuinely open, and so the day a WebGL
-   * export lands the only new work is the export itself.
+   * A playable build served from `public/demos/<path>/`. This can be a native
+   * WebGL export or a small, artifact-backed browser reconstruction.
    */
   z.object({
     type: z.literal('scene'),
