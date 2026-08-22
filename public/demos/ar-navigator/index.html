@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AR Navigator — artifact-backed demo</title>
+  <link rel="stylesheet" href="../shared/base.css">
+  <style>
+    .demo-main { display: grid; place-items: center; }
+    .navigator { width: min(100%, 980px); min-height: min(72vh, 600px); display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(250px, .8fr); overflow: hidden; }
+    .camera { position: relative; min-height: 520px; overflow: hidden; background: linear-gradient(#8bc6e4 0 46%, #b4ad9c 46% 58%, #48535b 58%); }
+    .camera::before { content: ""; position: absolute; inset: 42% -8% auto; height: 28%; transform: perspective(300px) rotateX(48deg); transform-origin: top; background: repeating-linear-gradient(90deg, transparent 0 8%, rgba(255,255,255,.35) 8.5% 9.5%), linear-gradient(#535e64,#29343b); }
+    .building { position: absolute; left: 5%; top: 16%; width: 27%; height: 33%; background: repeating-linear-gradient(90deg,#c86f55 0 15%,#e6b494 15% 22%); clip-path: polygon(7% 10%,90% 0,100% 100%,0 100%); box-shadow: inset 0 -12px rgba(0,0,0,.15); }
+    .tree { position: absolute; right: 7%; top: 19%; width: 18%; height: 35%; background: radial-gradient(circle at 50% 30%,#4f9a5d 0 30%,transparent 31%),radial-gradient(circle at 25% 42%,#3a7946 0 29%,transparent 30%),radial-gradient(circle at 72% 48%,#387845 0 29%,transparent 30%),linear-gradient(90deg,transparent 44%,#6a4934 45% 55%,transparent 56%); }
+    .bench { position: absolute; left: 37%; top: 46%; width: 26%; height: 10%; border: 10px solid #725342; border-top-width: 20px; transform: skew(-7deg); }
+    .hud { position: absolute; inset: 0; pointer-events: none; }
+    .target { position: absolute; padding: .34rem .5rem; border: 2px solid var(--yellow); border-radius: .45rem; color: #09131b; background: rgba(255,209,102,.88); font: 700 .72rem ui-monospace,monospace; box-shadow: 0 0 0 999px rgba(4,13,23,.05); }
+    .target[data-name="Bench"] { left: 39%; top: 43%; }
+    .target[data-name="Tree"] { right: 7%; top: 22%; }
+    .target[data-name="Door"] { left: 17%; top: 30%; }
+    .target:not(.selected) { border-color: rgba(255,255,255,.75); background: rgba(12,26,39,.72); color: white; }
+    .arrow { position: absolute; left: 50%; top: 11%; width: 64px; height: 64px; margin-left: -32px; filter: drop-shadow(0 5px 12px rgba(0,0,0,.4)); transition: transform .3s ease; }
+    .arrow::before { content:""; position:absolute; left:20px; top:2px; border-left:12px solid transparent; border-right:12px solid transparent; border-bottom:42px solid var(--yellow); }
+    .reticle { position:absolute; left:50%; top:54%; width:28px; height:28px; margin:-14px; border:2px solid white; border-radius:50%; box-shadow:0 0 0 1px rgba(0,0,0,.4); }
+    .reticle::before,.reticle::after { content:""; position:absolute; background:white; }
+    .reticle::before { left:12px; top:-8px; width:2px; height:40px; }.reticle::after { top:12px; left:-8px; width:40px; height:2px; }
+    .mode-banner { position:absolute; left:1rem; top:1rem; padding:.42rem .62rem; border-radius:999px; background:rgba(5,15,27,.76); border:1px solid rgba(255,255,255,.32); font-size:.72rem; }
+    .distance { position:absolute; left:50%; bottom:1.2rem; transform:translateX(-50%); min-width:220px; padding:.55rem .8rem; border-radius:.75rem; background:rgba(5,15,27,.78); border:1px solid rgba(255,255,255,.25); text-align:center; }
+    .distance strong { color:var(--yellow); }
+    .side { min-width:0; display:flex; flex-direction:column; gap:.75rem; padding:1rem; border-left:1px solid var(--line); background:linear-gradient(180deg,rgba(12,28,46,.98),rgba(6,18,31,.98)); }
+    .brand { display:flex; align-items:center; gap:.65rem; }
+    .brand-mark { width:45px; aspect-ratio:1; display:grid; place-items:center; border-radius:50%; color:#07111f; background:conic-gradient(from 90deg,var(--yellow) 0 50%,var(--cyan) 0); font-size:1.3rem; font-weight:900; }
+    .brand h2 { margin:0; font-size:1rem; }.brand small { color:var(--muted); }
+    .modes,.actions { display:grid; grid-template-columns:1fr 1fr; gap:.45rem; }
+    .target-list { display:grid; gap:.4rem; }
+    .target-button { display:flex; justify-content:space-between; text-align:left; }.target-button span:last-child { color:var(--muted); font-size:.72rem; }
+    .radar { position:relative; width:min(100%,180px); aspect-ratio:1; margin:.1rem auto; border:1px solid rgba(99,214,255,.5); border-radius:50%; background:repeating-radial-gradient(circle,transparent 0 21%,rgba(99,214,255,.16) 22% 23%),linear-gradient(90deg,transparent 49.5%,rgba(99,214,255,.2) 50% 50.5%,transparent 51%),linear-gradient(transparent 49.5%,rgba(99,214,255,.2) 50% 50.5%,transparent 51%); overflow:hidden; }
+    .radar::after { content:""; position:absolute; left:50%; bottom:50%; width:50%; height:1px; background:linear-gradient(90deg,var(--cyan),transparent); transform-origin:left; transform:rotate(var(--scan, -55deg)); transition:transform .3s ease; }
+    .blip { position:absolute; left:var(--x); top:var(--y); width:.58rem; height:.58rem; border-radius:50%; background:var(--yellow); box-shadow:0 0 12px var(--yellow); transform:translate(-50%,-50%); }
+    .blip:not(.selected) { background:var(--cyan); box-shadow:0 0 8px var(--cyan); opacity:.65; }
+    .heading-control { display:grid; gap:.35rem; font-size:.72rem; color:var(--muted); }.heading-control input { width:100%; accent-color:var(--cyan); }
+    .status { min-height:2.5em; margin:0; color:var(--green); font-size:.78rem; }
+    .artifact-note { margin-top:auto; }
+    @media(max-width:720px){.navigator{grid-template-columns:1fr}.camera{min-height:360px}.side{border-left:0;border-top:1px solid var(--line)}.radar{display:none}.artifact-note{margin-top:0}}
+  </style>
+</head>
+<body>
+  <div class="demo-shell">
+    <header class="demo-head"><h1>AR Navigator</h1><p>Interactive reconstruction · synthetic camera scene</p></header>
+    <main class="demo-main">
+      <section class="navigator panel" aria-label="AR Navigator reconstruction">
+        <div class="camera" aria-label="Synthetic camera view with detected targets">
+          <div class="building"></div><div class="tree"></div><div class="bench"></div>
+          <div class="hud"><div class="mode-banner"><span class="dot" style="color:var(--green)"></span> <span id="mode-label">Smart object detection</span></div><div class="arrow" id="arrow" aria-hidden="true"></div><div class="reticle" aria-hidden="true"></div><div id="boxes"></div><div class="distance"><strong id="distance">4.8 m</strong> · <span id="target-name">Bench</span><br><small id="guide">turn slightly left</small></div></div>
+        </div>
+        <aside class="side">
+          <div class="brand"><div class="brand-mark" aria-hidden="true">⌁</div><div><h2>VR Navigator</h2><small>Recovered Unity behavior</small></div></div>
+          <div class="modes" role="group" aria-label="Detection mode"><button data-mode="smart" aria-pressed="true">Smart objects</button><button data-mode="anchor" aria-pressed="false">Image anchors</button></div>
+          <div><div class="eyebrow">Targets · N to cycle</div><div class="target-list" id="targets"></div></div>
+          <div class="radar" id="radar" aria-label="Radar map of targets"></div>
+          <label class="heading-control">Phone heading <span id="heading-value">0°</span><input id="heading" type="range" min="-80" max="80" value="0"></label>
+          <div class="actions"><button id="ping">Spatial ping (P)</button><button id="found">Found / stop</button></div>
+          <p class="status" id="status" role="status">Searching for Bench. Point the phone toward the yellow target.</p>
+          <p class="artifact-note">Built from the recovered private 2022 Unity project: Barracuda/YOLO object detection, AR image anchors, arrow, radar, spatial ping, vibration cue, target cycling, and accessible labels. No private source or camera data is served here.</p>
+        </aside>
+      </section>
+    </main>
+  </div>
+  <script>
+    const smartTargets=[{name:'Bench',distance:4.8,x:'35%',y:'61%',angle:-22},{name:'Tree',distance:7.2,x:'68%',y:'28%',angle:34},{name:'Door',distance:9.1,x:'20%',y:'38%',angle:-48}];
+    const anchorTargets=[{name:'Water bottle',distance:3.4,x:'62%',y:'55%',angle:18},{name:'Backpack',distance:5.6,x:'31%',y:'33%',angle:-30}];
+    let mode='smart', current=0, stopped=false;
+    const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+    function items(){return mode==='smart'?smartTargets:anchorTargets}
+    function render(){const list=items(); current=Math.min(current,list.length-1); const selected=list[current]; $('#mode-label').textContent=mode==='smart'?'Smart object detection':'Uploaded image anchors'; $('#targets').innerHTML=list.map((t,i)=>`<button class="target-button ${i===current?'active':''}" data-index="${i}" aria-pressed="${i===current}"><span>${t.name}</span><span>${t.distance.toFixed(1)} m</span></button>`).join(''); $('#boxes').innerHTML=(mode==='smart'?smartTargets:[{name:'Water bottle'},{name:'Backpack'}]).map((t,i)=>`<div class="target ${i===current?'selected':''}" data-name="${mode==='smart'?t.name:['Water bottle','Backpack'][i]}">${mode==='smart'?t.name:['Bottle anchor','Bag anchor'][i]}</div>`).join(''); $('#radar').innerHTML=list.map((t,i)=>`<span class="blip ${i===current?'selected':''}" style="--x:${t.x};--y:${t.y}" title="${t.name}"></span>`).join(''); $('#target-name').textContent=selected.name; $('#distance').textContent=selected.distance.toFixed(1)+' m'; updateHeading(); $('#status').textContent=stopped?'Guidance stopped. Select a target to resume.':`Searching for ${selected.name}. Point the phone toward the yellow target.`; $$('.target-button').forEach(b=>b.onclick=()=>{current=+b.dataset.index;stopped=false;render()})}
+    function updateHeading(){const target=items()[current], heading=+$('#heading').value, delta=target.angle-heading; $('#heading-value').textContent=heading+'°'; $('#arrow').style.transform=`rotate(${delta}deg)`; $('#radar').style.setProperty('--scan',delta+'deg'); const abs=Math.abs(delta); $('#guide').textContent=abs<8?'target straight ahead':`turn ${delta<0?'left':'right'} ${Math.round(abs)}°`; if(abs<8&&!stopped&&navigator.vibrate)navigator.vibrate(35)}
+    function ping(){if(stopped)return; const ctx=new (window.AudioContext||window.webkitAudioContext)(), o=ctx.createOscillator(), g=ctx.createGain(), pan=ctx.createStereoPanner?ctx.createStereoPanner():null; o.frequency.value=760; g.gain.setValueAtTime(.001,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.18,ctx.currentTime+.015);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.32);o.connect(g);if(pan){pan.pan.value=Math.max(-1,Math.min(1,(items()[current].angle-+$('#heading').value)/60));g.connect(pan).connect(ctx.destination)}else g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.34);$('#status').textContent=`Ping sent from ${items()[current].name}'s direction.`;if(navigator.vibrate)navigator.vibrate([45,55,45])}
+    $$('.modes button').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;current=0;stopped=false;$$('.modes button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()}); $('#heading').oninput=updateHeading; $('#ping').onclick=ping; $('#found').onclick=()=>{stopped=!stopped;$('#found').textContent=stopped?'Resume search':'Found / stop';render()}; addEventListener('keydown',e=>{if(/input/i.test(e.target.tagName))return;if(e.key.toLowerCase()==='n'){current=(current+1)%items().length;stopped=false;render()}if(e.key.toLowerCase()==='p'){if(e.shiftKey){current=(current-1+items().length)%items().length;render()}else ping()}if(e.key.toLowerCase()==='m'){$$('.modes button')[mode==='smart'?1:0].click()}}); render();
+  </script>
+</body>
+</html>
