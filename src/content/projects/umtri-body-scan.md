@@ -10,8 +10,8 @@ stack: ['Python', 'Computer vision', '3D geometry']
 demo:
   type: scene
   path: body-scan
-  cta: 'Explore the recovered pipeline'
-  controls: 'Drag the synthetic scan to rotate it, select any of nine camera views, step through the pipeline, and adjust the confidence threshold.'
+  cta: 'Run the recovered application'
+  controls: 'Select synthetic PLY scans, run the recovered batch workflow, inspect all nine camera views and 2D-to-3D stages, orbit the output, tune confidence, and export a synthetic joint CSV.'
 links:
   - label: 'Dr. Park'
     href: 'https://sites.google.com/view/danielpark/home'
@@ -21,15 +21,26 @@ featured: true
 order: 20
 ---
 
-The recovered research artifacts document a nine-view pipeline. A 3D scan was
-rendered at 45° intervals from 0° through 360°. OpenPose produced 25 joints per
-view, represented as x, y and confidence—75 values per image and 675 across the
-nine renders. Accepted 2D detections were ray-picked back onto the scan and
-transformed into the original 3D coordinate system before measurement.
+The original private repository and an August 2022 application email were still
+recoverable. They show that this was more than an analysis script: I shipped a
+Tkinter desktop interface, a command-line workflow, and separate PyInstaller
+packages for macOS and Windows. The interface supported model-folder discovery,
+batch selection, configurable OpenPose and output folders, optional result
+visualization, CSV writing, run progress, and logs.
 
-The interactive viewer is a **privacy-safe reconstruction** of that process.
-Its point cloud is generated from equations in the browser, and its dimensions
-are illustrative. No participant scan, photograph, research output, or
+Underneath that interface was a nine-view reconstruction pipeline. A PLY scan
+was rendered with VTK at 45° intervals from 0° through 360°. OpenPose produced
+25 BODY_25 joints per view as x, y, and confidence. Detections below 0.30 were
+discarded; accepted points were ray-picked onto the rotated mesh, transformed
+back into the scan's original coordinate system, and combined across views by
+minimizing distance to the recovered 3D rays.
+
+The interactive application is a **privacy-safe reconstruction** of both the
+shipped interface and its processing stages. Choose one or more generated PLY
+subjects, use **Run Selected** or **Run All**, inspect the generated views,
+BODY_25 detections, scan rays, optimized joints and dimensions, then export a
+synthetic CSV. Every vertex and value is generated in the browser. No
+participant scan, photograph, research output, proprietary model, or
 confidential code is included.
 
 The artifacts also explain two useful debugging lessons: an early version
