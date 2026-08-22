@@ -117,23 +117,23 @@
   }
 
   function drawGrid(width,height) {
-    ctx.lineWidth=1;ctx.strokeStyle='rgba(99,214,255,.045)';
+    ctx.lineWidth=1;ctx.strokeStyle='rgba(75,63,53,.055)';
     for(let index=-12;index<=12;index++){
       ctx.beginPath();ctx.moveTo(width/2+index*32,0);ctx.lineTo(width/2+index*32,height);ctx.stroke();
       ctx.beginPath();ctx.moveTo(0,height*.53+index*32);ctx.lineTo(width,height*.53+index*32);ctx.stroke();
     }
-    ctx.strokeStyle='rgba(99,214,255,.12)';ctx.beginPath();ctx.moveTo(0,height*.83);ctx.lineTo(width,height*.83);ctx.stroke();
+    ctx.strokeStyle='rgba(75,63,53,.16)';ctx.beginPath();ctx.moveTo(0,height*.83);ctx.lineTo(width,height*.83);ctx.stroke();
   }
 
   function drawPointCloud() {
     const sorted=state.points.map(point=>({point,projected:project(point)})).sort((a,b)=>a.projected.z-b.projected.z);
     if(state.mode==='surface'){
-      ctx.globalAlpha=.18;ctx.fillStyle='#63d6ff';ctx.beginPath();
+      ctx.globalAlpha=.14;ctx.fillStyle='#9d4c34';ctx.beginPath();
       sorted.forEach(({projected},index)=>{if(index%3===0){ctx.moveTo(projected.x+2,projected.y);ctx.arc(projected.x,projected.y,2.2,0,Math.PI*2)}});ctx.fill();ctx.globalAlpha=1;
     } else {
       sorted.forEach(({projected},index)=>{
         const depth=Math.max(.16,Math.min(.74,.42+projected.z*.45));
-        ctx.fillStyle=state.mode==='wire'?`rgba(125,221,255,${depth*.75})`:`rgba(99,214,255,${depth})`;
+        ctx.fillStyle=state.mode==='wire'?`rgba(82,72,64,${depth*.75})`:`rgba(157,76,52,${depth})`;
         const size=state.mode==='wire'?(index%4===0?1.8:.8):1.7;
         ctx.fillRect(projected.x,projected.y,size,size);
       });
@@ -144,24 +144,24 @@
     const width=canvas.clientWidth,height=canvas.clientHeight;
     for(let index=0;index<9;index++){
       const angle=index*Math.PI/4,camera={x:Math.sin(angle)*1.85,y:.35,z:Math.cos(angle)*1.85},point=project(camera);
-      ctx.strokeStyle=index===state.viewIndex?'#ffd166':'rgba(99,214,255,.42)';ctx.lineWidth=index===state.viewIndex?2:1;
+      ctx.strokeStyle=index===state.viewIndex?'#b85c3d':'rgba(96,81,68,.38)';ctx.lineWidth=index===state.viewIndex?2:1;
       ctx.beginPath();ctx.arc(point.x,point.y,6,0,Math.PI*2);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(point.x,point.y);ctx.lineTo(width/2,height*.50);ctx.strokeStyle='rgba(99,214,255,.11)';ctx.stroke();
-      ctx.fillStyle=index===state.viewIndex?'#ffd166':'#8aa9bc';ctx.font='600 9px ui-monospace';ctx.fillText(`${index*45}°`,point.x+8,point.y+3);
+      ctx.beginPath();ctx.moveTo(point.x,point.y);ctx.lineTo(width/2,height*.50);ctx.strokeStyle='rgba(96,81,68,.12)';ctx.stroke();
+      ctx.fillStyle=index===state.viewIndex?'#9d4c34':'#796f66';ctx.font='600 9px ui-monospace';ctx.fillText(`${index*45}°`,point.x+8,point.y+3);
     }
   }
 
   function accepted(joint){return joint.c>=state.threshold;}
 
-  function drawSkeleton(color='#ffd166',lineColor='rgba(255,209,102,.74)') {
+  function drawSkeleton(color='#ae793f',lineColor='rgba(174,121,63,.74)') {
     const points=state.joints.map(project);ctx.lineWidth=2.2;ctx.strokeStyle=lineColor;
     bones.forEach(([a,b])=>{if(!accepted(state.joints[a])||!accepted(state.joints[b]))return;ctx.beginPath();ctx.moveTo(points[a].x,points[a].y);ctx.lineTo(points[b].x,points[b].y);ctx.stroke();});
-    points.forEach((point,index)=>{if(!accepted(state.joints[index]))return;ctx.beginPath();ctx.arc(point.x,point.y,3.8,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.lineWidth=1.4;ctx.strokeStyle='#07111f';ctx.stroke();});
+    points.forEach((point,index)=>{if(!accepted(state.joints[index]))return;ctx.beginPath();ctx.arc(point.x,point.y,3.8,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.lineWidth=1.4;ctx.strokeStyle='#faf8f3';ctx.stroke();});
   }
 
   function drawPoseFrame() {
-    const width=canvas.clientWidth,height=canvas.clientHeight;ctx.save();ctx.strokeStyle='rgba(255,209,102,.42)';ctx.setLineDash([6,5]);ctx.strokeRect(width*.31,height*.09,width*.38,height*.78);ctx.restore();
-    ctx.fillStyle='rgba(255,209,102,.8)';ctx.font='600 10px ui-monospace';ctx.fillText(`model_${state.viewIndex*45}.png · BODY_25`,width*.31,height*.075);
+    const width=canvas.clientWidth,height=canvas.clientHeight;ctx.save();ctx.strokeStyle='rgba(174,121,63,.44)';ctx.setLineDash([6,5]);ctx.strokeRect(width*.31,height*.09,width*.38,height*.78);ctx.restore();
+    ctx.fillStyle='rgba(143,98,46,.9)';ctx.font='600 10px ui-monospace';ctx.fillText(`model_${state.viewIndex*45}.png · BODY_25`,width*.31,height*.075);
     drawSkeleton();
   }
 
@@ -169,12 +169,12 @@
     const cameraAngle=state.viewIndex*Math.PI/4;
     const camera=project({x:Math.sin(cameraAngle)*1.75,y:.35,z:Math.cos(cameraAngle)*1.75});
     const ids=[0,2,5,8,9,12,10,13,11,14];
-    ids.forEach((id,index)=>{const point=project(state.joints[id]);if(!accepted(state.joints[id]))return;ctx.strokeStyle=`rgba(167,139,250,${.25+(index%3)*.12})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(camera.x,camera.y);ctx.lineTo(point.x,point.y);ctx.stroke();});
-    ctx.fillStyle='#a78bfa';ctx.beginPath();ctx.arc(camera.x,camera.y,6,0,Math.PI*2);ctx.fill();drawSkeleton('#ffd166','rgba(255,209,102,.55)');
+    ids.forEach((id,index)=>{const point=project(state.joints[id]);if(!accepted(state.joints[id]))return;ctx.strokeStyle=`rgba(117,87,101,${.25+(index%3)*.12})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(camera.x,camera.y);ctx.lineTo(point.x,point.y);ctx.stroke();});
+    ctx.fillStyle='#755765';ctx.beginPath();ctx.arc(camera.x,camera.y,6,0,Math.PI*2);ctx.fill();drawSkeleton('#ae793f','rgba(174,121,63,.58)');
   }
 
   function dimensionLine(a,b,label,offset=0) {
-    const start=project(state.joints[a]),end=project(state.joints[b]);ctx.save();ctx.strokeStyle='#ff7086';ctx.fillStyle='#ff9aac';ctx.lineWidth=1.8;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(start.x,start.y+offset);ctx.lineTo(end.x,end.y+offset);ctx.stroke();ctx.setLineDash([]);ctx.font='700 9px ui-monospace';ctx.textAlign='center';ctx.fillText(label,(start.x+end.x)/2,(start.y+end.y)/2+offset-6);ctx.restore();
+    const start=project(state.joints[a]),end=project(state.joints[b]);ctx.save();ctx.strokeStyle='#a65348';ctx.fillStyle='#8f4036';ctx.lineWidth=1.8;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(start.x,start.y+offset);ctx.lineTo(end.x,end.y+offset);ctx.stroke();ctx.setLineDash([]);ctx.font='700 9px ui-monospace';ctx.textAlign='center';ctx.fillText(label,(start.x+end.x)/2,(start.y+end.y)/2+offset-6);ctx.restore();
   }
 
   function draw() {
@@ -184,7 +184,7 @@
     if(state.stage==='rays') drawRays();
     if(state.stage==='solve'||state.stage==='export') drawSkeleton();
     if(state.stage==='solve'){
-      const point=project(state.joints[8]);ctx.strokeStyle='rgba(167,139,250,.72)';for(let index=0;index<5;index++){ctx.beginPath();ctx.arc(point.x,point.y,9+index*6,0,Math.PI*2);ctx.stroke();}
+      const point=project(state.joints[8]);ctx.strokeStyle='rgba(117,87,101,.72)';for(let index=0;index<5;index++){ctx.beginPath();ctx.arc(point.x,point.y,9+index*6,0,Math.PI*2);ctx.stroke();}
     }
     if(state.stage==='export'){
       const metrics=variants[state.model].metrics;dimensionLine(2,5,metrics[0],-12);dimensionLine(9,12,metrics[2],9);dimensionLine(0,14,metrics[3],20);
@@ -205,7 +205,7 @@
     for(let index=0;index<9;index++){
       const button=document.createElement('button');button.type='button';button.className='camera-view';button.dataset.camera=String(index);button.setAttribute('aria-label',`Rendered camera view ${index+1}, ${index*45} degrees`);button.setAttribute('aria-pressed',String(index===state.viewIndex));button.innerHTML=`<canvas width="94" height="72"></canvas><span>${index*45}°</span>`;wrap.append(button);
       const mini=button.querySelector('canvas'),miniContext=mini.getContext('2d'),angle=index*Math.PI/4;
-      state.points.filter((_,pointIndex)=>pointIndex%7===0).map(point=>miniProject(point,angle,94,72)).sort((a,b)=>a.z-b.z).forEach(point=>{miniContext.fillStyle='rgba(99,214,255,.54)';miniContext.fillRect(point.x,point.y,1,1)});
+      state.points.filter((_,pointIndex)=>pointIndex%7===0).map(point=>miniProject(point,angle,94,72)).sort((a,b)=>a.z-b.z).forEach(point=>{miniContext.fillStyle='rgba(157,76,52,.5)';miniContext.fillRect(point.x,point.y,1,1)});
     }
   }
 
