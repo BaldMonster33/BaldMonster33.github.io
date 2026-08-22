@@ -12,15 +12,11 @@ export const PROFILE = {
    * visitors actually reach — a canonical pointing somewhere that does not
    * resolve is worse than none at all.
    *
-   * Temporarily the GitHub Pages address, because www.qinle.ltd does not
-   * resolve yet. Moving to the custom domain takes both halves together:
-   *   1. set this to 'https://www.qinle.ltd'
-   *   2. add publish/overlay/public/CNAME containing `www.qinle.ltd`, and set
-   *      the same value under Settings -> Pages -> Custom domain
-   * Doing only (2) makes GitHub redirect the Pages address to the custom domain
-   * while every link in the markup still claims the old one.
+   * GitHub Pages serves the site at the custom domain below. Keep this value in
+   * sync with the Pages custom-domain setting so canonical links, redirects,
+   * Open Graph tags, the sitemap and the RSS feed all agree.
    */
-  url: 'https://baldmonster33.github.io',
+  url: 'https://www.qinle.ltd',
 
   /**
    * Where the view counter answers, or '' for no counter.
