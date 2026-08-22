@@ -11,14 +11,27 @@ demo:
   path: ar-navigator
   cta: 'Try the recovered interaction'
   controls: 'Choose a mode and target, drag Phone heading, or use N to cycle, P to ping, and M to switch modes.'
+links:
+  - label: 'Original team trailer'
+    href: 'https://youtu.be/Xf8MJ09-pX8'
 featured: false
 order: 50
 ---
 
-The original project website and WordPress dashboard at `virtualnavigator.ml`
-are gone, but the application is not. I recovered the private Unity repository
-and rebuilt its interaction model above without publishing the source or any
-camera data.
+The original project websites at `johnnyq.ml` and `virtualnavigator.ml` are
+gone, but the application is not. I recovered the private Unity repository and
+rebuilt its interaction model above without publishing the source or any camera
+data. The team's original product trailer also survived:
+
+<div class="video">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/Xf8MJ09-pX8"
+    title="ARNav — original Virtual Navigator team trailer"
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+</div>
 
 ## What survived
 
@@ -36,4 +49,5 @@ target is selected, the application combines several cues:
 The browser demo is an **artifact-backed reconstruction**, not the original
 camera build. Its street scene and detections are synthetic, but the modes,
 target cycling, guidance cues, stop state, and accessibility intent come from
-the recovered 2022 source.
+the recovered 2022 source. The embedded trailer above is the original mobile
+application recorded by the four-person EECS 498 team.
