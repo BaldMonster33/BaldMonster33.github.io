@@ -1,11 +1,39 @@
 ---
 title: AR Navigator
 description: >-
-  Augmented reality wayfinding prototype that overlays turn-by-turn directions
-  on the live camera view. The original demo site was hosted on a .ml domain
-  that no longer resolves, so there is nothing to link to.
+  Accessibility-minded augmented-reality wayfinding prototype that detects or
+  learns a target, then guides the user to it with an arrow, radar, spatial
+  audio, and haptic feedback.
 period: 'Nov 2022'
-stack: ['Unity', 'AR Foundation', 'C#']
+stack: ['Unity', 'AR Foundation', 'Barracuda', 'C#']
+demo:
+  type: scene
+  path: ar-navigator
+  cta: 'Try the recovered interaction'
+  controls: 'Choose a mode and target, drag Phone heading, or use N to cycle, P to ping, and M to switch modes.'
 featured: false
 order: 50
 ---
+
+The original project website and WordPress dashboard at `virtualnavigator.ml`
+are gone, but the application is not. I recovered the private Unity repository
+and rebuilt its interaction model above without publishing the source or any
+camera data.
+
+## What survived
+
+The recovered project uses Unity Barracuda to run a YOLO model against the live
+camera. Detected objects become targets in the AR scene; a second mode lets the
+user add a labelled reference image from their photo library instead. Once a
+target is selected, the application combines several cues:
+
+- an arrow points toward it;
+- a rotating 2D radar keeps other targets visible;
+- a spatial ping comes from the target's direction;
+- the phone vibrates when it is pointed at the target;
+- accessible labels, dynamic text, and text-to-speech expose the controls.
+
+The browser demo is an **artifact-backed reconstruction**, not the original
+camera build. Its street scene and detections are synthetic, but the modes,
+target cycling, guidance cues, stop state, and accessibility intent come from
+the recovered 2022 source.
