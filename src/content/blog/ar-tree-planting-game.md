@@ -12,7 +12,7 @@ point your phone at the ground, plant something, and come back to tend it.
 
 <div class="video">
   <iframe
-    src="https://www.youtube-nocookie.com/embed/mFiywZ0S4WU"
+    src="https://www.youtube-nocookie.com/embed/YerayK96dG4"
     title="AR tree-planting game demo"
     loading="lazy"
     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
