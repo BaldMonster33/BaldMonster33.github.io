@@ -50,10 +50,10 @@
             <label class="field-label" for="openpose-folder">OpenPose Folder</label>
             <div class="path-field"><input id="openpose-folder" value="/opt/openpose" readonly><button type="button" data-toast="The recovered app accepted an OpenPose root folder here.">Browse</button></div>
 
-            <div class="list-label"><span>Available Models</span><span id="selection-count">2 selected</span></div>
+            <div class="list-label"><span>Available Models</span><span id="selection-count">1 selected</span></div>
             <div class="model-list" id="model-list" role="group" aria-label="Synthetic PLY models">
-              <label class="model-row active"><input type="checkbox" value="standing" checked><span class="file-icon">PLY</span><span><strong>scan_look_01.ply</strong><small>standing · 18,420 vertices</small></span></label>
-              <label class="model-row"><input type="checkbox" value="jacket" checked><span class="file-icon">PLY</span><span><strong>scan_jacket_02.ply</strong><small>clothed · 21,760 vertices</small></span></label>
+              <label class="model-row active"><input type="checkbox" value="jacket" checked><span class="file-icon">PLY</span><span><strong>scan_clothed_01.ply</strong><small>loose T-shirt · synthetic surface mesh</small></span></label>
+              <label class="model-row"><input type="checkbox" value="standing"><span class="file-icon">PLY</span><span><strong>scan_fitted_02.ply</strong><small>fitted clothing · synthetic control</small></span></label>
               <label class="model-row"><input type="checkbox" value="seated"><span class="file-icon">PLY</span><span><strong>scan_seated_03.ply</strong><small>seated · 19,105 vertices</small></span></label>
             </div>
 
@@ -76,16 +76,16 @@
 
             <details class="cli">
               <summary>Command-line interface</summary>
-              <code>python3 JointsDetectionFrom3dScans.py<br>&nbsp;&nbsp;--input_filename scan_look_01.ply<br>&nbsp;&nbsp;--custom_axis "(0, 0, 1)"<br>&nbsp;&nbsp;--render_model True</code>
+              <code>python3 JointsDetectionFrom3dScans.py<br>&nbsp;&nbsp;--input_filename scan_clothed_01.ply<br>&nbsp;&nbsp;--custom_axis "(0, 0, 1)"<br>&nbsp;&nbsp;--render_model True</code>
             </details>
           </aside>
 
           <section class="viewer-column" aria-label="Synthetic VTK viewer">
             <div class="viewer-toolbar">
               <div class="segmented" role="group" aria-label="Viewer mode">
-                <button type="button" data-view-mode="surface" aria-pressed="false">Surface</button>
+                <button type="button" data-view-mode="surface" aria-pressed="true">Surface</button>
                 <button type="button" data-view-mode="wire" aria-pressed="false">Wireframe</button>
-                <button type="button" data-view-mode="points" aria-pressed="true">Points</button>
+                <button type="button" data-view-mode="points" aria-pressed="false">Points</button>
               </div>
               <div class="viewer-actions">
                 <button type="button" id="reset-camera">Reset view</button>
@@ -96,7 +96,7 @@
             <div class="viewer">
               <canvas id="scan" width="920" height="680" aria-label="Rotatable synthetic body scan with reconstructed pose rays and joints"></canvas>
               <span class="view-label pill" id="view-label">Orbit view · 0°</span>
-              <span class="privacy pill"><span class="dot"></span>synthetic subject</span>
+              <span class="privacy pill"><span class="dot"></span>synthetic clothed subject</span>
               <div class="viewer-hint" id="viewer-hint">Drag to orbit · scroll to zoom</div>
               <div class="axis-gizmo" aria-hidden="true"><b class="axis-x">X</b><b class="axis-y">Y</b><b class="axis-z">Z</b><i></i><i></i><i></i></div>
               <div class="stage-card" id="stage-card">
@@ -107,8 +107,9 @@
             </div>
 
             <div class="camera-strip-wrap">
-              <div class="strip-head"><span>Nine rendered camera views</span><span id="view-detail">0° · model_0.png</span></div>
+              <div class="strip-head"><span>Clothed surface → nine rendered camera views</span><span id="view-detail">0° · model_0.png</span></div>
               <div class="camera-strip" id="camera-strip" role="group" aria-label="Nine camera views"></div>
+              <p class="strip-note">This synthetic strip mirrors the recovered May 2022 artifacts: VTK surface shading preserves clothing folds, then OpenPose runs on each saved rotation.</p>
             </div>
 
             <div class="viewer-footer">
@@ -172,7 +173,7 @@
 
             <button class="export-button" id="download-csv" type="button" disabled>Download synthetic joint CSV</button>
 
-            <p class="artifact-note">Recovered from the original private repository, the August 17 application email, and project correspondence. The shipped app included Tkinter batch controls, CLI options, progress/log output, CSV writing, and separate macOS/Windows executables. Research scans and confidential UMTRI materials are intentionally excluded.</p>
+            <p class="artifact-note">Recovered from the original private repository and the May–August 2022 email trail. That trail preserves the first wireframe test, the corrected shaded clothing surface, 45°/90° captures, OpenPose overlays, and the final CLI plus macOS/Windows applications. Research scans and confidential UMTRI materials are intentionally excluded.</p>
           </aside>
         </div>
         <div class="toast" id="toast" role="status" aria-live="polite"></div>
