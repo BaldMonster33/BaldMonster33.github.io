@@ -94,6 +94,7 @@ const isActive = (href: string) =>
     display: flex;
     flex-direction: column;
     height: 100vh;
+    height: 100dvh;
     padding: 2.5rem 1.5rem 1.5rem;
   }
 
@@ -232,7 +233,11 @@ const isActive = (href: string) =>
     .inner {
       position: static;
       height: auto;
-      padding: 1.25rem;
+      padding:
+        max(1.25rem, env(safe-area-inset-top))
+        max(1.25rem, env(safe-area-inset-right))
+        1.25rem
+        max(1.25rem, env(safe-area-inset-left));
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 1rem 0.75rem;
@@ -260,6 +265,7 @@ const isActive = (href: string) =>
       display: flex;
       gap: 0.25rem;
       overflow-x: auto;
+      overscroll-behavior-inline: contain;
     }
 
     nav a[aria-current='page']::before {
@@ -280,6 +286,24 @@ const isActive = (href: string) =>
 
     .foot :global(#theme-toggle .label) {
       display: none;
+    }
+  }
+
+  @media (pointer: coarse) {
+    nav a,
+    .social a {
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    nav a {
+      display: flex;
+      align-items: center;
+    }
+
+    .social a {
+      width: 44px;
+      height: 44px;
     }
   }
 </style>

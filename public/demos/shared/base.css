@@ -45,8 +45,18 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 button[aria-pressed="true"], button.active { color: #06131d; background: var(--cyan); border-color: var(--cyan); font-weight: 750; }
 button:disabled { opacity: 0.45; cursor: not-allowed; }
 
+@media (any-pointer: coarse) {
+  button,
+  select,
+  input[type="range"] {
+    min-height: 2.75rem;
+    touch-action: manipulation;
+  }
+}
+
 .demo-shell {
   min-height: 100vh;
+  min-height: 100svh;
   display: grid;
   grid-template-rows: auto 1fr;
 }

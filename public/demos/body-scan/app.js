@@ -6,6 +6,10 @@
   const canvas = $('#scan');
   const ctx = canvas.getContext('2d');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const touchLike = matchMedia('(hover: none), (pointer: coarse)').matches;
+  const orbitHint = touchLike
+    ? 'Drag to orbit · use − / + to zoom'
+    : 'Drag to orbit · scroll or use − / + to zoom';
 
   const jointNames = ['Nose','Neck','R shoulder','R elbow','R wrist','L shoulder','L elbow','L wrist','Mid hip','R hip','R knee','R ankle','L hip','L knee','L ankle','R eye','L eye','R ear','L ear','L big toe','L small toe','L heel','R big toe','R small toe','R heel'];
   const baseJoints = [
@@ -237,6 +241,21 @@
     const rect=canvas.getBoundingClientRect(),density=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(rect.width*density);canvas.height=Math.round(rect.height*density);ctx.setTransform(density,0,0,density,0,0);draw();
   }
 
+  function updateZoomControls() {
+    const percent=`${Math.round(state.zoom*100)}%`;
+    $('#zoom-level').value=percent;
+    $('#zoom-out').disabled=state.zoom<=.68;
+    $('#zoom-in').disabled=state.zoom>=1.6;
+    $('#zoom-out').setAttribute('aria-label',`Zoom out, current zoom ${percent}`);
+    $('#zoom-in').setAttribute('aria-label',`Zoom in, current zoom ${percent}`);
+  }
+
+  function setZoom(value) {
+    state.zoom=Math.max(.68,Math.min(1.6,value));
+    updateZoomControls();
+    draw();
+  }
+
   function miniProject(point, angle, width, height) {
     const yawCos=Math.cos(angle),yawSin=Math.sin(angle),x=point.x*yawCos-point.z*yawSin,z=point.x*yawSin+point.z*yawCos,scale=Math.min(width,height)*.25;
     return {x:width/2+x*scale,y:height*.54-point.y*scale,z};
@@ -265,7 +284,7 @@
   }
 
   function setStage(stage, fromRun=false) {
-    state.stage=stage;$$('[data-stage]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.stage===stage)));const data=stages[stage];$('#stage-kicker').textContent=data.kicker;$('#stage-title').textContent=data.title;$('#stage-copy').textContent=data.copy;$('#viewer-hint').textContent=stage==='render'?'Choose any generated viewpoint':stage==='rays'?'Purple lines show 2D picks projected into 3D':'Drag to orbit · scroll to zoom';
+    state.stage=stage;$$('[data-stage]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.stage===stage)));const data=stages[stage];$('#stage-kicker').textContent=data.kicker;$('#stage-title').textContent=data.title;$('#stage-copy').textContent=data.copy;$('#viewer-hint').textContent=stage==='render'?'Choose any generated viewpoint':stage==='rays'?'Purple lines show 2D picks projected into 3D':orbitHint;
     if(!fromRun) $(`[data-stage="${stage}"]`).scrollIntoView({block:'nearest'});drawCameraStrip();draw();
   }
 
@@ -317,14 +336,18 @@
   $$('.model-row input').forEach(input=>input.addEventListener('change',()=>{updateSelection();if(input.checked){state.model=input.value;$$('.model-row').forEach(row=>row.classList.toggle('active',row.contains(input)));buildModel(input.value);}}));
   $('#threshold').addEventListener('input',event=>{state.threshold=Number(event.target.value)/100;$('#threshold-label').value=state.threshold.toFixed(2);$('#threshold-stat').textContent=state.threshold.toFixed(2);renderJointList();draw();});
   $('#axis').addEventListener('change',event=>{const axis=event.target.value;state.pitch=axis==='x'?.5:axis==='y'?.12:-.04;showToast(`Rotation axis set to ${event.target.selectedOptions[0].textContent}.`);draw();});
-  $('#reset-camera').addEventListener('click',()=>{state.yaw=0;state.pitch=-.04;state.zoom=1;state.viewIndex=0;$('#view-label').textContent='Orbit view · 0°';draw();});
+  $('#zoom-out').addEventListener('click',()=>setZoom(state.zoom-.12));
+  $('#zoom-in').addEventListener('click',()=>setZoom(state.zoom+.12));
+  $('#reset-camera').addEventListener('click',()=>{state.yaw=0;state.pitch=-.04;state.zoom=1;state.viewIndex=0;$('#view-label').textContent='Orbit view · 0°';updateZoomControls();draw();});
   $('#auto-rotate').addEventListener('click',event=>{state.auto=!state.auto;event.currentTarget.setAttribute('aria-pressed',String(state.auto));if(state.auto)autoLoop();else cancelAnimationFrame(state.raf);});
   $('#run-selected').addEventListener('click',()=>runPipeline(false));$('#run-all').addEventListener('click',()=>runPipeline(true));$('#download-csv').addEventListener('click',downloadCSV);
   $('#write-results').addEventListener('change',event=>{if(!event.target.checked)$('#download-csv').disabled=true;});
   canvas.addEventListener('pointerdown',event=>{state.drag=true;state.lastX=event.clientX;state.lastY=event.clientY;canvas.setPointerCapture(event.pointerId);});
   canvas.addEventListener('pointermove',event=>{if(!state.drag)return;state.yaw+=(event.clientX-state.lastX)*.012;state.pitch=Math.max(-.75,Math.min(.75,state.pitch+(event.clientY-state.lastY)*.007));state.lastX=event.clientX;state.lastY=event.clientY;draw();});
   canvas.addEventListener('pointerup',()=>state.drag=false);canvas.addEventListener('pointercancel',()=>state.drag=false);
-  canvas.addEventListener('wheel',event=>{event.preventDefault();state.zoom=Math.max(.68,Math.min(1.6,state.zoom-event.deltaY*.0008));draw();},{passive:false});
+  canvas.addEventListener('wheel',event=>{event.preventDefault();setZoom(state.zoom-event.deltaY*.0008);},{passive:false});
 
-  new ResizeObserver(resize).observe(canvas);buildModel('jacket');setStage('scan');updateSelection();setProgress(0,'Ready');addLog('Recovered application ready · synthetic clothed scan selected');resize();
+  if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);
+  else addEventListener('resize',resize);
+  buildModel('jacket');setStage('scan');updateSelection();updateZoomControls();setProgress(0,'Ready');addLog('Recovered application ready · synthetic clothed scan selected');resize();
 })();

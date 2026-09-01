@@ -93,6 +93,7 @@ body {
   font-size: 1rem;
   line-height: 1.7;
   min-height: 100vh;
+  min-height: 100svh;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -277,6 +278,7 @@ a.chip:hover {
   display: grid;
   grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
   min-height: 100vh;
+  min-height: 100svh;
 }
 
 .content {
@@ -308,7 +310,11 @@ a.chip:hover {
   }
 
   .content {
-    padding: 2rem 1.25rem 4rem;
+    padding:
+      2rem
+      max(1.25rem, env(safe-area-inset-right))
+      max(4rem, env(safe-area-inset-bottom))
+      max(1.25rem, env(safe-area-inset-left));
   }
 }
 

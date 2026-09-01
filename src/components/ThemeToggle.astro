@@ -33,6 +33,7 @@
     font-size: 0.75rem;
     letter-spacing: 0.05em;
     cursor: pointer;
+    touch-action: manipulation;
     transition:
       color 0.15s var(--ease),
       border-color 0.15s var(--ease),
@@ -75,6 +76,14 @@
 
   :global(:root:not([data-theme='light'])) .icon-moon {
     display: none;
+  }
+
+  @media (pointer: coarse) {
+    button {
+      min-width: 44px;
+      min-height: 44px;
+      justify-content: center;
+    }
   }
 </style>
 

@@ -88,6 +88,11 @@
                 <button type="button" data-view-mode="points" aria-pressed="false">Points</button>
               </div>
               <div class="viewer-actions">
+                <div class="zoom-controls" role="group" aria-label="Viewer zoom">
+                  <button type="button" id="zoom-out" aria-controls="scan" aria-label="Zoom out">−</button>
+                  <output id="zoom-level" for="zoom-out zoom-in" aria-live="polite">100%</output>
+                  <button type="button" id="zoom-in" aria-controls="scan" aria-label="Zoom in">+</button>
+                </div>
                 <button type="button" id="reset-camera">Reset view</button>
                 <button type="button" id="auto-rotate" aria-pressed="false">Auto rotate</button>
               </div>
@@ -97,7 +102,7 @@
               <canvas id="scan" width="920" height="680" aria-label="Rotatable synthetic body scan with reconstructed pose rays and joints"></canvas>
               <span class="view-label pill" id="view-label">Orbit view · 0°</span>
               <span class="privacy pill"><span class="dot"></span>synthetic clothed subject</span>
-              <div class="viewer-hint" id="viewer-hint">Drag to orbit · scroll to zoom</div>
+              <div class="viewer-hint" id="viewer-hint">Drag to orbit · use − / + to zoom</div>
               <div class="axis-gizmo" aria-hidden="true"><b class="axis-x">X</b><b class="axis-y">Y</b><b class="axis-z">Z</b><i></i><i></i><i></i></div>
               <div class="stage-card" id="stage-card">
                 <span id="stage-kicker">Input</span>

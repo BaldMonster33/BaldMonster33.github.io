@@ -146,6 +146,7 @@ const poster = demo.type === 'component' ? undefined : demo.poster;
       linear-gradient(90deg, var(--border) 1px, transparent 1px);
     background-size: 44px 44px;
     opacity: 0.5;
+    -webkit-mask-image: radial-gradient(70% 70% at 50% 50%, #000 0%, transparent 75%);
     mask-image: radial-gradient(70% 70% at 50% 50%, #000 0%, transparent 75%);
   }
 
@@ -192,6 +193,7 @@ const poster = demo.type === 'component' ? undefined : demo.poster;
     margin: auto;
     width: min(96vw, 1200px);
     max-width: 96vw;
+    max-height: 92vh;
     max-height: 92dvh;
     padding: 0;
     border: 1px solid var(--border-strong);
@@ -204,6 +206,7 @@ const poster = demo.type === 'component' ? undefined : demo.poster;
 
   .demo-modal::backdrop {
     background: rgb(0 0 0 / 0.66);
+    -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
   }
 
@@ -238,6 +241,7 @@ const poster = demo.type === 'component' ? undefined : demo.poster;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     cursor: pointer;
+    touch-action: manipulation;
   }
 
   .close:hover {
@@ -269,6 +273,51 @@ const poster = demo.type === 'component' ? undefined : demo.poster;
     border-top: 1px solid var(--border);
   }
 
+  @media (max-width: 48rem), (max-height: 36rem) and (pointer: coarse) {
+    .demo-modal {
+      width: 100vw;
+      max-width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      max-height: 100vh;
+      max-height: 100dvh;
+      border: 0;
+      border-radius: 0;
+      overflow: hidden;
+    }
+
+    .demo-modal[open] {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+
+    .bar {
+      padding:
+        max(0.55rem, env(safe-area-inset-top))
+        max(0.75rem, env(safe-area-inset-right))
+        0.55rem
+        max(0.75rem, env(safe-area-inset-left));
+    }
+
+    .frame {
+      min-height: 0;
+      aspect-ratio: auto;
+    }
+
+    .controls {
+      max-height: 25vh;
+      overflow: auto;
+      padding-bottom: max(0.9rem, env(safe-area-inset-bottom));
+    }
+  }
+
+  @media (pointer: coarse) {
+    .close {
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .stage,
     .cta svg {
@@ -280,6 +329,7 @@ const poster = demo.type === 'component' ? undefined : demo.poster;
     }
 
     .demo-modal::backdrop {
+      -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
   }
@@ -290,11 +340,13 @@ const poster = demo.type === 'component' ? undefined : demo.poster;
     #dialog: HTMLDialogElement | null = null;
     #frame: HTMLElement | null = null;
     #stage: HTMLAnchorElement | null = null;
+    #close: HTMLButtonElement | null = null;
 
     connectedCallback() {
       this.#stage = this.querySelector<HTMLAnchorElement>('[data-stage]');
       this.#dialog = this.querySelector<HTMLDialogElement>('dialog');
       this.#frame = this.querySelector<HTMLElement>('[data-frame]');
+      this.#close = this.querySelector<HTMLButtonElement>('[data-close]');
       if (!this.#stage) return;
 
       this.#stage.addEventListener('click', (e) => {
@@ -302,11 +354,14 @@ const poster = demo.type === 'component' ? undefined : demo.poster;
         // ⌘/ctrl-click, shift-click, middle-click. The page exists; opening it
         // in a tab must keep working.
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        // Older Safari and embedded web views without modal-dialog support keep
+        // the real project-page navigation instead of swallowing the click.
+        if (!this.#canOpen()) return;
         e.preventDefault();
         this.open();
       });
 
-      this.querySelector('[data-close]')?.addEventListener('click', () => {
+      this.#close?.addEventListener('click', () => {
         this.#dialog?.close();
       });
 
@@ -317,6 +372,16 @@ const poster = demo.type === 'component' ? undefined : demo.poster;
         if (this.#frame) this.#frame.replaceChildren();
         this.#stage?.focus();
       });
+    }
+
+    #canOpen() {
+      if (this.dataset.type === 'component') {
+        return (
+          typeof HTMLDialogElement !== 'undefined' &&
+          typeof HTMLDialogElement.prototype.showModal === 'function'
+        );
+      }
+      return Boolean(this.#dialog && typeof this.#dialog.showModal === 'function');
     }
 
     open() {
@@ -346,18 +411,18 @@ const poster = demo.type === 'component' ? undefined : demo.poster;
         // object-store hosts are deliberately less magical.
         iframe.src = `/demos/${this.dataset.path}/index.html`;
         iframe.title = `${title} — interactive demo`;
-        iframe.allow = 'autoplay; fullscreen; xr-spatial-tracking';
-        // Worth being straight about: with `allow-same-origin` on same-origin
-        // content this sandbox is not a real boundary. It is here to withhold
-        // top-level navigation and popups, not to contain hostile code — the
-        // code is ours.
-        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-fullscreen');
+        iframe.allow = 'fullscreen';
+        // These demos are ours, but keeping them in a unique-origin sandbox also
+        // prevents an accidental top-level navigation or popup. Scripts power
+        // the interaction and downloads are needed for the Body Scan CSV.
+        iframe.setAttribute('sandbox', 'allow-scripts allow-downloads');
       } else {
         return;
       }
 
       this.#frame.replaceChildren(iframe);
       this.#dialog.showModal();
+      this.#close?.focus({ preventScroll: true });
     }
   }
 

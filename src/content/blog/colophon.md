@@ -67,13 +67,15 @@ field.
 
 ## The front door
 
-The home page greets you with an **Enter** button you cannot click with a mouse.
-It is called *Fitts's Revenge*.
+The home page greets desktop pointer users with an **Enter** button they cannot
+click with a mouse. It is called *Fitts's Revenge*. Touch and pen stay direct,
+because a phone has no keyboard route to invert.
 
 Fitts's Law says the time to acquire a target falls out of its size and its
 distance — both of which a designer controls, and neither of which a keyboard has
 ever cared about. So the button declines to be a target at all, and hands the
-page to Tab and Enter instead.
+page to Tab and Enter instead. The dialog owns its small focus cycle, so that
+route also works when Safari's optional full-keyboard-navigation setting is off.
 
 The reason it exists is the role reversal. People turn up at a product every day
 and discover the mouse simply will not do it, while a keyboard or a screen reader

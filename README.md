@@ -3,12 +3,13 @@
 Personal site. [Astro](https://astro.build) compiled to static HTML, built by
 GitHub Actions, served from GitHub Pages.
 
-Currently live at **https://baldmonster33.github.io** — see
-[Deploying](#deploying) for why, and for how to move back to the custom domain.
+Currently live at **https://www.qinle.ltd**. The default GitHub Pages address
+redirects to the custom domain.
 
-There is no server, no database, and no client-side framework. The JavaScript
-that ships is the theme toggle, the home-page front door, and — only if a counter
-is configured — one `fetch` for view counts.
+There is no application server, database, or client-side framework. The
+JavaScript that ships powers the theme toggle, front door, project demo launcher,
+standalone interactive demos, and — only if a counter is configured — one
+`fetch` for view counts.
 
 ## Running it
 
@@ -20,6 +21,25 @@ npm run build    # -> dist/
 ```
 
 Node 22. `npm ci` rather than `npm install`, so the lockfile decides.
+
+## Browser support
+
+The supported floor is the current major versions of Chrome, Edge, Firefox and
+Safari on laptops, plus current mobile Safari and Chrome. The interactive layer
+uses progressive fallbacks:
+
+- Safari gets an explicit dialog focus cycle, so the front-door Tab route does
+  not depend on its optional “Press Tab to highlight each item” preference.
+- Fine mouse pointers see Fitts's Revenge; touch, pen and reduced-motion users
+  get a stable Enter control.
+- Demo launchers remain real links when modal-dialog support is unavailable.
+- Mobile demos open edge-to-edge and keep 44px touch targets where space is
+  constrained.
+
+Before deployment, run `npm run check`, `npm run build`, and smoke-test fresh
+desktop and mobile sessions in Chromium, Firefox and WebKit. WebKit automation
+is a rendering-engine check; Safari's app-level keyboard preference still needs
+one manual check in Safari itself.
 
 ## Layout
 
@@ -51,29 +71,18 @@ be re-run without an empty commit.
 
 ### The address it serves on
 
-There is no `public/CNAME` right now, so Pages serves the default
-`baldmonster33.github.io`. That file is what makes GitHub attach a custom domain,
-and it also makes GitHub `301` the `github.io` address to that domain — so while
-`www.qinle.ltd` was pointing at the wrong host, both addresses were unreachable
-rather than one.
+This repository uses the custom GitHub Actions Pages workflow, so the custom
+domain is authoritative under Settings → Pages rather than in `public/CNAME`.
+Keep these values aligned:
 
-The hostname is set in two places and they have to agree, because `SITE.url`
-(`src/consts.ts`) is what canonical links, Open Graph tags, the sitemap and
-`robots.txt` are built from. To move back to the custom domain:
+1. `www.qinle.ltd` DNS CNAME → `baldmonster33.github.io.`
+2. Apex DNS A records → GitHub Pages' four documented addresses.
+3. Settings → Pages → Custom domain → `www.qinle.ltd`, with HTTPS enforced.
+4. `src/site.profile.ts` → `https://www.qinle.ltd`, which supplies canonical
+   links, Open Graph tags, the sitemap, RSS, and `robots.txt`.
 
-1. Point `www.qinle.ltd` at `baldmonster33.github.io` with a CNAME record. For
-   the apex as well, add A records to `185.199.108.153`, `185.199.109.153`,
-   `185.199.110.153`, `185.199.111.153`. Confirm with
-   `dig +short www.qinle.ltd` before continuing.
-2. Set `SITE.url` to `https://www.qinle.ltd`.
-3. Recreate `public/CNAME` containing `www.qinle.ltd`, and set the same value
-   under Settings → Pages → Custom domain. It lives in the build output rather
-   than only in the settings so the domain survives a redeploy by something
-   other than this workflow.
-4. Once GitHub has issued the certificate, tick Enforce HTTPS.
-
-Doing 3 without 2 leaves every link in the markup claiming a host GitHub is
-redirecting away from.
+Changing Pages before DNS resolves can redirect the otherwise working
+`github.io` address to an unreachable hostname, so verify DNS first.
 
 ## View counts
 

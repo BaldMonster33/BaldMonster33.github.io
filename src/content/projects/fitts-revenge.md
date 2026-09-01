@@ -4,8 +4,8 @@ description: >-
   The splash screen on this site, and an empathy device. Fitts's Law says the
   time to hit a target falls out of its size and distance; this one refuses both,
   fleeing to wherever your cursor is not heading. A keyboard walks straight in,
-  because the law never governed Tab and Enter — the same barrier a lot of people
-  meet every day, pointed the other way round for once.
+  while touch and pen stay direct — the same barrier a lot of people meet every
+  day, pointed the other way round for once.
 period: 'Aug 2026'
 stack: ['Astro', 'TypeScript', 'CSS', 'a11y']
 demo:
@@ -28,7 +28,8 @@ part of the viewport is furthest from where the cursor is heading. Pointing at
 it is not hard, it is undefined.
 
 Then the keyboard walks straight in, because Fitts's Law never governed the
-keyboard. Tab, Enter, done.
+keyboard. Tab, Enter, done — including in Safari, where the dialog supplies its
+own focus cycle instead of depending on the browser's optional Tab setting.
 
 ## Why it exists
 
@@ -42,8 +43,9 @@ The inversion is only honest if the other routes are genuinely open, so they
 are, and none of them require aim:
 
 - Keyboard activation is detected and never dodges.
+- Touch and pen activation is direct; only a fine mouse gets the evasive version.
 - Escape closes it.
-- A `skip this` link appears once it is clear you are being toyed with.
+- A `skip this` control appears once it is clear you are being toyed with.
 - `prefers-reduced-motion` disables the whole act — dodging *is* the motion.
 - Without JavaScript there is no door at all.
 
