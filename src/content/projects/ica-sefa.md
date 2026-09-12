@@ -57,14 +57,5 @@ the team's contribution statement.
 
 ## Course presentation
 
-Watch the team's four-minute course presentation alongside the report.
-
-<div class="video">
-  <iframe
-    src="https://drive.google.com/file/d/1GoPQ-Sas7qviviR_hrQ4NSJF5p4nLFAA/preview"
-    title="ICA-SeFa course presentation"
-    loading="lazy"
-    allow="fullscreen"
-    allowfullscreen>
-  </iframe>
-</div>
+[Watch the team's four-minute course presentation](https://drive.google.com/file/d/1GoPQ-Sas7qviviR_hrQ4NSJF5p4nLFAA/view)
+alongside the report.
