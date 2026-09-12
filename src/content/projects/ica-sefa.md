@@ -9,6 +9,8 @@ stack: ['Python', 'FastICA', 'GANs', 'Human evaluation', 'CLIP']
 links:
   - label: 'Course report'
     href: '/artifacts/ica-sefa/ica-sefa-course-report-2021.pdf'
+  - label: 'Presentation'
+    href: 'https://drive.google.com/file/d/1GoPQ-Sas7qviviR_hrQ4NSJF5p4nLFAA/view'
 featured: true
 order: 21
 ---
@@ -52,3 +54,17 @@ to establish that a discovered direction was useful or interpretable.
 
 The linked **2021 course report** includes the experiments, example edits, and
 the team's contribution statement.
+
+## Course presentation
+
+Watch the team's four-minute course presentation alongside the report.
+
+<div class="video">
+  <iframe
+    src="https://drive.google.com/file/d/1GoPQ-Sas7qviviR_hrQ4NSJF5p4nLFAA/preview"
+    title="ICA-SeFa course presentation"
+    loading="lazy"
+    allow="fullscreen"
+    allowfullscreen>
+  </iframe>
+</div>
