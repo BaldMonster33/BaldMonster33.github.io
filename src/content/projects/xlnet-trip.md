@@ -4,7 +4,7 @@ description: >-
   Adapted the TRIP reasoning pipeline to XLNet and used loss-function ablations
   to examine the gap between choosing a plausible story and identifying the
   physical evidence that supports that choice.
-period: 'Dec 2021'
+period: 'Sept 2021 – Dec 2021'
 stack: ['Python', 'PyTorch', 'Hugging Face', 'XLNet', 'NLP']
 links:
   - label: 'Course report'

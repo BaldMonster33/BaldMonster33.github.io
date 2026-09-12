@@ -4,7 +4,7 @@ description: >-
   Co-implemented a GAN representation-analysis method and designed its human
   evaluation, testing whether discovered editing directions produced consistent,
   interpretable changes across generated images.
-period: 'Winter 2021 (course origin)'
+period: 'Jan 2021 – Sept 2021'
 stack: ['Python', 'FastICA', 'GANs', 'Human evaluation', 'CLIP']
 links:
   - label: 'Course report'

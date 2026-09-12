@@ -4,7 +4,7 @@ description: >-
   Designed and built an application that lets users select an object with
   positive and negative clicks, apply an artistic style, and preserve the
   background. Evaluated four style-transfer models for quality and speed.
-period: 'Fall 2022'
+period: 'Sept 2022 – Dec 2022'
 stack: ['Python', 'Computer vision', 'FocalClick', 'Style transfer', 'ArtFID']
 links:
   - label: 'Course report'

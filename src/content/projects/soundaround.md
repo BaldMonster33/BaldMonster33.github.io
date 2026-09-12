@@ -4,7 +4,7 @@ description: >-
   Designed and built a wearable prototype that translates sound direction into
   peripheral LED cues, integrating microphone hardware and Python software and
   analyzing how people interpret its feedback.
-period: 'Spring 2023'
+period: 'Jan 2023 – Apr 2023'
 stack: ['Python', 'Raspberry Pi', 'ReSpeaker', 'Interaction design', 'Human evaluation']
 links:
   - label: 'Course report'
@@ -23,7 +23,7 @@ that direction visually, with accessibility for deaf and hard-of-hearing people
 as its design motivation. Instead of asking someone to check a separate screen,
 the prototype places directional feedback in their peripheral vision.
 
-This Spring 2023 Engineering Interactive Systems course project at the
+This Engineering Interactive Systems course project at the
 University of Michigan was a collaboration with Jeremy Zhengqi Huang.
 
 ## My contribution
