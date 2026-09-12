@@ -1,0 +1,65 @@
+{
+  "project": "SoundAround",
+  "course": "Engineering Interactive Systems, University of Michigan",
+  "project_term": "Spring 2023",
+  "prepared_on": "2026-09-12",
+  "source_archive": {
+    "name": "code.zip",
+    "sha256": "457df2552ef8753fb79e308f6a6f773874e7fe46a6c12fb1c80a544fc7163ebe",
+    "bytes": 21731,
+    "entry_dates": "April 24, 2023",
+    "description": "Historical project archive supplied by the applicant; no project code executed during recovery or packaging."
+  },
+  "packaging": {
+    "python_file_count": 7,
+    "python_files": "Copied byte for byte; source files were not fixed or reformatted.",
+    "excluded": "macOS resource forks, .DS_Store, and .idea metadata."
+  },
+  "files": [
+    {
+      "path": "audio/readMicrophoneArray.py",
+      "bytes": 1475,
+      "sha256": "b2f2bbbf80095f773c9edf150eb4e792ab49719d4181cb22af053e0d4a731e38"
+    },
+    {
+      "path": "multiprocessing/lights.py",
+      "bytes": 1908,
+      "sha256": "d81e9c7ca5874585e394d911f2822e6f45c9e87fbb9aec72769a8c09263aa397"
+    },
+    {
+      "path": "multiprocessing/main.py",
+      "bytes": 1616,
+      "sha256": "10c40aea289967354e974640093e99b5d83e181538a5b4096c68034306a48d1c"
+    },
+    {
+      "path": "multiprocessing/mic.py",
+      "bytes": 760,
+      "sha256": "e5c3b55d500f155e60f72f443c6b2b4d468b5dfba5de6327587c6f0abab10b05"
+    },
+    {
+      "path": "multiprocessing/scratchMultiprocessing.py",
+      "bytes": 6155,
+      "sha256": "50d05aa56a95b42f4e96ac189030067a46eb9f4ab2a08f0985a5633b2810a2b0"
+    },
+    {
+      "path": "scripts/drawSingleBeads.py",
+      "bytes": 2253,
+      "sha256": "b5317a217660691827208f588d8ef0582fbccd86bd04f5c9f5c9152d824030b1"
+    },
+    {
+      "path": "scripts/tuning.py",
+      "bytes": 9391,
+      "sha256": "ae63cf17e8a7dc06cb21a34cf275ddf7c0452f9d56121c45e49aa1ab0c55db72"
+    }
+  ],
+  "upstream_dependency": {
+    "name": "ReSpeaker USB 4 Mic Array tuning driver",
+    "repository": "https://github.com/respeaker/usb_4_mic_array",
+    "comparison_commit": "00585f08779a816107f1668684815660aab2fe43",
+    "source_url": "https://raw.githubusercontent.com/respeaker/usb_4_mic_array/00585f08779a816107f1668684815660aab2fe43/tuning.py",
+    "license_url": "https://raw.githubusercontent.com/respeaker/usb_4_mic_array/00585f08779a816107f1668684815660aab2fe43/LICENSE",
+    "upstream_tuning_sha256": "25c0a006f5b4b5d19e4c58d0c95cc1f975238e4f70038fdf0074739981e04b0b",
+    "license_sha256": "9cf5de169b595cdae317551ef69a794b59fa3d1e151db4190d337fe08d13d5f8",
+    "local_difference": "scripts/tuning.py replaces response.tostring() with response.tobytes(); other differences are whitespace. Original editor is not established."
+  }
+}

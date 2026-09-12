@@ -63,6 +63,15 @@ frontmatter is schema-checked at build time, so a missing description or a
 malformed date fails the build rather than rendering as `undefined` in
 production.
 
+### Project artifacts and licensing
+
+Project pages link to original course reports, recordings,
+and recovered code. Files under `public/artifacts/` and `project-source/` are
+historical project materials and are excluded from the website code's root MIT
+license. Their authors retain their existing rights; publication here does not
+assign a new license. See `public/artifacts/README.md` and each source package's
+attribution notes for provenance, third-party licenses, and archive limitations.
+
 ## Deploying
 
 Push to `main`. The workflow runs `npm ci`, `npm run check`, `npm run build` and

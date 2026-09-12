@@ -86,7 +86,13 @@ const projects = defineCollection({
     period: z.string(),
     stack: z.array(z.string()).default([]),
     links: z
-      .array(z.object({ label: z.string(), href: z.string().url() }))
+      .array(z.object({
+        label: z.string(),
+        href: z.union([
+          z.string().url(),
+          z.string().regex(/^\/(?!\/)[^\s\\]*$/, 'expected a root-relative path'),
+        ]),
+      }))
       .default([]),
     featured: z.boolean().default(false),
     /** Lower sorts first. */
