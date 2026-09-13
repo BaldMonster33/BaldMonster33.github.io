@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Ann Arbor Go: explore, interact, and carry the world forward</title>
+  <desc id="desc">An illustrated system map of the original AR course game. Map exploration connects to phone-based AR interaction, with shared inventory and planted-tree state between the scenes. This is a diagram, not an original mobile screenshot.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#142d27"/><stop offset="1" stop-color="#071a18"/></linearGradient>
+    <linearGradient id="ground" x2="0" y2="1"><stop stop-color="#86b76e"/><stop offset="1" stop-color="#315745"/></linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#9fd1bd" stroke-opacity=".12"/></pattern>
+    <g id="tree"><path d="M-5 15H5V58H-5Z" fill="#9a7252"/><path d="M0-45C-42-42-47 14-19 26C-4 43 17 37 21 24C54 11 38-49 0-45Z" fill="#83c175"/><path d="M-8-34C-34-24-37 1-18 12C-7 17-3-6-8-34Z" fill="#b6dd8f"/></g>
+  </defs>
+  <rect width="1200" height="720" rx="28" fill="url(#bg)"/>
+  <rect width="1200" height="720" rx="28" fill="url(#grid)"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="64" y="68" font-size="15" letter-spacing="3" fill="#b6dd8f">ANN ARBOR GO · SYSTEM MAP</text>
+    <text x="64" y="117" font-size="36" font-weight="700" fill="#f1f3df">Two views. One evolving world.</text>
+    <g transform="translate(64 166)">
+      <rect width="477" height="400" rx="20" fill="#274139" stroke="#557667"/>
+      <text x="28" y="44" font-size="16" letter-spacing="2" font-weight="700" fill="#e5e8ce">01 / EXPLORE</text>
+      <path d="M28 269L449 103M23 168L436 332M155 75L263 363" stroke="#547265" stroke-width="24"/>
+      <path d="M28 269L449 103M23 168L436 332M155 75L263 363" stroke="#bac9a7" stroke-width="3" stroke-dasharray="8 12"/>
+      <g transform="translate(112 141) scale(.7)"><use href="#tree"/></g>
+      <g transform="translate(350 258) scale(.78)"><use href="#tree"/></g>
+      <circle cx="229" cy="207" r="34" fill="#cbe794" fill-opacity=".12" stroke="#cbe794" stroke-dasharray="5 5"/>
+      <circle cx="229" cy="207" r="9" fill="#ddeb96"/>
+      <path d="M363 121V147L348 159L333 147V121Z" fill="#edcc7a"/>
+      <circle cx="348" cy="132" r="6" fill="#274139"/>
+      <text x="28" y="361" font-size="19" fill="#f1f3df">Map · landmarks · drone scouting</text>
+    </g>
+    <g transform="translate(659 166)">
+      <rect width="477" height="400" rx="20" fill="#203a34" stroke="#557667"/>
+      <text x="28" y="44" font-size="16" letter-spacing="2" font-weight="700" fill="#e5e8ce">02 / INTERACT</text>
+      <rect x="149" y="75" width="176" height="241" rx="21" fill="#0a201e" stroke="#a8c4af" stroke-width="4"/>
+      <rect x="160" y="87" width="154" height="217" rx="12" fill="url(#ground)"/>
+      <path d="M161 257L312 206M161 230L312 281M160 285L314 234" stroke="#d0ecd2" stroke-opacity=".6"/>
+      <path d="M188 295L266 217M216 297L295 217M170 275L233 216" stroke="#d0ecd2" stroke-opacity=".4"/>
+      <ellipse cx="237" cy="265" rx="43" ry="12" fill="#0a201e" fill-opacity=".25"/>
+      <g transform="translate(237 211) scale(.85)"><use href="#tree"/></g>
+      <rect x="215" y="94" width="45" height="6" rx="3" fill="#203a34"/>
+      <text x="28" y="361" font-size="19" fill="#f1f3df">Surface placement · tree interaction</text>
+    </g>
+    <g stroke="#dfdba6" stroke-width="3" fill="none">
+      <path d="M560 337H639M628 327L639 337L628 347"/>
+      <path d="M639 382H560M571 372L560 382L571 392"/>
+    </g>
+    <rect x="295" y="606" width="610" height="57" rx="28" fill="#344d40" stroke="#6a8165"/>
+    <text x="600" y="642" text-anchor="middle" font-size="19" fill="#eef0d5">Shared inventory + planted-tree state across scenes</text>
+    <text x="600" y="698" text-anchor="middle" font-size="12" fill="#99b1a4">SOURCE-BASED ILLUSTRATION · NOT A MOBILE BUILD SCREENSHOT</text>
+  </g>
+</svg>

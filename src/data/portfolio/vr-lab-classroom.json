@@ -1,0 +1,69 @@
+{
+  "headline": "A familiar classroom, made interactive",
+  "intro": "We recreated a university lab in virtual reality, then added objects that respond to a motion controller. The project connected spatial reconstruction with playful, tangible interaction.",
+  "context": "University of Michigan · Extended-reality course project · Oct 2022",
+  "role": "Co-developed the Unreal classroom and interactive scene with teammate Maxwell Zuber.",
+  "hero": {
+    "type": "video",
+    "src": "/media/projects/vr-lab-classroom/classroom-excerpt.mp4",
+    "poster": "/media/projects/vr-lab-classroom/classroom-poster.jpg",
+    "alt": "A short first-person tour of the archived Unreal classroom prototype shows its windows, computer benches, props, and motion-controller pointer.",
+    "caption": "Eight seconds from the archived Unreal prototype recording, cropped to the scene and presented without audio.",
+    "credit": "2022 team project · archived VRAlpha recording"
+  },
+  "metrics": [
+    {
+      "value": "2",
+      "label": "Student collaborators",
+      "note": "A shared Unreal Engine course build."
+    },
+    {
+      "value": "4",
+      "label": "Piano tones",
+      "note": "C, D, E, and G appear in the archived audio assets."
+    },
+    {
+      "value": "Touch + buttons",
+      "label": "Controller interaction",
+      "note": "Contact plays a note; buttons change the selection."
+    }
+  ],
+  "question": {
+    "title": "How does a room become a place to interact?",
+    "text": "Reconstructing the classroom established a recognizable setting. Adding controller-responsive objects gave visitors a reason to move through it, approach familiar props, and explore what they could do."
+  },
+  "steps": [
+    {
+      "title": "Recreate the space",
+      "text": "Built a virtual version of a university lab with its windows, computer stations, fixtures, and room layout."
+    },
+    {
+      "title": "Populate the scene",
+      "text": "Added classroom props and custom interactions. The recovered archive includes a printer, violin, trash can, discarded math book, and piano."
+    },
+    {
+      "title": "Connect action to feedback",
+      "text": "Implemented the team’s motion-controller piano interaction: touching a key plays a default note, while controller buttons select notes for a simple melody."
+    }
+  ],
+  "gallery": [
+    {
+      "type": "image",
+      "src": "/media/projects/vr-lab-classroom/piano-interaction.svg",
+      "alt": "An illustrated controller points at a four-tone piano diagram beside contact, button selection, and sound-feedback steps.",
+      "caption": "A new interaction schematic based on the original write-up. The drawing explains the behavior; it does not reproduce the original piano geometry."
+    }
+  ],
+  "finding": {
+    "title": "Spatial fidelity sets up the interaction.",
+    "text": "The project paired a recognizable classroom with responsive objects. Its most concrete interaction story is the piano: a familiar object translates controller contact and button input into immediate musical feedback."
+  },
+  "details": [
+    "The original walkthrough remains linked. The lightweight browser demo is a later reconstruction using new geometry and generated oscillator tones; it is separate from the original Unreal build.",
+    "The recovered write-up documents the piano as a team contribution and describes playing Mary Had a Little Lamb. It does not divide individual component ownership."
+  ],
+  "credits": [
+    "Classroom project by Le Qin and Maxwell Zuber. Scene assets and interaction behaviors are preserved in the original project archive.",
+    "The short clip retains the original prototype visuals. Its audio is omitted; the browser reconstruction also avoids reusing the original build’s credited film audio."
+  ]
+}

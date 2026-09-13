@@ -1,0 +1,42 @@
+---
+import type { PortfolioStory } from '../data/portfolio';
+interface Props { comparison: NonNullable<PortfolioStory['comparison']>; }
+const { comparison } = Astro.props;
+---
+<image-comparison>
+  <div class="comparison-stage">
+    <img class="before" src={comparison.before} alt={`Original: ${comparison.alt}`} loading="lazy" />
+    <img class="after" src={comparison.after} alt={`Stylized result: ${comparison.alt}`} loading="lazy" />
+    <div class="divider" aria-hidden="true"><span>↔</span></div>
+    <span class="label original">Original</span><span class="label result">Stylized object</span>
+  </div>
+  <label class="slider-label">Compare the original and result
+    <input type="range" min="0" max="100" value="50" aria-label="Percentage of the original image shown" />
+  </label>
+  <p>{comparison.caption}</p>
+  <noscript><p><a href={comparison.before}>Original image</a> · <a href={comparison.after}>Stylized result</a></p></noscript>
+</image-comparison>
+<style>
+ image-comparison { display: block; --split: 50%; }
+ .comparison-stage { position: relative; overflow: hidden; border: 1px solid var(--border); border-radius: 14px; background: #101820; }
+ img { display: block; width: 100%; aspect-ratio: 16/10; object-fit: contain; }
+ .after { position: absolute; inset: 0; clip-path: inset(0 0 0 var(--split)); }
+ .divider { position: absolute; top: 0; bottom: 0; left: var(--split); width: 2px; background: white; }
+ .divider span { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); padding: .25rem .6rem; background: white; color: #17252b; border-radius: 30px; font-size: 1.15rem; box-shadow: 0 1px 8px #0003; }
+ .label { position: absolute; top: .8rem; padding: .3rem .6rem; border-radius: 4px; background: #101820e8; color: white; font: .68rem var(--font-mono); }
+ .original { left: .8rem; } .result { right: .8rem; }
+ .slider-label { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 1rem; padding: .7rem 0 .3rem; font-size: .8rem; }
+ input { width: 100%; min-height: 44px; accent-color: var(--accent); cursor: ew-resize; }
+ p { font-size: .78rem; color: var(--text-dim); }
+ @media(max-width:36rem) { .slider-label { grid-template-columns: 1fr; gap: 0; padding-top: 1rem; } }
+</style>
+<script>
+ class ImageComparison extends HTMLElement {
+   connectedCallback() {
+     this.querySelector('input')?.addEventListener('input', (event) => {
+       this.style.setProperty('--split', `${(event.target as HTMLInputElement).value}%`);
+     });
+   }
+ }
+ if (!customElements.get('image-comparison')) customElements.define('image-comparison', ImageComparison);
+</script>

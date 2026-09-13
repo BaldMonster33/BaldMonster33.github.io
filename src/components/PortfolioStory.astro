@@ -1,0 +1,88 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { PortfolioStory } from '../data/portfolio';
+import PortfolioMedia from './PortfolioMedia.astro';
+import PortfolioChart from './PortfolioChart.astro';
+import DirectionExplorer from './DirectionExplorer.astro';
+import ImageComparison from './ImageComparison.astro';
+import ProjectDemo from './ProjectDemo.astro';
+interface Props { project: CollectionEntry<'projects'>; story: PortfolioStory; next?: { href: string; title: string }; }
+const { project, story, next } = Astro.props;
+---
+<article class="case-study">
+  <nav class="breadcrumbs" aria-label="Project navigation"><a href="/projects/">← All projects</a><div><a href="#process">Process</a><a href="#results">Results</a><a href="#sources">Sources</a></div></nav>
+  <header class="case-header">
+    <p class="eyebrow">{story.context}</p>
+    <h1>{story.headline}</h1>
+    <p class="project-title">{project.data.title}</p>
+    <p class="intro">{story.intro}</p>
+    <div class="role"><span>My role</span><p>{story.role}</p></div>
+  </header>
+  <PortfolioMedia media={story.hero} eager />
+  <dl class="metrics">{story.metrics.map(metric => <div><dt>{metric.label}</dt><dd><span class="metric-value">{metric.value}</span>{metric.note && <p>{metric.note}</p>}</dd></div>)}</dl>
+  <section class="question" aria-labelledby="question-title"><p class="section-kicker">01 / The question</p><div><h2 id="question-title">{story.question.title}</h2><p>{story.question.text}</p></div></section>
+  <section id="process" class="process" aria-labelledby="process-title">
+    <div class="section-heading"><p class="section-kicker">02 / The approach</p><h2 id="process-title">How I built it</h2></div>
+    <ol class="steps">{story.steps.map((step,index) => <li><span class="step-number">0{index+1}</span><h3>{step.title}</h3><p>{step.text}</p></li>)}</ol>
+  </section>
+  {story.comparison && <div class="interactive-slot"><ImageComparison comparison={story.comparison} /></div>}
+  {story.sweep && <div class="interactive-slot"><DirectionExplorer sweep={story.sweep} /></div>}
+  {story.gallery.length > 0 && <div class:list={['gallery', { pair: story.gallery.length > 1 }]}>{story.gallery.map(media => <PortfolioMedia media={media} />)}</div>}
+  <section id="results" class="results" aria-labelledby="results-title">
+    <p class="section-kicker">03 / What I learned</p>
+    <h2 id="results-title">{story.finding.title}</h2>
+    <p class="result-copy">{story.finding.text}</p>
+    {story.charts.length > 0 && <div class="charts">{story.charts.map(chart => <PortfolioChart chart={chart} />)}</div>}
+    <div class="details">{story.details.map(detail => <p>{detail}</p>)}</div>
+  </section>
+  {project.data.demo && <section class="demo-section"><h2>Explore the idea</h2><p>Try an interactive explanation of the workflow.</p><ProjectDemo demo={project.data.demo} href={`/projects/${project.id}/`} title={project.data.title} size="page" /></section>}
+  <footer id="sources" class="sources">
+    <div><p class="section-kicker">04 / Take a closer look</p><h2>Reports, code & credits</h2></div>
+    <div class="resource-links">{project.data.links.map(link => <a href={link.href} rel="noopener">{link.label}<span aria-hidden="true">↗</span></a>)}</div>
+    <div class="credits">{story.credits.map(credit => <p>{credit}</p>)}</div>
+  </footer>
+  {next && <a class="next-project" href={next.href}><span>Next study</span><strong>{next.title}</strong><span aria-hidden="true">↗</span></a>}
+</article>
+<style>
+ .case-study { margin-inline: auto; }
+ .breadcrumbs { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-bottom: 1.4rem; border-bottom: 1px solid var(--border); font: .7rem var(--font-mono); }
+ .breadcrumbs div { display: flex; gap: 1rem; } .breadcrumbs a { text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+ .case-header { padding: clamp(2rem,6vw,4.25rem) 0 2.5rem; }
+ .eyebrow, .section-kicker { font: .66rem var(--font-mono); color: var(--text-dim); line-height: 1.6; text-transform: uppercase; letter-spacing: .07em; }
+ .eyebrow span { margin-inline: .5rem; }
+ h1 { font-size: clamp(2.5rem,5.5vw,4.9rem); line-height: 1.06; letter-spacing: -.055em; max-width: 18ch; margin: 1.2rem 0 1rem; white-space: pre-line; }
+ .project-title { font-size: .85rem; color: var(--accent); margin-bottom: 1rem; }
+ .intro { color: var(--text-dim); font-size: clamp(1rem,1.8vw,1.2rem); max-width: 65ch; line-height: 1.7; }
+ .role { display: grid; grid-template-columns: 5rem 1fr; gap: 1rem; margin-top: 1.75rem; font-size: .85rem; max-width: 65ch; }
+ .role span { color: var(--text-dim); font: .7rem var(--font-mono); padding-top: .2rem; } .role p { line-height: 1.6; }
+ .metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); margin: 2.5rem 0 0; padding: 1.75rem 0; border-block: 1px solid var(--border); gap: 1.5rem; }
+ .metrics div { display: flex; flex-direction: column; padding-right: 1.5rem; border-right: 1px solid var(--border); } .metrics div:last-child { border-right: 0; }
+ dt { font-size: .8rem; margin-bottom: .45rem; } .metric-value { display: block; font-size: clamp(1.6rem,3vw,2.8rem); line-height: 1.2; letter-spacing: -.05em; font-weight: 600; }
+ .metrics p { color: var(--text-dim); font-size: .7rem; margin-top: .4rem; line-height: 1.5; }
+ section, footer { scroll-margin-top: 1.5rem; }
+ .question { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; padding: 3.5rem 0; }
+ h2 { font-size: clamp(1.6rem,3vw,2.4rem); letter-spacing: -.04em; } .question h2 { max-width: 27ch; }
+ .question p:not(.section-kicker) { margin-top: 1rem; color: var(--text-dim); font-size: .95rem; max-width: 67ch; }
+ .process { padding: 2rem 0; border-top: 1px solid var(--border); }
+ .section-heading h2 { margin-top: .65rem; }
+ .steps { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.5rem; margin: 1.8rem 0 1rem; }
+ .steps li { position: relative; border-top: 2px solid var(--accent-ring); padding: 1.2rem 0; }
+ .step-number { font: .72rem var(--font-mono); color: var(--accent); }
+ h3 { font-size: 1rem; margin-top: .8rem; } .steps p { margin-top: .6rem; color: var(--text-dim); font-size: .85rem; line-height: 1.65; }
+ .gallery { display: grid; gap: 2rem; margin: 2.5rem 0 3rem; } .pair { grid-template-columns: repeat(2,minmax(0,1fr)); }
+ .interactive-slot { margin: 1.75rem 0 2.5rem; }
+ .results { padding: 2.5rem 0; border-top: 1px solid var(--border); } .results h2 { margin: .85rem 0 1rem; max-width: 30ch; }
+ .result-copy { max-width: 70ch; font-size: 1.05rem; line-height: 1.7; } .charts { display: grid; gap: 1.2rem; margin: 2rem 0; }
+ .details { max-width: 85ch; padding-left: 1.2rem; border-left: 2px solid var(--border-strong); margin-top: 1.6rem; }
+ .details p, .credits p { font-size: .8rem; line-height: 1.65; color: var(--text-dim); } .details p + p, .credits p + p { margin-top: .7rem; }
+ .demo-section { padding: 1rem 0 3rem; } .demo-section > p { color: var(--text-dim); font-size: .85rem; margin: .7rem 0 1.2rem; }
+ .sources { border-top: 1px solid var(--border); padding-top: 2.5rem; } .sources h2 { margin-top: .7rem; font-size: 1.5rem; }
+ .resource-links { display: flex; flex-wrap: wrap; gap: .7rem; margin: 1.5rem 0; }
+ .resource-links a { display: inline-flex; gap: 1.5rem; justify-content: space-between; align-items: center; min-height: 44px; padding: .65rem 1rem; border: 1px solid var(--border-strong); border-radius: 6px; font-size: .8rem; text-decoration: none; }
+ .resource-links a:hover { background: var(--accent-wash); }
+ .credits { max-width: 85ch; }
+ .next-project { display: grid; grid-template-columns: auto 1fr auto; gap: 1.5rem; align-items: center; padding: 1.5rem 0; margin-top: 3.5rem; border-block: 1px solid var(--border); text-decoration: none; }
+ .next-project span:first-child { font: .65rem var(--font-mono); color: var(--text-dim); } .next-project strong { font-size: .95rem; font-weight: 500; }
+ @media(max-width:44rem) { .question { grid-template-columns: 1fr; gap: 1rem; padding: 2.5rem 0; } .steps { grid-template-columns: 1fr; gap: .25rem; } .steps li { padding: 1rem 0; } .pair { grid-template-columns: 1fr; } .metrics { gap: .75rem; } .metrics div { padding-right: .7rem; } .next-project { gap: .7rem; } }
+ @media(max-width:25rem) { .breadcrumbs { align-items: flex-start; flex-direction: column; gap: 0; } .role { grid-template-columns: 1fr; gap: .3rem; } .metrics { grid-template-columns: 1fr; } .metrics div { border-right: 0; border-bottom: 1px solid var(--border); padding-bottom: 1rem; } .metrics div:last-child { border-bottom: 0; } }
+</style>

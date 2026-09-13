@@ -13,12 +13,14 @@ interface Props {
   description?: string;
   /** Set on article pages so crawlers get the right OG type. */
   ogType?: 'website' | 'article';
+  wide?: boolean;
 }
 
 const {
   title,
   description = SITE.description,
   ogType = 'website',
+  wide = false,
 } = Astro.props;
 
 const pageTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} — ${SITE.role}`;
@@ -83,7 +85,7 @@ const viewPath = normalizePath(Astro.url.pathname);
     <a href="#main" class="skip-link">Skip to content</a>
     <div class="shell">
       <Sidebar />
-      <main id="main" class="content">
+      <main id="main" class="content" style={wide ? '--content-w: 72rem' : undefined}>
         <slot />
       </main>
     </div>

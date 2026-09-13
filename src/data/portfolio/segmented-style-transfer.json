@@ -1,0 +1,103 @@
+{
+  "headline": "Restyle the subject. Keep the scene.",
+  "intro": "An interactive computer-vision application that gives people control over where an artistic style appears: select an object, refine its mask, and preserve the surrounding image.",
+  "context": "University of Michigan · Computer Vision course project · Sept–Dec 2022",
+  "role": "I originated the idea and led the pipeline design, implementation, model evaluation, and final application integration.",
+  "hero": {
+    "type": "video",
+    "src": "/media/projects/segmented-style-transfer/selected-style-summary.mp4",
+    "poster": "/media/projects/segmented-style-transfer/swan-styled.webp",
+    "alt": "Six-second before-and-after sequence showing the original black swan transitioning into the AdaAttN segmented style-transfer result.",
+    "caption": "Before/after summary assembled from the course report; not a live inference recording. The selected swan changes while its surroundings remain visible.",
+    "credit": "Course report, Figure 2 · DAVIS585 / WikiArt"
+  },
+  "metrics": [
+    {
+      "value": "4",
+      "label": "stylization models compared"
+    },
+    {
+      "value": "1,000",
+      "label": "sampled evaluation inputs",
+      "note": "DAVIS585 / WikiArt image–mask–style combinations"
+    },
+    {
+      "value": "4.92 ms",
+      "label": "AdaIN stylization time",
+      "note": "Mean of 600 transfers; excludes segmentation and compositing"
+    }
+  ],
+  "question": {
+    "title": "What if a style changed only what you selected?",
+    "text": "Whole-image stylization can overwrite details a creator wants to retain. I connected interactive object selection to neural stylization so the boundary of the edit becomes part of the creative workflow."
+  },
+  "steps": [
+    {
+      "title": "Select with clicks",
+      "text": "Use positive and negative clicks to guide FocalClick and refine a foreground mask without tracing the object's entire outline."
+    },
+    {
+      "title": "Compare stylizers",
+      "text": "Evaluate AdaIN, AdaAttN, IEContraAST, and PAMA using ArtFID and separate timing experiments to understand the quality–speed tradeoff."
+    },
+    {
+      "title": "Compose selectively",
+      "text": "Combine the stylized foreground with the original background through the mask, retaining the surrounding scene."
+    }
+  ],
+  "gallery": [
+    {
+      "type": "image",
+      "src": "/media/projects/segmented-style-transfer/selection-prototype.webp",
+      "alt": "Progress presentation screenshot of a click-based object-selection interface, generated mask, and tower-styling example.",
+      "caption": "The progress checkpoint pairs the selection interface with a mask and styling example. The unified application was completed later.",
+      "credit": "Original team presentation, 1:35 · DAVIS / WikiArt imagery"
+    }
+  ],
+  "finding": {
+    "title": "The fastest model was not the quality leader.",
+    "text": "AdaIN had the shortest measured stylization time; AdaAttN had the lowest ArtFID (27.419 versus AdaIN's 27.955). Separating those objectives made the model choice explicit instead of treating speed and visual quality as the same result."
+  },
+  "charts": [
+    {
+      "title": "Stylization time by model",
+      "subtitle": "Report measurements · 600 transfers per model · lower is faster",
+      "labels": [
+        "AdaIN",
+        "PAMA",
+        "IEContraAST",
+        "AdaAttN"
+      ],
+      "series": [
+        {
+          "name": "Mean stylization time",
+          "values": [
+            4.9166,
+            9.2811,
+            10.1938,
+            37.3597
+          ],
+          "color": "primary"
+        }
+      ],
+      "max": 40,
+      "unit": "ms"
+    }
+  ],
+  "details": [
+    "Timing describes only the stylization step. The report does not identify hardware or establish full-application latency.",
+    "The 1,000-input evaluation and timing chart come from the course report. Earlier presentation scores are a separate experimental snapshot.",
+    "The interface screenshot comes from a progress presentation, before the unified application was finished. The surviving code link is the upstream segmentation dependency."
+  ],
+  "credits": [
+    "Course team: Le Qin, Yu Peng, Christopher Yeh, and Yu-Ju Chiu.",
+    "Built with existing FocalClick and neural style-transfer implementations; my contribution was the interaction, integration, and evaluation.",
+    "Image examples use DAVIS585 and WikiArt material credited in the original report."
+  ],
+  "comparison": {
+    "before": "/media/projects/segmented-style-transfer/swan-original.webp",
+    "after": "/media/projects/segmented-style-transfer/swan-styled.webp",
+    "alt": "Reveal the original swan image and the selectively stylized AdaAttN result.",
+    "caption": "Drag to compare the original content and AdaAttN segmented result. Report images are resized for display; this is a qualitative example, not an interactive app recording."
+  }
+}

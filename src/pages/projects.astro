@@ -3,10 +3,14 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import FittsRevenge from '../components/FittsRevenge.astro';
+import PortfolioCard from '../components/PortfolioCard.astro';
+import { portfolioStories, academicOrder } from '../data/portfolio';
 
 const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order - b.data.order
 );
+const academic = academicOrder.map(id => projects.find(project => project.id === id)).filter((project): project is NonNullable<typeof project> => Boolean(project && portfolioStories[project.id]));
+const otherProjects = projects.filter(project => !portfolioStories[project.id]);
 
 // A `component` demo opens the real piece rather than a copy of it, so the
 // piece has to be on the page — dormant, waiting for its event.
@@ -18,21 +22,22 @@ const needsFrontDoor = projects.some(
 <BaseLayout
   title="Projects"
   description="Research and engineering projects, with reports, code, and recordings across machine learning, computer vision, and accessibility."
+  wide
 >
   {needsFrontDoor && <FittsRevenge auto={false} />}
 
-  <div class="page-head">
-    <h1>Projects</h1>
-    <p>
-      Research and coursework from Michigan, plus things I've built since.
-      Open a project for my contribution, results, and the available reports,
-      code, or recordings. The Amazon overview covers public product work.
-    </p>
+  <div class="portfolio-head">
+    <p class="eyebrow">Selected work / University of Michigan</p>
+    <h1>Ideas you can<br />see, test & explore.</h1>
+    <div class="intro-row"><p>From interpreting a model to making an interface usable.<br class="desktop-break" /> Research and course projects in machine learning, vision, and human interaction.</p><span class="study-count">{String(academic.length).padStart(2, '0')} <small>studies<br />2021–2023</small></span></div>
   </div>
 
+  <div class="portfolio-grid">{academic.map((project,index) => <PortfolioCard project={project} story={portfolioStories[project.id]} index={index} featured={index === 0 || (academic.length % 2 === 0 && index === academic.length - 1)} />)}</div>
+
+  <div class="other-heading"><p class="eyebrow">Beyond the coursework</p><h2>More things I've built</h2><p>Product engineering, interactive experiments, and independent projects.</p></div>
   <div class="grid">
     {
-      projects.map((project) => (
+      otherProjects.map((project) => (
         <ProjectCard
           title={project.data.title}
           description={project.data.description}
@@ -48,8 +53,20 @@ const needsFrontDoor = projects.some(
 </BaseLayout>
 
 <style>
+  .portfolio-head { margin: 0 auto 2.8rem; }
+  .eyebrow { font: .7rem var(--font-mono); color: var(--text-dim); text-transform: uppercase; letter-spacing: .08em; }
+  h1 { font-size: clamp(2.6rem,5.7vw,5.1rem); letter-spacing: -.06em; line-height: 1.05; margin: 1.3rem 0 1.4rem; }
+  .intro-row { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+  .intro-row p { color: var(--text-dim); font-size: .96rem; max-width: 58ch; }
+  .study-count { display: flex; gap: .8rem; align-items: center; font-size: 2.5rem; letter-spacing: -.04em; }
+  .study-count small { font: .62rem/1.6 var(--font-mono); letter-spacing: 0; color: var(--text-dim); }
+  .portfolio-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1.4rem; margin-inline: auto; }
+  .other-heading { margin: 4rem auto 1.5rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
+  .other-heading h2 { margin: .6rem 0; font-size: 1.8rem; } .other-heading > p:last-child { color: var(--text-dim); font-size: .9rem; }
   .grid {
     display: grid;
     gap: 1rem;
+    margin-inline: auto;
   }
+  @media(max-width:44rem) { .portfolio-grid { grid-template-columns: 1fr; } .study-count { display: none; } .desktop-break { display: none; } }
 </style>

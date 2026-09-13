@@ -1,0 +1,92 @@
+---
+import type { PortfolioMedia } from '../data/portfolio';
+interface Props { media: PortfolioMedia; eager?: boolean; compact?: boolean; }
+const { media, eager = false, compact = false } = Astro.props;
+---
+<figure class:list={['portfolio-figure', { compact }]}>
+  <div class="image-stage">
+    {media.type === 'video' ? (
+      <portfolio-clip>
+        <video controls muted loop playsinline preload="none" poster={media.poster} aria-label={media.alt}>
+          <source data-src={media.src} type="video/mp4" />
+          <a href={media.src}>Open the short demo clip</a>
+        </video>
+        <button type="button" data-playback hidden>Play clip</button>
+        <noscript><p><a href={media.src}>Watch the short demo clip</a></p></noscript>
+      </portfolio-clip>
+    ) : (
+      <img src={media.src} alt={media.alt} loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : 'auto'} decoding="async" />
+    )}
+  </div>
+  <figcaption>{media.caption}{!compact && media.credit && <span class="credit">{media.credit}</span>}</figcaption>
+</figure>
+<style>
+  .portfolio-figure { margin: 0; min-width: 0; }
+  .image-stage { position: relative; overflow: hidden; border-radius: 14px; border: 1px solid var(--border); background: #101820; }
+  img, video { display: block; width: 100%; height: auto; aspect-ratio: 16/10; object-fit: contain; }
+  figcaption { margin-top: .7rem; font-size: .78rem; color: var(--text-dim); line-height: 1.6; max-width: 85ch; }
+  .credit { display: block; color: var(--text-dim); font-size: .72rem; margin-top: .25rem; }
+  .compact .image-stage { border: 0; border-radius: 0; }
+  .compact figcaption { margin: 0; padding: .65rem 1rem; background: var(--bg-card); font-size: .68rem; }
+  portfolio-clip { display: block; position: relative; }
+  button { position: absolute; top: .8rem; right: .8rem; min-height: 44px; padding: .55rem .85rem; border: 1px solid #ffffff55; border-radius: 30px; background: #101820e8; color: #fff; font: 500 .75rem var(--font-sans); cursor: pointer; }
+  button[hidden] { display: none; }
+  button:hover { background: #243340; }
+  noscript p { padding: .8rem; }
+</style>
+<script>
+  class PortfolioClip extends HTMLElement {
+    private video?: HTMLVideoElement;
+    private button?: HTMLButtonElement;
+    private observer?: IntersectionObserver;
+    private visible = false;
+    private userPaused = false;
+    private autoPause = false;
+    private loaded = false;
+    private motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    private abort?: AbortController;
+    connectedCallback() {
+      this.video = this.querySelector('video') ?? undefined;
+      this.button = this.querySelector('[data-playback]') ?? undefined;
+      if (!this.video || !this.button) return;
+      this.abort = new AbortController();
+      const options = { signal: this.abort.signal };
+      this.button.hidden = false;
+      this.button.addEventListener('click', () => {
+        if (!this.video) return;
+        if (this.video.paused) { this.userPaused = false; this.load(); void this.video.play().catch(() => this.update()); }
+        else { this.userPaused = true; this.video.pause(); }
+      }, options);
+      this.video.addEventListener('play', () => { this.userPaused = false; this.update(); }, options);
+      this.video.addEventListener('pause', () => {
+        if (!this.autoPause) this.userPaused = true;
+        this.autoPause = false;
+        this.update();
+      }, options);
+      // Native controls also work before automatic playback has loaded a source.
+      this.video.addEventListener('pointerdown', () => this.load(), options);
+      this.video.addEventListener('keydown', () => this.load(), options);
+      document.addEventListener('visibilitychange', () => this.sync(), options);
+      this.motion.addEventListener('change', () => this.sync(), options);
+      this.observer = new IntersectionObserver(([entry]) => { this.visible = entry.isIntersecting && entry.intersectionRatio >= .25; this.sync(); }, { threshold: .25 });
+      this.observer.observe(this);
+    }
+    private load() {
+      if (this.loaded || !this.video) return;
+      const source = this.video.querySelector('source');
+      if (source?.dataset.src) { source.src = source.dataset.src; this.video.load(); this.loaded = true; }
+    }
+    private sync() {
+      if (!this.video) return;
+      const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+      if (!this.visible || document.hidden || this.motion.matches || saveData) {
+        if (!this.video.paused) { this.autoPause = true; this.video.pause(); }
+      } else if (!this.userPaused) {
+        this.load(); void this.video.play().catch(() => this.update());
+      }
+    }
+    private update() { if (this.button && this.video) this.button.textContent = this.video.paused ? 'Play clip' : 'Pause clip'; }
+    disconnectedCallback() { this.observer?.disconnect(); this.abort?.abort(); this.video?.pause(); }
+  }
+  if (!customElements.get('portfolio-clip')) customElements.define('portfolio-clip', PortfolioClip);
+</script>

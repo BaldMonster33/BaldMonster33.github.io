@@ -1,0 +1,48 @@
+{
+  "headline": "From clothed scans to 3D joint coordinates.",
+  "intro": "I turned a lab prototype into a Python research tool that combines pose detections from rendered views and exports estimated 3D joints.",
+  "context": "UMTRI · Undergraduate research · May–September 2022",
+  "role": "Python/VTK adaptation, coordinate-frame debugging, desktop interface, and macOS/Windows packaging.",
+  "hero": {
+    "type": "image",
+    "src": "/media/projects/umtri-body-scan/multi-view-hero.svg",
+    "alt": "Illustrated synthetic mannequin with pose landmarks and rays converging from several rendered viewpoints.",
+    "caption": "An illustrated view of the reconstruction pipeline. All geometry is synthetic.",
+    "credit": "Original explanatory graphic created for this portfolio."
+  },
+  "metrics": [
+    { "value": "9", "label": "Rendered images per scan", "note": "45° increments; 0° and 360° repeat one orientation." },
+    { "value": "25", "label": "Candidate landmarks per image", "note": "OpenPose BODY_25; low-confidence detections are filtered." },
+    { "value": "2", "label": "Desktop platforms", "note": "Delivered macOS and Windows application packages." }
+  ],
+  "question": {
+    "title": "How do 2D pose detections become 3D joints?",
+    "text": "The lab's method used multiple views of a clothed mesh. My challenge was to reproduce the C# prototype in Python and keep image coordinates, camera transforms, and scan coordinates consistent."
+  },
+  "steps": [
+    { "title": "Render the scan", "text": "Load a PLY mesh in VTK and render the configured views, retaining the corresponding camera transforms." },
+    { "title": "Recover spatial rays", "text": "Run OpenPose, filter detections by confidence, and map accepted points back into the scan's coordinate frame." },
+    { "title": "Estimate and export", "text": "Combine observations through ray-distance optimization, then visualize joints and export coordinates through a batch desktop interface." }
+  ],
+  "gallery": [
+    {
+      "type": "image",
+      "src": "/media/projects/umtri-body-scan/alignment-fix.svg",
+      "alt": "Diagram of nine rendered images and an early sequence of eight transforms, highlighting the unpaired repeated endpoint.",
+      "caption": "A mismatch I diagnosed: nine rendered images, but eight stored transforms. Correcting the correspondence restored alignment.",
+      "credit": "Illustration based on the documented development issue; no research output is displayed."
+    }
+  ],
+  "finding": {
+    "title": "Geometry debugging became part of the product.",
+    "text": "I resolved the image-to-transform mismatch, then delivered selectable batch processing, progress logs, optional visualization, and CSV export in a desktop tool."
+  },
+  "details": [
+    "The original joint-estimation method and C# prototype came from mentor Byoung-Keon (Daniel) Park. My contribution was the Python adaptation and research-tool delivery.",
+    "The browser demo is a synthetic reconstruction of the workflow. It illustrates processing stages, not measured anatomical accuracy or the original executable."
+  ],
+  "credits": [
+    "Research at the University of Michigan Transportation Research Institute, mentored by Byoung-Keon (Daniel) Park.",
+    "Pipeline: Python, VTK, OpenPose, SciPy, and Tkinter."
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "headline": "Make sound direction visible.",
+  "intro": "SoundAround translates sound-direction estimates into peripheral LED cues. The wearable prototype explores how someone could locate a sound without checking a separate screen.",
+  "context": "University of Michigan · Engineering Interactive Systems course project · Jan–Apr 2023",
+  "role": "I originated the idea and handled hardware assembly, Python software, interaction design, testing, and results analysis. I did not lead the participant study sessions.",
+  "hero": {
+    "type": "image",
+    "src": "/media/projects/soundaround/prototype-study.webp",
+    "alt": "The original SoundAround helmet prototype with microphone array, Raspberry Pi, battery pack, and LED wiring, positioned in the five-direction study setup.",
+    "caption": "The working course prototype in the direction-identification setup. The numbered positions defined five front-direction targets.",
+    "credit": "Original course report, Figure 3 · Le Qin and Jeremy Zhengqi Huang"
+  },
+  "metrics": [
+    { "value": "5", "label": "participants in the final evaluation", "note": "Quiet-lab tasks with noise-cancelling headphones" },
+    { "value": "88%", "label": "front-direction identification", "note": "22 correct responses across 25 trials" },
+    { "value": "93.3%", "label": "rear-direction identification", "note": "14 of 15 trials; approximate pointing counted" }
+  ],
+  "question": {
+    "title": "Can peripheral light communicate a sound's location?",
+    "text": "Sound can originate outside the field of view. Motivated by accessibility for deaf and hard-of-hearing people, I explored visual cues that convey its direction while allowing the wearer to keep looking at their surroundings."
+  },
+  "steps": [
+    { "title": "Acquire direction", "text": "Connect a ReSpeaker four-microphone array to a Raspberry Pi. The microphone device supplies direction estimates to a Python acquisition process." },
+    { "title": "Map to peripheral light", "text": "Share readings with a display process and map direction to LED position. Red and green distinguish front and rear sources." },
+    { "title": "Refine from feedback", "text": "Retune directional mappings, reduce brightness, add diffusion, and dim idle LEDs after preliminary feedback exposed interpretation and comfort issues." }
+  ],
+  "gallery": [
+    {
+      "type": "image",
+      "src": "/media/projects/soundaround/hardware-flow.webp",
+      "alt": "System diagram connecting a four-microphone array, Raspberry Pi 4, programmable LED strip, and portable power supply.",
+      "caption": "Sensing, concurrent software, and wearable output form one system. The microphone supplies direction; the application makes it interpretable.",
+      "credit": "Original course report, Figure 1"
+    },
+    {
+      "type": "image",
+      "src": "/media/projects/soundaround/directional-interface.webp",
+      "alt": "Original interface sketch showing light position and color indicating front and rear sound directions around a wearer.",
+      "caption": "The interaction sketch uses both LED position and color to distinguish where a sound originates.",
+      "credit": "Original course report, Figure 2"
+    }
+  ],
+  "finding": {
+    "title": "Interpretability mattered as much as sensing.",
+    "text": "The quiet-lab tasks showed that participants could interpret the cues. Outdoor tests exposed a different challenge: ambient noise could destabilize the indication and slow interpretation. That gap shaped the next questions about filtering and evaluation in everyday environments."
+  },
+  "details": [
+    "The reported percentages measure participant direction-identification tasks, not angular localization accuracy. Rear trials accepted pointing at or very near the target.",
+    "Noise-cancelling headphones limited auditory input; this condition does not reproduce or validate the deaf or hard-of-hearing experience.",
+    "The original source preserves experimental hardware/software variants. It documents the course prototype rather than a verified, reproducible product release."
+  ],
+  "credits": [
+    "A collaboration with Jeremy Zhengqi Huang; we coauthored the course report.",
+    "Direction estimation came from the ReSpeaker device. My engineering connected its output to the wearable interaction and evaluation."
+  ]
+}

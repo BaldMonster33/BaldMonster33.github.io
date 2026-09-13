@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+<title id="title">Object finding through sight, sound, and touch</title><desc id="desc">An illustrated phone guides toward a selected apple using an arrow, spatial audio, and a vibration cue. This is a schematic of the original Unity prototype's interaction, not an application screenshot.</desc>
+<defs><linearGradient id="screen" x2="0" y2="1"><stop stop-color="#e4eedb"/><stop offset="1" stop-color="#c0d5ba"/></linearGradient><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M50 0H0V50" fill="none" stroke="#36514a" stroke-opacity=".065"/></pattern><style>text{font-family:Arial,Helvetica,sans-serif}.signal{animation:ping 4s ease-in-out 1;opacity:.75}@keyframes ping{0%,100%{opacity:.75}45%{opacity:1}}@media(prefers-reduced-motion:reduce){.signal{animation:none}}</style></defs>
+<rect width="1600" height="1000" fill="#f1f0e6"/><rect width="1600" height="1000" fill="url(#grid)"/>
+<circle cx="1120" cy="482" r="474" fill="#dbe6d2"/><circle cx="1120" cy="482" r="342" fill="none" stroke="#a6baa0" stroke-dasharray="5 12"/>
+<path d="M78 76h85" stroke="#bd593e" stroke-width="5"/><text x="78" y="118" fill="#576d60" font-size="19" letter-spacing="3">AR NAVIGATOR / INCLUSIVE XR</text>
+<text x="76" y="231" fill="#153c31" font-size="72" font-weight="700" letter-spacing="-2">Find the object.</text>
+<text x="76" y="315" fill="#153c31" font-size="72" font-weight="700" letter-spacing="-2">Follow the cues.</text>
+<text x="80" y="385" fill="#4c6557" font-size="26">A phone-based prototype for</text><text x="80" y="424" fill="#4c6557" font-size="26">finding things in your surroundings.</text>
+<g transform="translate(78 515)"><rect width="478" height="180" rx="20" fill="#183f33"/><text x="30" y="48" fill="#a9c4b2" font-size="18" letter-spacing="2">ONE TARGET, THREE CHANNELS</text><text x="30" y="95" fill="#f8f1d9" font-size="30" font-weight="700">Arrow · audio · vibration</text><text x="30" y="142" fill="#c6d5c6" font-size="21">A shared direction across visual,</text><text x="30" y="169" fill="#c6d5c6" font-size="21">auditory, and tactile feedback.</text></g>
+<g transform="translate(780 106)">
+<rect x="17" y="20" width="443" height="778" rx="66" fill="#1a3a2c" opacity=".15"/>
+<rect width="443" height="778" rx="66" fill="#18372b"/><rect x="15" y="15" width="413" height="748" rx="52" fill="url(#screen)"/>
+<rect x="144" y="20" width="155" height="32" rx="16" fill="#18372b"/>
+<text x="45" y="95" fill="#335745" font-size="18" letter-spacing="2">OBJECT DETECTION</text>
+<rect x="35" y="116" width="373" height="68" rx="16" fill="#fbfbef"/><text x="59" y="158" fill="#163e30" font-size="27" font-weight="700">Selected: apple</text>
+<path d="M-1 439L443 374V608H0" fill="#aabf9a"/><path d="M0 607H443" stroke="#779170" stroke-width="3"/>
+<g transform="translate(210 382)"><path d="M-15-29c-62-44-104 16-64 84c27 44 42 28 64 28c24 0 42 17 66-27c40-73-5-128-66-85Z" fill="#bb5b3a"/><path d="M-14-25q3-31 29-40" stroke="#4d6337" stroke-width="8" fill="none"/><path d="M-7-41q22-43 50-19q-8 32-50 19" fill="#6b884e"/></g>
+<path d="M105 285h32M105 285v32M323 285h-32M323 285v32M105 498h32M105 498v-32M323 498h-32M323 498v-32" fill="none" stroke="#c24f29" stroke-width="5"/>
+<path d="M218 223l-30 39h18v35h24v-35h18Z" fill="#bb593a"/>
+<rect x="37" y="537" width="368" height="69" rx="17" fill="#1d4536"/><circle class="signal" cx="69" cy="572" r="8" fill="#eac272"/><text x="91" y="580" fill="#e4eedc" font-size="23">Point toward the target</text>
+<rect x="35" y="636" width="177" height="62" rx="15" fill="#f7f8ed"/><rect x="232" y="636" width="176" height="62" rx="15" fill="#f7f8ed"/><text x="123" y="675" fill="#335744" font-size="22" text-anchor="middle">Previous</text><text x="320" y="675" fill="#335744" font-size="22" text-anchor="middle">Next</text>
+<rect x="163" y="736" width="117" height="5" rx="3" fill="#365443"/>
+</g>
+<g class="signal" stroke="#b96b43" stroke-width="4" fill="none" stroke-linecap="round"><path d="M1265 459q36 32 0 64M1294 435q63 55 0 112M1324 409q94 81 0 163"/><path d="M741 653l-9 13 13 16-13 16 13 16-10 13"/><path d="M1250 742l11 14-13 16 13 16-12 14"/></g>
+<text x="1271" y="363" fill="#4d654f" font-size="22">Spatial ping</text><path d="M682 742h-41v56h103" fill="none" stroke="#799677" stroke-width="2"/><text x="544" y="827" fill="#4d654f" font-size="22">Alignment vibration</text>
+<path d="M77 852h480" stroke="#adbaaa"/><text x="78" y="892" fill="#556d5b" font-size="18">Interaction schematic · Unity course prototype</text><text x="78" y="926" fill="#667b69" font-size="18">Illustrated scene; no camera or participant data</text>
+</svg>

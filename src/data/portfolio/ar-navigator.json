@@ -1,0 +1,46 @@
+{
+  "headline": "Find objects through sight, sound, and touch.",
+  "intro": "I proposed an accessibility-focused object-finding concept and developed it with my team into a Unity mobile AR prototype.",
+  "context": "University of Michigan · XR course project · November–December 2022",
+  "role": "Concept originator and Unity/C# team developer; iterated through weekly peer playtests.",
+  "hero": {
+    "type": "image",
+    "src": "/media/projects/ar-navigator/multisensory-guidance.svg",
+    "alt": "An illustrated phone guides toward a selected apple through an arrow, spatial sound, and an alignment vibration.",
+    "caption": "Three cues point toward one target. This illustration explains the original mobile interaction; it is not an application screenshot."
+  },
+  "metrics": [
+    { "value": "2", "label": "Target-finding modes", "note": "Object detection and uploaded image references." },
+    { "value": "3", "label": "Guidance channels", "note": "Visual arrow, spatial audio, and vibration." },
+    { "value": "80", "label": "Model object categories", "note": "YOLOv3-tiny label set; not a detection-accuracy result." }
+  ],
+  "question": {
+    "title": "Can a phone help someone locate a nearby object?",
+    "text": "Inspired by assistive technology, I proposed combining recognition with directional cues for people with vision impairments. The prototype explored that interaction through two complementary ways to define a target."
+  },
+  "steps": [
+    { "title": "Choose what to find", "text": "Detect a common object with on-device YOLOv3-tiny, or label an uploaded image for reference tracking." },
+    { "title": "Follow the direction", "text": "Select or cycle targets. An arrow, spatial ping, and alignment vibration provide complementary feedback." },
+    { "title": "Keep controls accessible", "text": "Use spoken labels and accessible controls, then stop guidance when the search is finished." }
+  ],
+  "gallery": [
+    {
+      "type": "image",
+      "src": "/media/projects/ar-navigator/two-target-modes.svg",
+      "alt": "Diagram of object detection and image references converging into one target-selection and guidance workflow.",
+      "caption": "The two modes address different targets: recognizable object categories and specific visual references."
+    }
+  ],
+  "finding": {
+    "title": "Make the core search interaction work together.",
+    "text": "Peer playtests confirmed working audio and vibration but exposed confusion between modes. The team prioritized integrating those flows and polishing the interface; a radar-map prototype was deferred."
+  },
+  "details": [
+    "The browser demo reconstructs the interaction with a synthetic scene. The linked team trailer records the original mobile application.",
+    "Peer playtests informed the design. They do not establish validated effectiveness for people with vision impairments."
+  ],
+  "credits": [
+    "A University of Michigan student-team project, developed in Unity with AR Foundation, Barracuda, and Apple accessibility support.",
+    "Original explanatory SVGs created for this portfolio."
+  ]
+}

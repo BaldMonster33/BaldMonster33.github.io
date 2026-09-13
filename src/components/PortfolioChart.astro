@@ -1,0 +1,29 @@
+---
+import type { PortfolioChart } from '../data/portfolio';
+interface Props { chart: PortfolioChart; }
+const { chart } = Astro.props;
+const formatValue = (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(value);
+const unit = chart.unit === '%' ? '%' : ` ${chart.unit}`;
+---
+<figure class="result-chart">
+  <figcaption><h3>{chart.title}</h3>{chart.subtitle && <p>{chart.subtitle}</p>}</figcaption>
+  <div class="legend">{chart.series.map((s, i) => <span><i class:list={{secondary: i > 0}} aria-hidden="true"></i>{s.name}</span>)}</div>
+  <div class="chart-rows">
+    {chart.labels.map((label, index) => <div class="chart-row"><p class="label">{label}</p><div class="series">{chart.series.map((s, i) => <div class="bar-row"><span class="visually-hidden">{s.name}: </span><div class="track" aria-hidden="true"><span class:list={['bar',{secondary: i > 0}]} style={`width: ${s.values[index] / chart.max * 100}%`}></span></div><span class="value">{formatValue(s.values[index])}{unit}</span></div>)}</div></div>)}
+  </div>
+  <p class="axis">Bars share a zero baseline · scale 0–{formatValue(chart.max)}{unit}</p>
+</figure>
+<style>
+ .result-chart { border: 1px solid var(--border); border-radius: 14px; padding: clamp(1.15rem,3vw,1.75rem); background: var(--bg-card); margin: 0; }
+ h3 { font-size: 1.1rem; } figcaption p { font-size: .85rem; color: var(--text-dim); margin-top: .5rem; }
+ .legend { display: flex; flex-wrap: wrap; gap: .5rem 1.1rem; margin: 1.25rem 0; font-size: .75rem; color: var(--text-dim); }
+ .legend span { display: inline-flex; gap: .45rem; align-items: center; }
+ .legend i { width: .65rem; height: .65rem; background: #52b8b1; border-radius: 2px; }
+ .legend i.secondary, .bar.secondary { background: #e8a173; }
+ .chart-rows { display: grid; gap: 1.2rem; } .chart-row { display: grid; grid-template-columns: minmax(7rem, .8fr) minmax(0,2fr); gap: 1rem; align-items: center; }
+ .label { font-size: .85rem; } .series { display: grid; gap: .45rem; }
+ .bar-row { display: flex; gap: .6rem; align-items: center; min-width: 0; } .track { height: .8rem; background: var(--bg-inset); border-radius: 2px; flex: 1; overflow: hidden; }
+ .bar { height: 100%; background: #52b8b1; display: block; } .value { font: .72rem var(--font-mono); min-width: 5rem; text-align: right; }
+ .axis { margin-top: 1rem; font-size: .68rem; color: var(--text-dim); }
+ @media(max-width: 36rem) { .chart-row { grid-template-columns: 1fr; gap: .4rem; } }
+</style>

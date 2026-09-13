@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img">
+<rect width="1200" height="760" fill="#112333"/>
+<g font-family="Arial, Helvetica, sans-serif">
+<text x="52" y="60" fill="#85d8c6" font-size="17" font-weight="700" letter-spacing="2">VR CLASSROOM / TANGIBLE INTERACTION</text>
+<text x="52" y="120" fill="#f3f7fa" font-size="43" font-weight="700">A familiar object becomes playable.</text>
+<text x="52" y="160" fill="#b8cbd9" font-size="21">The recovered write-up describes a motion-controller piano.</text>
+<path d="M100 294 L604 248 L658 495 L132 549 Z" fill="#36516a" stroke="#7990a2" stroke-width="2"/>
+<path d="M132 549 L658 495 L658 528 L132 582 Z" fill="#1b3146" stroke="#7990a2" stroke-width="2"/>
+<path d="M112 340 L236 329 L255 540 L137 553 Z" fill="#f3f6f6" stroke="#183349" stroke-width="3"/>
+<path d="M236 329 L360 318 L382 527 L255 540 Z" fill="#dfebee" stroke="#183349" stroke-width="3"/>
+<path d="M360 318 L484 307 L509 514 L382 527 Z" fill="#f3f6f6" stroke="#183349" stroke-width="3"/>
+<path d="M484 307 L608 296 L640 501 L509 514 Z" fill="#85d8c6" stroke="#183349" stroke-width="3"/>
+<text x="189" y="510" text-anchor="middle" fill="#183349" font-size="30" font-weight="700">C</text>
+<text x="316" y="498" text-anchor="middle" fill="#183349" font-size="30" font-weight="700">D</text>
+<text x="443" y="486" text-anchor="middle" fill="#183349" font-size="30" font-weight="700">E</text>
+<text x="566" y="474" text-anchor="middle" fill="#183349" font-size="30" font-weight="700">G</text>
+<g transform="translate(470 285) rotate(-25)"><rect x="0" y="-33" width="58" height="118" rx="26" fill="#24475f" stroke="#a9c7d8" stroke-width="3"/><ellipse cx="29" cy="-39" rx="46" ry="35" fill="none" stroke="#a9c7d8" stroke-width="9"/><circle cx="30" cy="0" r="7" fill="#85d8c6"/><path d="M30 91 V156" stroke="#85d8c6" stroke-width="3" stroke-dasharray="6 6"/></g>
+<text x="132" y="625" fill="#b8cbd9" font-size="18">Schematic of four available tones, not the original piano geometry.</text>
+<line x1="704" y1="235" x2="704" y2="625" stroke="#36516a"/>
+<text x="754" y="278" fill="#85d8c6" font-size="16" font-weight="700" letter-spacing="1">01 / CONTACT</text>
+<text x="754" y="316" fill="#f3f7fa" font-size="27" font-weight="700">Touch a key</text>
+<text x="754" y="349" fill="#b8cbd9" font-size="20">Play the default note.</text>
+<text x="754" y="421" fill="#85d8c6" font-size="16" font-weight="700" letter-spacing="1">02 / CONTROLLER INPUT</text>
+<text x="754" y="459" fill="#f3f7fa" font-size="27" font-weight="700">Choose a tone</text>
+<text x="754" y="492" fill="#b8cbd9" font-size="20">Buttons select other notes.</text>
+<text x="754" y="564" fill="#85d8c6" font-size="16" font-weight="700" letter-spacing="1">03 / FEEDBACK</text>
+<text x="754" y="602" fill="#f3f7fa" font-size="27" font-weight="700">Hear the interaction</text>
+<text x="754" y="635" fill="#b8cbd9" font-size="20">Combine notes into a melody.</text>
+<text x="52" y="714" fill="#b8cbd9" font-size="17">Interaction diagram based on the 2022 team write-up and archived C / D / E / G audio assets.</text>
+</g></svg>

@@ -50,6 +50,8 @@ src/
     blog/              posts, Markdown + typed frontmatter
     projects/          project entries, same idea
   content.config.ts    the schemas those two are validated against
+  data/portfolio/      visual academic case studies, one JSON per project slug
+  data/portfolio.ts    visual-story schema and display order
   layouts/             page shells
   components/          cards, sidebar, theme toggle, front door
   pages/               routes, including rss.xml.js, robots.txt.ts, tag pages
@@ -66,11 +68,30 @@ production.
 ### Project artifacts and licensing
 
 Project pages link to original course reports, recordings,
-and recovered code. Files under `public/artifacts/` and `project-source/` are
+and recovered code. Files under `public/artifacts/`, `public/media/projects/`, and `project-source/` are
 historical project materials and are excluded from the website code's root MIT
 license. Their authors retain their existing rights; publication here does not
 assign a new license. See `public/artifacts/README.md` and each source package's
 attribution notes for provenance, third-party licenses, and archive limitations.
+
+### Visual project portfolios
+
+The eight academic project pages use `src/data/portfolio/*.json` for their
+visual narrative. Project Markdown still supplies the canonical title, period,
+tags, resource links, and optional browser demo. Keep the dated context in the
+visual narrative consistent with that project period. Existing project URLs do
+not change. Other projects continue to render their Markdown pages.
+
+`PortfolioStory.astro` presents each question, contribution, process, and result.
+The media caption identifies original report figures, archived footage, and new
+explanatory illustrations. Local media lives under `public/media/projects/`;
+its README records the published sources and attribution.
+
+Short, silent clips have still posters and explicit playback controls. They load
+only when visible or requested, pause offscreen and in background tabs, and
+avoid automatic playback for reduced-motion or data-saving preferences. Full
+recordings remain optional resource links. The comparison slider and GAN frame
+selector use original report images and native keyboard-accessible controls.
 
 ## Deploying
 

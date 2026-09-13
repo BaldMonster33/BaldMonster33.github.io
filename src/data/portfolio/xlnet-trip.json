@@ -1,0 +1,92 @@
+{
+  "headline": "Correct answers can hide broken reasoning",
+  "intro": "I adapted a tiered reasoning pipeline to XLNet to ask a harder question than story classification: can a model identify the conflicting sentences and physical states that justify its choice?",
+  "context": "University of Michigan · Natural-language-processing course project · Sept–Dec 2021",
+  "role": "XLNet-base integration, fine-tuning, loss-function ablations, evaluation, and final report.",
+  "hero": {
+    "type": "image",
+    "src": "/media/projects/xlnet-trip/reasoning-layers.svg",
+    "alt": "An illustrative glass-breaking story is mapped to three evaluation levels: story choice, conflicting sentences, and physical states.",
+    "caption": "The three levels of TRIP reasoning. The short glass story is an illustrative explanation, not a dataset example or saved model prediction."
+  },
+  "metrics": [
+    {
+      "value": "3",
+      "label": "Levels of reasoning",
+      "note": "Accuracy, consistency, and verifiability."
+    },
+    {
+      "value": "4",
+      "label": "Supervision signals",
+      "note": "Preconditions, effects, conflicts, and story choice."
+    },
+    {
+      "value": "80%",
+      "label": "Story accuracy",
+      "note": "Validation result with state-classification losses omitted."
+    }
+  ],
+  "question": {
+    "title": "What does a correct story choice actually prove?",
+    "text": "TRIP pairs plausible and implausible stories about physical situations. A useful evaluation should reveal whether the model understands the conflict, alongside whether it chooses the right story."
+  },
+  "steps": [
+    {
+      "title": "Adapt the model",
+      "text": "Integrated Hugging Face XLNet-base-cased into the published TRIP pipeline, including its tokenizer, model configuration, and representations."
+    },
+    {
+      "title": "Change supervision",
+      "text": "Fine-tuned the model and evaluated loss ablations across story choice, conflicting-sentence detection, and physical-state preconditions and effects."
+    },
+    {
+      "title": "Evaluate the explanation",
+      "text": "Compared validation accuracy with consistency and verifiability, which require progressively stronger evidence behind the story choice."
+    }
+  ],
+  "finding": {
+    "title": "80% accuracy. 0% verifiable reasoning.",
+    "text": "Omitting state-classification losses increased reported story accuracy from 76.7% to 80.0%, while consistency fell from 12.7% to zero. Neither configuration produced verifiable reasoning in this validation table. Final-answer accuracy alone missed that failure."
+  },
+  "charts": [
+    {
+      "title": "The answer–explanation gap",
+      "subtitle": "XLNet validation results from Table 1 of the December 2021 course report. Higher is better; the measures have different requirements.",
+      "labels": [
+        "Accuracy",
+        "Consistency",
+        "Verifiability"
+      ],
+      "series": [
+        {
+          "name": "All losses",
+          "values": [
+            76.7,
+            12.7,
+            0
+          ],
+          "color": "primary"
+        },
+        {
+          "name": "No state losses",
+          "values": [
+            80,
+            0,
+            0
+          ],
+          "color": "secondary"
+        }
+      ],
+      "max": 100,
+      "unit": "%"
+    }
+  ],
+  "details": [
+    "Accuracy counts correct story choices. Consistency also requires identifying the conflicting sentence pair; verifiability additionally requires the relevant physical-state predictions.",
+    "These are historical report results, not a new benchmark run. The archived notebook corroborates the XLNet adaptation; no statistical-significance claim is made from the two reported configurations."
+  ],
+  "credits": [
+    "The TRIP dataset, tiered reasoning framework, and original pipeline are by Storks and colleagues. My modified notebook is preserved in the linked public fork.",
+    "BERT, RoBERTa, and DeBERTa comparisons in my report are baselines reported by Storks et al., not independent reruns. The hero diagram is a new conceptual illustration of the evaluation task."
+  ]
+}

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>UMTRI 3D Joints Detection — recovered application</title>
+  <title>UMTRI 3D Joint Estimation — synthetic pipeline demo</title>
   <link rel="stylesheet" href="../shared/base.css">
   <link rel="stylesheet" href="./style.css">
 </head>
@@ -12,8 +12,8 @@
   <div class="demo-shell">
     <header class="demo-head">
       <div>
-        <h1>3D Joints Detection</h1>
-        <p class="subhead">Recovered desktop application · August 2022</p>
+        <h1>3D Joint Estimation</h1>
+        <p class="subhead">Synthetic browser reconstruction · Research project, May–September 2022</p>
       </div>
       <p>Python · Tkinter · VTK · OpenPose · SciPy</p>
     </header>
@@ -22,18 +22,18 @@
       <section class="app-window panel" aria-label="Interactive reconstruction of the recovered UMTRI desktop application">
         <div class="titlebar">
           <span class="traffic" aria-hidden="true"><i></i><i></i><i></i></span>
-          <strong>Joints Detection · research build</strong>
-          <span class="build">macOS + Windows builds recovered</span>
+          <strong>Joint Estimation · pipeline illustration</strong>
+          <span class="build">Browser demo · synthetic data</span>
         </div>
 
         <div class="workspace">
-          <aside class="controls" aria-label="Recovered desktop controls">
+          <aside class="controls" aria-label="Reconstructed desktop controls">
             <div class="section-head">
               <div>
-                <span class="eyebrow">Original interface</span>
+                <span class="eyebrow">Reconstructed interface</span>
                 <h2>Batch controls</h2>
               </div>
-              <span class="source-badge">source verified</span>
+              <span class="source-badge">illustrative</span>
             </div>
 
             <div class="switch-row">
@@ -114,7 +114,7 @@
             <div class="camera-strip-wrap">
               <div class="strip-head"><span>Clothed surface → nine rendered camera views</span><span id="view-detail">0° · model_0.png</span></div>
               <div class="camera-strip" id="camera-strip" role="group" aria-label="Nine camera views"></div>
-              <p class="strip-note">This synthetic strip mirrors the recovered May 2022 artifacts: VTK surface shading preserves clothing folds, then OpenPose runs on each saved rotation.</p>
+              <p class="strip-note">Synthetic illustration of the original pipeline: VTK renders the clothed surface from nine angles, with 0° and 360° overlapping, before OpenPose detects joints in each image. This browser demo simulates those stages.</p>
             </div>
 
             <div class="viewer-footer">
@@ -171,14 +171,14 @@
                 <div><span>Hip breadth</span><strong id="hip">38.9 cm</strong></div>
                 <div><span>Estimated height</span><strong id="height">173.6 cm</strong></div>
               </div>
-              <p>Dimensions are illustrative and derived from synthetic joint landmarks—not participant data.</p>
+              <p>These synthetic dimensions illustrate a possible use of joint coordinates. Body-dimension accuracy was not evaluated in this project.</p>
             </div>
 
             <div class="result-panel logs" data-result-panel="logs" hidden id="logs" aria-live="polite"></div>
 
             <button class="export-button" id="download-csv" type="button" disabled>Download synthetic joint CSV</button>
 
-            <p class="artifact-note">Recovered from the original private repository and the May–August 2022 email trail. That trail preserves the first wireframe test, the corrected shaded clothing surface, 45°/90° captures, OpenPose overlays, and the final CLI plus macOS/Windows applications. Research scans and confidential UMTRI materials are intentionally excluded.</p>
+            <p class="artifact-note">A browser reconstruction of the research workflow, using synthetic geometry and simulated detections. The original Python application used VTK, OpenPose, and SciPy and was packaged for macOS and Windows. This page explains that process; it does not run the original research executable or display participant scans.</p>
           </aside>
         </div>
         <div class="toast" id="toast" role="status" aria-live="polite"></div>

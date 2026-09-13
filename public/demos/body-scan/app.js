@@ -349,5 +349,5 @@
 
   if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);
   else addEventListener('resize',resize);
-  buildModel('jacket');setStage('scan');updateSelection();updateZoomControls();setProgress(0,'Ready');addLog('Recovered application ready · synthetic clothed scan selected');resize();
+  buildModel('jacket');setStage('scan');updateSelection();updateZoomControls();setProgress(0,'Ready');addLog('Synthetic pipeline demo ready · illustrative clothed scan selected');resize();
 })();

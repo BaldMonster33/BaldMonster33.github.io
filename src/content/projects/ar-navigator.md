@@ -1,15 +1,15 @@
 ---
 title: AR Navigator
 description: >-
-  Accessibility-minded augmented-reality wayfinding prototype that detects or
-  learns a target, then guides the user to it with an arrow, spatial
+  Accessibility-minded augmented-reality object-finding prototype that detects
+  objects or tracks an image reference, then guides the user with an arrow, spatial
   audio, and haptic feedback.
-period: 'Nov 2022'
+period: 'Nov – Dec 2022'
 stack: ['Unity', 'AR Foundation', 'Barracuda', 'C#']
 demo:
   type: scene
   path: ar-navigator
-  cta: 'Try the recovered interaction'
+  cta: 'Explore the interaction'
   controls: 'Choose a mode and target, drag Phone heading, or use N to cycle, P to ping, and M to switch modes.'
 links:
   - label: 'Original team trailer'
@@ -18,43 +18,19 @@ featured: false
 order: 50
 ---
 
-The original project websites at `johnnyq.ml` and `virtualnavigator.ml` are
-gone, but the application is not. I recovered the private Unity repository and
-rebuilt its interaction model above without publishing the source or any camera
-data. The team's original product trailer also survived:
+I originated the accessibility-focused object-finding idea and developed the
+prototype with my course team. The original Unity application combined
+YOLOv3-tiny object detection with AR Foundation image-reference tracking.
+Targets could be selected and cycled, then located using an arrow, spatial
+audio, and vibration. Accessible labels and text-to-speech supported the controls.
 
-<div class="video">
-  <iframe
-    src="https://www.youtube-nocookie.com/embed/Xf8MJ09-pX8"
-    title="ARNav — original Virtual Navigator team trailer"
-    loading="lazy"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowfullscreen
-  ></iframe>
-</div>
+Our December 7 peer playtest confirmed working sound and vibration and surfaced
+confusion about the two modes. The team focused on integrating their workflows
+and polishing the interface, while deferring a partially developed radar map.
+These were design playtests, not an effectiveness study with people with vision
+impairments.
 
-## What survived
-
-The recovered project uses Unity Barracuda to run a YOLO model against the live
-camera. Detected objects become targets in the AR scene; a second mode lets the
-user add a labelled reference image from their photo library instead. Once a
-target is selected, the application combines several cues:
-
-- an arrow points toward it;
-- spatial audio places a ping in the target's direction;
-- the phone vibrates when it is pointed at the target;
-- accessible labels, dynamic text, and text-to-speech expose the controls.
-
-The recovered postmortem adds an important distinction: the two detection modes,
-website, trailer, on-device YOLOv3-tiny model, arrow, spatial audio, vibration,
-and accessibility work formed the delivered project. A rotating 2D map/radar
-was a promising prototype that the team intentionally stopped polishing before
-the deadline. Its scripts and prefabs survived in the Unity repository, so the
-browser reconstruction exposes it as an explorable **recovered prototype**, not
-as a claim that it fully shipped.
-
-The browser demo is an **artifact-backed reconstruction**, not the original
-camera build. Its street scene and detections are synthetic, but the modes,
-target cycling, guidance cues, stop state, and accessibility intent come from
-the recovered 2022 source and project postmortem. The embedded trailer above is
-the original mobile application recorded by the four-person EECS 498 team.
+The linked **original team trailer** shows the mobile application. The browser
+demo is an **illustrative reconstruction** of its interaction using synthetic
+scenery and detections. It also exposes the radar as an unfinished prototype.
+No private Unity source, model weights, or camera data is served by this page.

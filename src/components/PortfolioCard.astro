@@ -1,0 +1,35 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { PortfolioStory } from '../data/portfolio';
+import PortfolioMedia from './PortfolioMedia.astro';
+interface Props { project: CollectionEntry<'projects'>; story: PortfolioStory; index: number; featured?: boolean; }
+const { project, story, index, featured = false } = Astro.props;
+const href = `/projects/${project.id}/`;
+---
+<article class:list={['portfolio-card', { featured }]}>
+  <div class="visual"><PortfolioMedia media={story.hero} compact eager={featured} /></div>
+  <div class="card-copy">
+    <div class="topline"><span>0{index + 1} / Selected study</span><span>{project.data.period}</span></div>
+    <p class="project-name">{project.data.title}</p>
+    <h2><a href={href}>{story.headline}</a></h2>
+    <p class="summary">{story.intro}</p>
+    <div class="tags">{project.data.stack.slice(0,3).map(tag => <span>{tag}</span>)}</div>
+    <a class="case-link" href={href}>Explore the project <span aria-hidden="true">↗</span></a>
+  </div>
+</article>
+<style>
+ .portfolio-card { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--bg-card); }
+ .visual { border-bottom: 1px solid var(--border); background: #101820; }
+ .card-copy { padding: clamp(1.25rem,2.5vw,2rem); display: flex; flex-direction: column; flex: 1; }
+ .topline { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .4rem; color: var(--text-dim); font: .64rem var(--font-mono); }
+ .project-name { margin-top: 1.3rem; font-size: .78rem; color: var(--text-dim); }
+ h2 { font-size: clamp(1.5rem,2.6vw,2.1rem); letter-spacing: -.04em; margin-top: .45rem; }
+ h2 a { color: var(--text); text-decoration: none; } h2 a:hover { color: var(--accent); }
+ .summary { color: var(--text-dim); font-size: .86rem; line-height: 1.65; margin-top: .85rem; }
+ .tags { display: flex; gap: .5rem; flex-wrap: wrap; margin: 1.1rem 0; font: .64rem var(--font-mono); color: var(--text-dim); }
+ .tags span + span::before { content: '/'; margin-right: .5rem; opacity: .6; }
+ .case-link { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: .9rem; border-top: 1px solid var(--border); margin-top: auto; font-size: .8rem; font-weight: 600; text-decoration: none; min-height: 44px; }
+ .case-link span { font-size: 1.25rem; }
+ .featured { grid-column: 1/-1; }
+ @media(min-width:75rem) { .featured { display: grid; grid-template-columns: 1.25fr 1fr; } .featured .visual { align-self: center; border-bottom: 0; } .featured h2 { font-size: clamp(2rem,3vw,2.7rem); } }
+</style>

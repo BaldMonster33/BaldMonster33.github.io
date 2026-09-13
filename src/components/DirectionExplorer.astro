@@ -1,0 +1,43 @@
+---
+import type { PortfolioStory } from '../data/portfolio';
+interface Props { sweep: NonNullable<PortfolioStory['sweep']>; }
+const { sweep } = Astro.props;
+---
+<direction-explorer>
+  <div><p class="kicker">Explore an editing direction</p><h3>{sweep.title}</h3><p>{sweep.caption}</p>
+    <div class="choices" role="group" aria-label="Choose a generated edit">{sweep.labels.map((label, i) => <button type="button" data-frame={i} aria-pressed={i === 1}>{label}</button>)}</div>
+    <p class="frame-label" aria-live="polite">{sweep.labels[1]}</p>
+  </div>
+  <div class="window" role="img" aria-label={`${sweep.alt}: ${sweep.labels[1]}`} data-alt={sweep.alt} style={`--strip: url('${sweep.src}')`}>
+    <span class="source-label">Original course-report images</span>
+  </div>
+  <noscript><img src={sweep.src} alt={sweep.alt} loading="lazy" /></noscript>
+</direction-explorer>
+<style>
+ direction-explorer { display: grid; grid-template-columns: 1fr minmax(220px,.8fr); gap: clamp(1.5rem,4vw,3rem); align-items: center; padding: clamp(1.25rem,4vw,2.5rem); border: 1px solid var(--border); border-radius: 14px; background: var(--bg-card); }
+ .kicker { font: .68rem var(--font-mono); text-transform: uppercase; color: var(--text-dim); letter-spacing: .08em; margin-bottom: .65rem; }
+ h3 { font-size: clamp(1.4rem,3vw,2rem); margin-bottom: .8rem; }
+ p { color: var(--text-dim); font-size: .9rem; }
+ .window { position: relative; aspect-ratio: 1; background-image: var(--strip); background-size: 300% 100%; background-position: 50% 0; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+ .source-label { position: absolute; bottom: .6rem; left: .6rem; right: .6rem; background: #101820e8; color: white; font-size: .62rem; padding: .3rem .5rem; border-radius: 4px; text-align: center; }
+ .choices { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1.2rem; }
+ button { min-height: 44px; padding: .6rem .85rem; border: 1px solid var(--border-strong); background: var(--bg); color: var(--text); border-radius: 7px; font: .8rem var(--font-sans); cursor: pointer; }
+ button[aria-pressed='true'] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+ .frame-label { margin-top: .65rem; font: .7rem var(--font-mono); }
+ @media(max-width: 36rem) { direction-explorer { grid-template-columns: 1fr; } .window { max-width: 350px; width: 100%; margin-inline: auto; } }
+</style>
+<script>
+ class DirectionExplorer extends HTMLElement {
+   connectedCallback() {
+     this.querySelectorAll<HTMLButtonElement>('[data-frame]').forEach(button => button.addEventListener('click', () => {
+       const image = this.querySelector<HTMLElement>('.window'); const live = this.querySelector('.frame-label');
+       if (!image) return;
+       image.style.backgroundPosition = `${Number(button.dataset.frame) * 50}% 0`;
+       image.setAttribute('aria-label', `${image.dataset.alt}: ${button.textContent}`);
+       if (live) live.textContent = button.textContent;
+       this.querySelectorAll('[data-frame]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+     }));
+   }
+ }
+ if (!customElements.get('direction-explorer')) customElements.define('direction-explorer', DirectionExplorer);
+</script>

@@ -1,0 +1,39 @@
+{
+  "headline": "Grow a game into the world around you.",
+  "intro": "Ann Arbor Go connects map exploration with phone-based AR: plant trees on detected surfaces, revisit them, and explore the surrounding landmarks.",
+  "context": "University of Michigan · XR course project · Oct 2022",
+  "role": "I co-developed the game with Maxwell Zuber, contributing mode/navigation UI, camera setup, and acorn interactions. We shared implementation rather than assigning fixed subsystems.",
+  "hero": {
+    "type": "image",
+    "src": "/media/projects/ar-tree-planting-game/mode-map.svg",
+    "alt": "An illustrated map-exploration scene and phone AR scene connected by shared inventory and planted-tree state.",
+    "caption": "System illustration drawn from the original C# source. This is not a screenshot of the mobile build.",
+    "credit": "Original project: Le Qin and Maxwell Zuber"
+  },
+  "metrics": [
+    { "value": "2", "label": "connected scenes", "note": "Map exploration and AR interaction" },
+    { "value": "iPhone", "label": "device-tested prototype", "note": "Unity Editor and on-device development" },
+    { "value": "2", "label": "course teammates" }
+  ],
+  "question": {
+    "title": "What makes a virtual tree feel part of a place?",
+    "text": "A game needs more than a model on the camera view. Placement, navigation, and remembered state must fit together as the player moves between local interaction and wider exploration."
+  },
+  "steps": [
+    { "title": "Explore the area", "text": "Navigate a map with compass and landmark cues. A teammate-proposed drone mode lets players scout before traveling." },
+    { "title": "Interact in AR", "text": "Place seeds at the AR cursor and interact with trees; acorns serve as projectiles for squirrel defense." },
+    { "title": "Carry state forward", "text": "Retain inventory and transfer planted-tree information between interaction and exploration scenes." }
+  ],
+  "finding": {
+    "title": "Test the real device early.",
+    "text": "Phone deployment problems delayed testing, and movement that felt fast in the editor felt slow on-device. The project made regular hardware testing a concrete development lesson."
+  },
+  "details": [
+    "The original is a solo game built by two teammates. Cross-scene state is not multiplayer synchronization.",
+    "The browser scene is an illustrative reconstruction. Its water/boost actions and simplified growth stages are not a reproduction of the original mobile mechanics."
+  ],
+  "credits": [
+    "Built with Unity, C#, AR Foundation, and Mapbox. The original team recording remains linked below.",
+    "Project source, commit history, and Le Qin's course postmortem support this account."
+  ]
+}
