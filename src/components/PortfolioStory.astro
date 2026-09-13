@@ -15,10 +15,12 @@ const { project, story, next } = Astro.props;
     <p class="eyebrow">{story.context}</p>
     <h1>{story.headline}</h1>
     <p class="project-title">{project.data.title}</p>
-    <p class="intro">{story.intro}</p>
-    <div class="role"><span>My role</span><p>{story.role}</p></div>
   </header>
   <PortfolioMedia media={story.hero} eager />
+  <div class="overview">
+    <p class="intro">{story.intro}</p>
+    <div class="role"><span>My role</span><p>{story.role}</p></div>
+  </div>
   <dl class="metrics">{story.metrics.map(metric => <div><dt>{metric.label}</dt><dd><span class="metric-value">{metric.value}</span>{metric.note && <p>{metric.note}</p>}</dd></div>)}</dl>
   <section class="question" aria-labelledby="question-title"><p class="section-kicker">01 / The question</p><div><h2 id="question-title">{story.question.title}</h2><p>{story.question.text}</p></div></section>
   <section id="process" class="process" aria-labelledby="process-title">
@@ -47,7 +49,8 @@ const { project, story, next } = Astro.props;
  .case-study { margin-inline: auto; }
  .breadcrumbs { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-bottom: 1.4rem; border-bottom: 1px solid var(--border); font: .7rem var(--font-mono); }
  .breadcrumbs div { display: flex; gap: 1rem; } .breadcrumbs a { text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
- .case-header { padding: clamp(2rem,6vw,4.25rem) 0 2.5rem; }
+ .case-header { padding: clamp(1.5rem,5vw,3rem) 0 1rem; }
+ .overview { padding-top: 2rem; }
  .eyebrow, .section-kicker { font: .66rem var(--font-mono); color: var(--text-dim); line-height: 1.6; text-transform: uppercase; letter-spacing: .07em; }
  .eyebrow span { margin-inline: .5rem; }
  h1 { font-size: clamp(2.5rem,5.5vw,4.9rem); line-height: 1.06; letter-spacing: -.055em; max-width: 18ch; margin: 1.2rem 0 1rem; white-space: pre-line; }
@@ -84,5 +87,5 @@ const { project, story, next } = Astro.props;
  .next-project { display: grid; grid-template-columns: auto 1fr auto; gap: 1.5rem; align-items: center; padding: 1.5rem 0; margin-top: 3.5rem; border-block: 1px solid var(--border); text-decoration: none; }
  .next-project span:first-child { font: .65rem var(--font-mono); color: var(--text-dim); } .next-project strong { font-size: .95rem; font-weight: 500; }
  @media(max-width:44rem) { .question { grid-template-columns: 1fr; gap: 1rem; padding: 2.5rem 0; } .steps { grid-template-columns: 1fr; gap: .25rem; } .steps li { padding: 1rem 0; } .pair { grid-template-columns: 1fr; } .metrics { gap: .75rem; } .metrics div { padding-right: .7rem; } .next-project { gap: .7rem; } }
- @media(max-width:25rem) { .breadcrumbs { align-items: flex-start; flex-direction: column; gap: 0; } .role { grid-template-columns: 1fr; gap: .3rem; } .metrics { grid-template-columns: 1fr; } .metrics div { border-right: 0; border-bottom: 1px solid var(--border); padding-bottom: 1rem; } .metrics div:last-child { border-bottom: 0; } }
+ @media(max-width:25rem) { .breadcrumbs { flex-wrap: wrap; gap: 0 1rem; } .role { grid-template-columns: 1fr; gap: .3rem; } .metrics { grid-template-columns: 1fr; } .metrics div { border-right: 0; border-bottom: 1px solid var(--border); padding-bottom: 1rem; } .metrics div:last-child { border-bottom: 0; } }
 </style>
