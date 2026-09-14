@@ -22,28 +22,27 @@ const { project, story, next } = Astro.props;
     <div class="role"><span>My role</span><p>{story.role}</p></div>
   </div>
   <dl class="metrics">{story.metrics.map(metric => <div><dt>{metric.label}</dt><dd><span class="metric-value">{metric.value}</span>{metric.note && <p>{metric.note}</p>}</dd></div>)}</dl>
-  <section class="question" aria-labelledby="question-title"><p class="section-kicker">01 / The question</p><div><h2 id="question-title">{story.question.title}</h2><p>{story.question.text}</p></div></section>
+  <section class="question" aria-labelledby="question-title"><p class="section-kicker">Starting point</p><div><h2 id="question-title">{story.question.title}</h2><p>{story.question.text}</p></div></section>
   <section id="process" class="process" aria-labelledby="process-title">
-    <div class="section-heading"><p class="section-kicker">02 / The approach</p><h2 id="process-title">How I built it</h2></div>
+    <div class="section-heading"><h2 id="process-title">How it came together</h2></div>
     <ol class="steps">{story.steps.map((step,index) => <li><span class="step-number">0{index+1}</span><h3>{step.title}</h3><p>{step.text}</p></li>)}</ol>
   </section>
   {story.comparison && <div class="interactive-slot"><ImageComparison comparison={story.comparison} /></div>}
   {story.sweep && <div class="interactive-slot"><DirectionExplorer sweep={story.sweep} /></div>}
   {story.gallery.length > 0 && <div class:list={['gallery', { pair: story.gallery.length > 1 }]}>{story.gallery.map(media => <PortfolioMedia media={media} />)}</div>}
   <section id="results" class="results" aria-labelledby="results-title">
-    <p class="section-kicker">03 / What I learned</p>
     <h2 id="results-title">{story.finding.title}</h2>
     <p class="result-copy">{story.finding.text}</p>
     {story.charts.length > 0 && <div class="charts">{story.charts.map(chart => <PortfolioChart chart={chart} />)}</div>}
     <div class="details">{story.details.map(detail => <p>{detail}</p>)}</div>
   </section>
-  {project.data.demo && <section class="demo-section"><h2>Explore the idea</h2><p>Try an interactive explanation of the workflow.</p><ProjectDemo demo={project.data.demo} href={`/projects/${project.id}/`} title={project.data.title} size="page" /></section>}
+  {project.data.demo && <section class="demo-section"><h2>Try it in your browser</h2><p>This demo recreates parts of the project so you can try the interactions.</p><ProjectDemo demo={project.data.demo} href={`/projects/${project.id}/`} title={project.data.title} size="page" /></section>}
   <footer id="sources" class="sources">
-    <div><p class="section-kicker">04 / Take a closer look</p><h2>Reports, code & credits</h2></div>
+    <div><h2>Reports, code, and credits</h2></div>
     <div class="resource-links">{project.data.links.map(link => <a href={link.href} rel="noopener">{link.label}<span aria-hidden="true">↗</span></a>)}</div>
     <div class="credits">{story.credits.map(credit => <p>{credit}</p>)}</div>
   </footer>
-  {next && <a class="next-project" href={next.href}><span>Next study</span><strong>{next.title}</strong><span aria-hidden="true">↗</span></a>}
+  {next && <a class="next-project" href={next.href}><span>Next project</span><strong>{next.title}</strong><span aria-hidden="true">↗</span></a>}
 </article>
 <style>
  .case-study { margin-inline: auto; }

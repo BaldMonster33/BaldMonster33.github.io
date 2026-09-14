@@ -9,12 +9,12 @@ const href = `/projects/${project.id}/`;
 <article class:list={['portfolio-card', { featured }]}>
   <div class="visual"><PortfolioMedia media={story.hero} compact eager={featured} /></div>
   <div class="card-copy">
-    <div class="topline"><span>0{index + 1} / Selected study</span><span>{project.data.period}</span></div>
+    <div class="topline"><span>Project 0{index + 1}</span><span>{project.data.period}</span></div>
     <p class="project-name">{project.data.title}</p>
     <h2><a href={href}>{story.headline}</a></h2>
     <p class="summary">{story.intro}</p>
     <div class="tags">{project.data.stack.slice(0,3).map(tag => <span>{tag}</span>)}</div>
-    <a class="case-link" href={href}>Explore the project <span aria-hidden="true">↗</span></a>
+    <a class="case-link" href={href}>Read about the project <span aria-hidden="true">↗</span></a>
   </div>
 </article>
 <style>

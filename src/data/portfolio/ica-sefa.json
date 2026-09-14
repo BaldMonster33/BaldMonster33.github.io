@@ -1,20 +1,20 @@
 {
-  "headline": "Finding meaningful controls inside a GAN",
-  "intro": "Moving a GAN’s latent code can change a face dramatically. I studied whether discovered directions change one interpretable attribute consistently across generated images.",
+  "headline": "Changing one feature in a generated face",
+  "intro": "This project explored how to change a feature such as hair color without changing several others. I helped implement ICA-SeFa, a method for finding these edits in a trained GAN, and ran its human evaluation.",
   "context": "University of Michigan · Machine-learning course research · Jan–Sept 2021",
-  "role": "Human-evaluation design and execution, annotator recruitment, results analysis, shared algorithm implementation, and report coauthorship.",
+  "role": "I designed and ran the human study, recruited annotators, analyzed the results, and helped implement the method and write the report.",
   "hero": {
     "type": "image",
     "src": "/media/projects/ica-sefa/semantic-directions.svg",
     "alt": "Three generated StyleGAN2 faces show the same latent identity with a closed, partly open, and widely open mouth.",
-    "caption": "A real editing sweep from Figure 1: the middle image is the original latent code; the sides move in opposite directions.",
+    "caption": "Figure 1 from the course report. The middle face is the starting image; the faces on either side show edits in opposite directions.",
     "credit": "Chen, Qin, Bi, Chen and Zhao · 2021 course report"
   },
   "metrics": [
     {
       "value": "8",
       "label": "Human annotators",
-      "note": "The public course-study protocol."
+      "note": "Participants in the course study."
     },
     {
       "value": "35",
@@ -28,21 +28,21 @@
     }
   ],
   "question": {
-    "title": "Does a direction mean the same thing across images?",
-    "text": "A striking edit is only a starting point. I designed the human evaluation to examine whether each direction produced an interpretable, consistent change, then analyzed the comparison."
+    "title": "Checking the same edit across faces",
+    "text": "An editing direction changes the inputs used to generate an image. I designed the human study to check whether each direction changed a recognizable feature consistently across different faces."
   },
   "steps": [
     {
-      "title": "Discover",
-      "text": "Co-implemented FastICA factorization of pretrained generator weights, building on SeFa to discover directions without training another neural network."
+      "title": "Find editing directions",
+      "text": "I helped implement a method that applies FastICA to a pretrained generator's weights. It builds on SeFa and finds editing directions without training another neural network."
     },
     {
-      "title": "Inspect",
-      "text": "Generated editing sweeps and compared similar attributes in StyleGAN2 trained on FFHQ. Looked for changes that preserve unrelated characteristics."
+      "title": "Compare the images",
+      "text": "We generated sequences of edits with StyleGAN2 trained on FFHQ, then compared similar features and checked whether other parts of the face changed too."
     },
     {
-      "title": "Evaluate",
-      "text": "Recruited eight annotators, designed and ran the mean-opinion-score study, and analyzed the selected directions. The team also examined semantic correlations with CLIP."
+      "title": "Collect human ratings",
+      "text": "I recruited eight annotators, designed and ran the rating study, and analyzed their scores for the selected directions. The team also used CLIP to compare edits with named attributes."
     }
   ],
   "gallery": [
@@ -55,22 +55,22 @@
     }
   ],
   "finding": {
-    "title": "Evaluation makes interpretability visible.",
-    "text": "Selected ICA-SeFa directions showed clearer attribute control in the qualitative comparisons and higher top-ranked human scores. Because the study rated a manually selected subset, these findings should not be read as an average over every discovered direction."
+    "title": "Results for the selected directions",
+    "text": "The selected ICA-SeFa examples showed clearer control over individual features, and its highest-rated directions received higher human scores than SeFa's. The study used a manually selected subset, so these results don't describe the average across all discovered directions."
   },
   "details": [
-    "The public course experiment discovered 200 directions per method, selected 35 per method for human rating, and reported the ten highest-scoring directions. Mean opinion scores represent human judgments, not classification accuracy.",
-    "CLIP analysis provided a complementary view of how directions correlated with named attributes. It was team research implemented by Dongyang Zhao."
+    "The course experiment found 200 directions per method, manually selected 35 from each for human rating, and reported the ten highest-scoring directions. The mean opinion scores are averages of human ratings, rather than classification accuracy.",
+    "Dongyang Zhao implemented the CLIP analysis, which measured how the editing directions correlated with named attributes."
   ],
   "credits": [
-    "Houming Chen proposed the idea, developed the theory and algorithm, and led implementation. Le Qin owned the human-evaluation work and contributed to implementation. Yutong Bi and Jiaxi Chen contributed literature review and theory development.",
-    "Visuals come from the linked 2021 course report. The full course presentation remains available in the project resources."
+    "Houming Chen proposed the idea, developed the theory and algorithm, and led implementation. I ran the human evaluation and helped with implementation. Yutong Bi and Jiaxi Chen contributed to the literature review and theory development.",
+    "The images come from our 2021 course report. The full course presentation is also linked below."
   ],
   "sweep": {
     "src": "/media/projects/ica-sefa/mouth-sweep.jpg",
     "alt": "The same generated face with a less open mouth, its original mouth opening, and a more open mouth.",
-    "title": "Explore the actual direction",
-    "caption": "Three original Figure 1 frames from the 2021 course report. Select a position to inspect the edit; no images are synthesized or interpolated here.",
+    "title": "Compare the mouth edits",
+    "caption": "Select a position to view one of three original Figure 1 frames from the 2021 course report. This viewer displays the saved images without generating frames between them.",
     "labels": [
       "Less open",
       "Original",

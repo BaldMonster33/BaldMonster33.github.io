@@ -1,72 +1,54 @@
 ---
 title: Fitts's Revenge
 description: >-
-  The splash screen on this site, and an empathy device. Fitts's Law says the
-  time to hit a target falls out of its size and distance; this one refuses both,
-  fleeing to wherever your cursor is not heading. A keyboard walks straight in,
-  while touch and pen stay direct — the same barrier a lot of people meet every
-  day, pointed the other way round for once.
+  An Enter button that dodges your mouse. You can still use the keyboard,
+  touch, or a pen to get in. I built it as a small experiment about what
+  happens when an interface gets in your way.
 period: 'Aug 2026'
 stack: ['Astro', 'TypeScript', 'CSS', 'a11y']
 demo:
   type: component
   id: fitts-revenge
-  cta: 'Try the front door'
+  cta: 'Try the button'
 featured: true
 order: 15
 ---
 
-Fitts's Law models how long it takes to acquire a target with a pointer: the
-time falls out of the target's size and its distance, and nothing else. It is
-one of the oldest results in interaction design and it is usually invoked to
-make things easier to hit — bigger buttons, closer menus, corners you can
-slam a cursor into.
+On the home page, the Enter button moves away as you try to click it. Press
+Tab and Enter, though, and you can go straight through. Touch and pen work
+normally too.
 
-This button is the same law read backwards. It refuses to hold a size and a
-distance long enough to be modelled, because it moves every frame to whichever
-part of the viewport is furthest from where the cursor is heading. Pointing at
-it is not hard, it is undefined.
+The name comes from Fitts's Law, which relates pointing time to a target's size
+and distance. Designers use it to make buttons easier to reach. Here, the button
+keeps moving away from the cursor.
 
-Then the keyboard walks straight in, because Fitts's Law never governed the
-keyboard. Tab, Enter, done — including in Safari, where the dialog supplies its
-own focus cycle instead of depending on the browser's optional Tab setting.
+## Why I made it
 
-## Why it exists
+An interface can work for someone using a mouse and still be difficult or
+impossible to use with a keyboard. I reversed that situation to give mouse users
+a brief experience of a control getting in their way. It's a small interaction
+experiment, not a simulation of someone's experience with a disability.
 
-Plenty of people arrive at a product and discover that the way they drive a
-computer is the one way that does not work. Usually that means the mouse works
-fine and everything else is broken. Here it is inverted, so that the majority
-gets thirty seconds of the minority's experience — futility with a visible,
-functioning door right next to it.
+There are several ways through:
 
-The inversion is only honest if the other routes are genuinely open, so they
-are, and none of them require aim:
+- Tab and Enter activate the button without making it dodge. The dialog handles
+  its own focus cycle, including in Safari.
+- Touch and pen activate it directly.
+- Escape closes the dialog, and a skip button appears after a few evasions.
+- With reduced motion enabled, the Enter button stays still.
+- Without JavaScript, the page opens without the dialog.
 
-- Keyboard activation is detected and never dodges.
-- Touch and pen activation is direct; only a fine mouse gets the evasive version.
-- Escape closes it.
-- A `skip this` control appears once it is clear you are being toyed with.
-- `prefers-reduced-motion` disables the whole act — dodging *is* the motion.
-- Without JavaScript there is no door at all.
+## How the button moves
 
-A version of this that also shut out the keyboard would not be making a point
-about accessibility. It would just be inaccessible.
+The first version moved away only when the cursor got close, so a slow approach
+could catch it. The current version uses the cursor's direction and speed to
+estimate where it's heading. It chooses a new position from a 5×5 grid across
+the viewport, which lets it move across the screen instead of getting pushed
+into a corner.
 
-## Making it actually uncatchable
+Checking only the predicted cursor position caused another problem: a fast
+approach could look as if the cursor would pass the button safely. The code now
+checks both the current and predicted positions and uses whichever is closer.
 
-The first version merely flinched when the cursor got close, which is trivially
-beatable — you approach slowly. Two changes fixed that. It aims at the cursor's
-*predicted* position rather than its current one, and it chooses from a 5×5 grid
-of candidate resting places rather than simply fleeing the cursor, because pure
-repulsion can be walked into a corner and pinned.
-
-I checked the targeting by replaying the maths headlessly against a simulated
-cursor chasing the button from a slow creep to a violent flick. That caught a
-bug I would not have found by hand: judging danger purely by predicted position
-reads a fast, direct approach as *heading past me, no danger*, and the pursuer
-could sit inside the button 7% of the time. Danger is now the nearer of where
-the cursor is and where it is going, and that figure is zero at every speed
-above a crawl.
-
-There is a fuller account of the implementation in
+You can read about the rest of the site in
 [how this site is built](/blog/colophon).

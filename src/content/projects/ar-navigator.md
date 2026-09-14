@@ -1,9 +1,9 @@
 ---
 title: AR Navigator
 description: >-
-  Accessibility-minded augmented-reality object-finding prototype that detects
-  objects or tracks an image reference, then guides the user with an arrow, spatial
-  audio, and haptic feedback.
+  A mobile prototype that points toward a selected object with an arrow,
+  spatial sound, and vibration. I proposed the idea for people with vision
+  impairments and built it with my course team.
 period: 'Nov – Dec 2022'
 stack: ['Unity', 'AR Foundation', 'Barracuda', 'C#']
 demo:
@@ -18,19 +18,22 @@ featured: false
 order: 50
 ---
 
-I originated the accessibility-focused object-finding idea and developed the
-prototype with my course team. The original Unity application combined
-YOLOv3-tiny object detection with AR Foundation image-reference tracking.
-Targets could be selected and cycled, then located using an arrow, spatial
-audio, and vibration. Accessible labels and text-to-speech supported the controls.
+AR Navigator uses an arrow, spatial sound, and vibration to point a phone
+toward a selected object. I proposed the idea for people with vision
+impairments and developed the prototype with my course team in Unity.
 
-Our December 7 peer playtest confirmed working sound and vibration and surfaced
-confusion about the two modes. The team focused on integrating their workflows
-and polishing the interface, while deferring a partially developed radar map.
-These were design playtests, not an effectiveness study with people with vision
-impairments.
+The app offers two ways to choose a target: select a common object detected by
+YOLOv3-tiny, or add a labelled reference image for AR Foundation to track.
+Users can cycle through targets, with spoken labels and accessibility support
+for the controls.
 
-The linked **original team trailer** shows the mobile application. The browser
-demo is an **illustrative reconstruction** of its interaction using synthetic
-scenery and detections. It also exposes the radar as an unfinished prototype.
-No private Unity source, model weights, or camera data is served by this page.
+Our December 7 peer playtest confirmed that sound and vibration worked, but
+the difference between the two modes wasn't clear. We focused on connecting
+the search flows and revising the interface, and set aside a partially
+developed radar map. We used these playtests to improve the design; we haven't
+established how well the prototype works for people with vision impairments.
+
+The linked team trailer shows the original mobile application. The browser
+demo recreates the interaction with generated scenery and detections, and
+includes the unfinished radar prototype. The page doesn't serve private Unity
+source, model weights, or camera data.

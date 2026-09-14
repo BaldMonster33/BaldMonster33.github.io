@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
-  <title id="title">Ann Arbor Go: explore, interact, and carry the world forward</title>
+  <title id="title">Ann Arbor Go: map and AR scenes</title>
   <desc id="desc">An illustrated system map of the original AR course game. Map exploration connects to phone-based AR interaction, with shared inventory and planted-tree state between the scenes. This is a diagram, not an original mobile screenshot.</desc>
   <defs>
     <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#142d27"/><stop offset="1" stop-color="#071a18"/></linearGradient>
@@ -11,7 +11,7 @@
   <rect width="1200" height="720" rx="28" fill="url(#grid)"/>
   <g font-family="Inter, Arial, sans-serif">
     <text x="64" y="68" font-size="15" letter-spacing="3" fill="#b6dd8f">ANN ARBOR GO · SYSTEM MAP</text>
-    <text x="64" y="117" font-size="36" font-weight="700" fill="#f1f3df">Two views. One evolving world.</text>
+    <text x="64" y="117" font-size="36" font-weight="700" fill="#f1f3df">Map view and AR view</text>
     <g transform="translate(64 166)">
       <rect width="477" height="400" rx="20" fill="#274139" stroke="#557667"/>
       <text x="28" y="44" font-size="16" letter-spacing="2" font-weight="700" fill="#e5e8ce">01 / EXPLORE</text>

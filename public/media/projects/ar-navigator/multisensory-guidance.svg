@@ -3,11 +3,11 @@
 <defs><linearGradient id="screen" x2="0" y2="1"><stop stop-color="#e4eedb"/><stop offset="1" stop-color="#c0d5ba"/></linearGradient><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M50 0H0V50" fill="none" stroke="#36514a" stroke-opacity=".065"/></pattern><style>text{font-family:Arial,Helvetica,sans-serif}.signal{animation:ping 4s ease-in-out 1;opacity:.75}@keyframes ping{0%,100%{opacity:.75}45%{opacity:1}}@media(prefers-reduced-motion:reduce){.signal{animation:none}}</style></defs>
 <rect width="1600" height="1000" fill="#f1f0e6"/><rect width="1600" height="1000" fill="url(#grid)"/>
 <circle cx="1120" cy="482" r="474" fill="#dbe6d2"/><circle cx="1120" cy="482" r="342" fill="none" stroke="#a6baa0" stroke-dasharray="5 12"/>
-<path d="M78 76h85" stroke="#bd593e" stroke-width="5"/><text x="78" y="118" fill="#576d60" font-size="19" letter-spacing="3">AR NAVIGATOR / INCLUSIVE XR</text>
-<text x="76" y="231" fill="#153c31" font-size="72" font-weight="700" letter-spacing="-2">Find the object.</text>
-<text x="76" y="315" fill="#153c31" font-size="72" font-weight="700" letter-spacing="-2">Follow the cues.</text>
+<path d="M78 76h85" stroke="#bd593e" stroke-width="5"/><text x="78" y="118" fill="#576d60" font-size="19" letter-spacing="3">AR NAVIGATOR / OBJECT FINDING</text>
+<text x="76" y="231" fill="#153c31" font-size="72" font-weight="700" letter-spacing="-2">Finding objects</text>
+<text x="76" y="315" fill="#153c31" font-size="72" font-weight="700" letter-spacing="-2">with a phone</text>
 <text x="80" y="385" fill="#4c6557" font-size="26">A phone-based prototype for</text><text x="80" y="424" fill="#4c6557" font-size="26">finding things in your surroundings.</text>
-<g transform="translate(78 515)"><rect width="478" height="180" rx="20" fill="#183f33"/><text x="30" y="48" fill="#a9c4b2" font-size="18" letter-spacing="2">ONE TARGET, THREE CHANNELS</text><text x="30" y="95" fill="#f8f1d9" font-size="30" font-weight="700">Arrow · audio · vibration</text><text x="30" y="142" fill="#c6d5c6" font-size="21">A shared direction across visual,</text><text x="30" y="169" fill="#c6d5c6" font-size="21">auditory, and tactile feedback.</text></g>
+<g transform="translate(78 515)"><rect width="478" height="180" rx="20" fill="#183f33"/><text x="30" y="48" fill="#a9c4b2" font-size="18" letter-spacing="2">DIRECTION CUES</text><text x="30" y="95" fill="#f8f1d9" font-size="30" font-weight="700">Arrow · audio · vibration</text><text x="30" y="142" fill="#c6d5c6" font-size="21">The same direction shown through</text><text x="30" y="169" fill="#c6d5c6" font-size="21">an arrow, sound, and vibration.</text></g>
 <g transform="translate(780 106)">
 <rect x="17" y="20" width="443" height="778" rx="66" fill="#1a3a2c" opacity=".15"/>
 <rect width="443" height="778" rx="66" fill="#18372b"/><rect x="15" y="15" width="413" height="748" rx="52" fill="url(#screen)"/>

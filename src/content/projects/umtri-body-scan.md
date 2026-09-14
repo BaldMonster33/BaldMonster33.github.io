@@ -1,16 +1,16 @@
 ---
 title: 3D Joint Estimation from Clothed Body Scans
 description: >-
-  Research at the University of Michigan Transportation Research Institute under
-  Dr. Byoung-Keon (Daniel) Park. Adapted the lab's joint-estimation prototype into
-  a Python/VTK pipeline and delivered a batch desktop application for macOS and Windows.
+  I adapted Dr. Byoung-Keon (Daniel) Park's joint-estimation prototype into a
+  Python desktop tool at UMTRI. It estimates 3D joints from clothed body scans
+  and processes batches on macOS and Windows.
 period: 'May – Sept 2022'
 stack: ['Python', 'VTK', 'OpenPose', '3D geometry', 'Tkinter']
 demo:
   type: scene
   path: body-scan
-  cta: 'Explore the pipeline'
-  controls: 'Explore a synthetic reconstruction: select generated scans, inspect the rendered views and 2D-to-3D stages, orbit the illustration, and export synthetic coordinates.'
+  cta: 'Try the illustrated demo'
+  controls: 'Select a synthetic scan, inspect its rendered views and the 2D-to-3D steps, rotate the illustration, and export synthetic coordinates.'
 links:
   - label: 'Dr. Park'
     href: 'https://sites.google.com/view/danielpark/home'
@@ -20,23 +20,28 @@ featured: true
 order: 20
 ---
 
-My research focused on adapting the lab's C# joint-estimation prototype into a
-Python application. Mentor Byoung-Keon (Daniel) Park provided the original
-method and prototype; I implemented the Python pipeline, debugged coordinate
-transforms, and built the interface and application packages.
+At the University of Michigan Transportation Research Institute, I adapted a
+C# prototype from my mentor, Byoung-Keon (Daniel) Park, into a Python desktop
+tool. It estimates joint positions from several views of a clothed body scan
+and exports the coordinates. Dr. Park provided the original method and
+prototype; I built the Python version, debugged the coordinate transforms,
+and added the interface and application packages.
 
-The pipeline rendered each PLY scan at 45° intervals from 0° through 360°:
-nine images, including a repeated endpoint. OpenPose supplied 25 candidate
-landmarks per image. Confidence filtering, inverse transforms, and optimization
-over recovered rays produced estimated 3D joint coordinates. These are
-implementation dimensions, not a measured accuracy result.
+The tool renders each PLY scan in VTK at 45° intervals from 0° through 360°.
+That produces nine images, with the first and last showing the same
+orientation. OpenPose supplies 25 candidate landmarks per image. After
+filtering low-confidence detections, the tool maps the accepted points back
+into 3D rays in the scan's coordinate frame. An optimization step combines
+these rays to estimate joint positions. These counts describe the processing
+setup; they don't measure how accurate the estimates are.
 
-A key issue was the mismatch between nine rendered images and eight stored
-transforms. I corrected that alignment and delivered batch selection, progress
-logs, optional result visualization, and joint-coordinate CSV export through a
-Tkinter interface, command-line workflow, and macOS/Windows packages.
+I found nine rendered images paired with only eight stored transforms.
+Fixing that mismatch restored the alignment. I also added batch selection,
+progress logs, optional result visualization, and joint-coordinate CSV export
+through a Tkinter interface and command-line workflow, then packaged the
+application for macOS and Windows.
 
-The interactive demo is an **illustrative reconstruction using synthetic data**.
-It makes the processing stages explorable in a browser; it is not the original
-research executable or evidence of anatomical accuracy. The original scans,
-research outputs, and private source code are not included.
+The browser demo uses synthetic data to explain the processing stages. It is
+separate from the original application and doesn't demonstrate anatomical
+accuracy. The original scans, research outputs, and private source code are
+not included.

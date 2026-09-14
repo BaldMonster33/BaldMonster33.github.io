@@ -21,20 +21,20 @@ const needsFrontDoor = projects.some(
 
 <BaseLayout
   title="Projects"
-  description="Research and engineering projects, with reports, code, and recordings across machine learning, computer vision, and accessibility."
+  description="Projects I worked on in machine learning, computer vision, accessibility, and software engineering, with demos, code, and reports."
   wide
 >
   {needsFrontDoor && <FittsRevenge auto={false} />}
 
   <div class="portfolio-head">
-    <p class="eyebrow">Selected work / University of Michigan</p>
-    <h1>Ideas you can<br />see, test & explore.</h1>
-    <div class="intro-row"><p>From interpreting a model to making an interface usable.<br class="desktop-break" /> Research and course projects in machine learning, vision, and human interaction.</p><span class="study-count">{String(academic.length).padStart(2, '0')} <small>studies<br />2021–2023</small></span></div>
+    <p class="eyebrow">University of Michigan / 2021–2023</p>
+    <h1>Projects</h1>
+    <div class="intro-row"><p>These are projects I worked on at Michigan, from editing images to building AR games. Each page explains what we tried, what I worked on, and how it turned out.</p><span class="study-count">{String(academic.length).padStart(2, '0')} <small>university<br />projects</small></span></div>
   </div>
 
   <div class="portfolio-grid">{academic.map((project,index) => <PortfolioCard project={project} story={portfolioStories[project.id]} index={index} featured={index === 0 || (academic.length % 2 === 0 && index === academic.length - 1)} />)}</div>
 
-  <div class="other-heading"><p class="eyebrow">Beyond the coursework</p><h2>More things I've built</h2><p>Product engineering, interactive experiments, and independent projects.</p></div>
+  <div class="other-heading"><h2>Work and side projects</h2><p>An example of the work I do at AWS, and a small experiment on this site.</p></div>
   <div class="grid">
     {
       otherProjects.map((project) => (
@@ -68,5 +68,5 @@ const needsFrontDoor = projects.some(
     gap: 1rem;
     margin-inline: auto;
   }
-  @media(max-width:44rem) { .portfolio-grid { grid-template-columns: 1fr; } .study-count { display: none; } .desktop-break { display: none; } }
+  @media(max-width:44rem) { .portfolio-grid { grid-template-columns: 1fr; } .study-count { display: none; } }
 </style>

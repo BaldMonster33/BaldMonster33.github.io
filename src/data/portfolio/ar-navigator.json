@@ -1,46 +1,46 @@
 {
-  "headline": "Find objects through sight, sound, and touch.",
-  "intro": "I proposed an accessibility-focused object-finding concept and developed it with my team into a Unity mobile AR prototype.",
+  "headline": "Finding objects with a phone",
+  "intro": "AR Navigator is a mobile prototype that points toward a selected object with an arrow, spatial sound, and vibration. I proposed the idea for people with vision impairments and built it with my course team in Unity.",
   "context": "University of Michigan · XR course project · November–December 2022",
-  "role": "Concept originator and Unity/C# team developer; iterated through weekly peer playtests.",
+  "role": "I came up with the concept, helped develop it in Unity and C#, and revised the interaction with the team through weekly peer playtests.",
   "hero": {
     "type": "image",
     "src": "/media/projects/ar-navigator/multisensory-guidance.svg",
     "alt": "An illustrated phone guides toward a selected apple through an arrow, spatial sound, and an alignment vibration.",
-    "caption": "Three cues point toward one target. This illustration explains the original mobile interaction; it is not an application screenshot."
+    "caption": "A diagram of the arrow, spatial sound, and alignment vibration used in the mobile prototype."
   },
   "metrics": [
-    { "value": "2", "label": "Target-finding modes", "note": "Object detection and uploaded image references." },
-    { "value": "3", "label": "Guidance channels", "note": "Visual arrow, spatial audio, and vibration." },
-    { "value": "80", "label": "Model object categories", "note": "YOLOv3-tiny label set; not a detection-accuracy result." }
+    { "value": "2", "label": "ways to choose a target", "note": "Object detection and uploaded image references." },
+    { "value": "3", "label": "types of guidance", "note": "Visual arrow, spatial audio, and vibration." },
+    { "value": "80", "label": "object categories in the model", "note": "The YOLOv3-tiny label set; this count doesn't measure detection accuracy." }
   ],
   "question": {
-    "title": "Can a phone help someone locate a nearby object?",
-    "text": "Inspired by assistive technology, I proposed combining recognition with directional cues for people with vision impairments. The prototype explored that interaction through two complementary ways to define a target."
+    "title": "Choosing what to find",
+    "text": "The app offers two ways to set a target: select a common object detected by the camera, or add a labelled reference image from the photo library. Both modes use the same types of directional cues."
   },
   "steps": [
-    { "title": "Choose what to find", "text": "Detect a common object with on-device YOLOv3-tiny, or label an uploaded image for reference tracking." },
-    { "title": "Follow the direction", "text": "Select or cycle targets. An arrow, spatial ping, and alignment vibration provide complementary feedback." },
-    { "title": "Keep controls accessible", "text": "Use spoken labels and accessible controls, then stop guidance when the search is finished." }
+    { "title": "Select a target", "text": "The phone runs YOLOv3-tiny to detect common objects and AR Foundation to track image references. Users can select a target or cycle through the available ones." },
+    { "title": "Turn toward it", "text": "An arrow and spatial ping indicate direction. The phone vibrates when it lines up with the target." },
+    { "title": "Control the search", "text": "Spoken labels and accessibility support help users operate the controls and stop guidance when they're finished." }
   ],
   "gallery": [
     {
       "type": "image",
       "src": "/media/projects/ar-navigator/two-target-modes.svg",
       "alt": "Diagram of object detection and image references converging into one target-selection and guidance workflow.",
-      "caption": "The two modes address different targets: recognizable object categories and specific visual references."
+      "caption": "Object detection searches for categories the model recognizes. Image tracking uses a specific visual reference supplied by the user."
     }
   ],
   "finding": {
-    "title": "Make the core search interaction work together.",
-    "text": "Peer playtests confirmed working audio and vibration but exposed confusion between modes. The team prioritized integrating those flows and polishing the interface; a radar-map prototype was deferred."
+    "title": "The two modes were confusing in playtests",
+    "text": "Peer testers could use the audio and vibration, but the difference between the modes wasn't clear. We focused on connecting the two search flows and revising the interface, and set aside a partially developed radar map."
   },
   "details": [
-    "The browser demo reconstructs the interaction with a synthetic scene. The linked team trailer records the original mobile application.",
-    "Peer playtests informed the design. They do not establish validated effectiveness for people with vision impairments."
+    "The browser demo recreates the interaction with generated scenery and detections. The linked team trailer shows the original mobile application.",
+    "We used peer playtests to improve the design. We haven't established how well the prototype works for people with vision impairments."
   ],
   "credits": [
-    "A University of Michigan student-team project, developed in Unity with AR Foundation, Barracuda, and Apple accessibility support.",
-    "Original explanatory SVGs created for this portfolio."
+    "A University of Michigan student team project, built in Unity with AR Foundation, Barracuda, and Apple accessibility support.",
+    "The diagrams were created for this portfolio."
   ]
 }

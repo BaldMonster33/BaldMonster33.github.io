@@ -1,9 +1,9 @@
 ---
 title: 'XLNet for Verifiable Commonsense Reasoning'
 description: >-
-  Adapted the TRIP reasoning pipeline to XLNet and used loss-function ablations
-  to examine the gap between choosing a plausible story and identifying the
-  physical evidence that supports that choice.
+  I adapted the TRIP reasoning pipeline to XLNet and compared training losses
+  to check whether the model could choose a plausible story and explain
+  the physical conflict in the other one.
 period: 'Sept 2021 – Dec 2021'
 stack: ['Python', 'PyTorch', 'Hugging Face', 'XLNet', 'NLP']
 links:
@@ -15,30 +15,22 @@ featured: true
 order: 22
 ---
 
-A language model can choose the more plausible of two stories while failing
-to explain what makes the other impossible. That gap matters when a system's
-answer needs to be supported by reasoning that a person can inspect.
+I adapted the TRIP reasoning pipeline to XLNet to test whether it could
+identify why a short story was physically impossible. This was a University
+of Michigan natural-language-processing course project.
 
-For this University of Michigan natural-language-processing course project,
-I evaluated XLNet on TRIP, the Tiered Reasoning for Intuitive Physics dataset
-introduced by Storks and colleagues. TRIP pairs plausible and implausible
-stories and tests progressively stronger forms of reasoning: choosing the
-plausible story, identifying conflicting sentences, and predicting the physical
-states responsible for the conflict.
+TRIP, the Tiered Reasoning for Intuitive Physics dataset from Storks and
+colleagues, pairs plausible and implausible stories. It checks the model's
+story choice, the conflicting sentence pair, and the physical states before
+and after an action that explain the conflict.
 
-## My contribution
+My work covered integrating Hugging Face XLNet, fine-tuning the model,
+comparing training losses, evaluating the results, and writing the report.
+The training used four signals: precondition classification, effect
+classification, conflicting-sentence detection, and story choice. I removed
+selected losses to examine how each part of the training affected the results.
 
-I adapted the published TRIP pipeline to Hugging Face XLNet, fine-tuned the
-model, and evaluated loss-function ablations. The project used four supervision
-signals: precondition classification, effect classification, conflicting-sentence
-detection, and story choice. Removing selected losses made it possible to
-examine how supervision at one level affected behavior at the others.
-
-The linked repository preserves my modified notebook in a fork of the original
-research code. The dataset, tiered reasoning framework, and underlying pipeline
-are credited to Storks and colleagues; my work extends that setup to XLNet.
-
-## What the evaluation revealed
+## Validation results
 
 | Validation metric | All losses | No state losses |
 | --- | ---: | ---: |
@@ -48,22 +40,21 @@ are credited to Storks and colleagues; my work extends that setup to XLNet.
 
 “No state losses” omits the physical-state classification losses.
 
-Accuracy measures correct story choices. Consistency also requires identifying
-the conflicting sentence pair; verifiability additionally requires identifying
-the relevant physical states. In the second configuration, higher accuracy
-coincided with failure on both stronger reasoning measures. Correct answers
-alone therefore gave an incomplete account of the model's behavior.
-
-This result shaped how I approach model evaluation: measure the intermediate
-capabilities needed to justify an answer, alongside the final answer itself.
-An aggregate classification score can hide weaknesses that a structured
-evaluation exposes.
+Accuracy counts correct story choices. Consistency also requires the correct
+conflicting sentence pair; verifiability adds the relevant physical-state
+predictions. Without the state losses, story accuracy rose from 76.7% to
+80.0%, while consistency fell from 12.7% to zero. Verifiability was zero in
+both configurations: neither met the full requirements for explaining the
+conflict in this validation table.
 
 ## Report and code
 
-The linked document is my original December 2021 course report, rather than a
-peer-reviewed publication. Its BERT, RoBERTa, and DeBERTa comparisons are
-reported baselines from Storks et al.; they are not independent reruns. The
-table above reproduces the report's XLNet validation results. The archived
-notebook and report preserve the historical work; these experiments have not
-been rerun for this portfolio.
+The table comes from my December 2021 course report, which wasn't a
+peer-reviewed publication. The report's BERT, RoBERTa, and DeBERTa comparisons
+use baselines published by Storks et al.; I didn't rerun those models. The
+XLNet experiments haven't been rerun for this portfolio, and the two
+configurations don't establish statistical significance.
+
+My modified notebook is in the linked public fork of the original research
+code. Storks and colleagues created the dataset, reasoning framework, and
+underlying pipeline; my work adapted that setup to XLNet.

@@ -1,13 +1,13 @@
 {
-  "headline": "Make sound direction visible.",
-  "intro": "SoundAround translates sound-direction estimates into peripheral LED cues. The wearable prototype explores how someone could locate a sound without checking a separate screen.",
+  "headline": "Showing sound direction with LEDs",
+  "intro": "SoundAround is a wearable prototype that uses LEDs at the edge of the wearer's vision to show where a sound is coming from. A microphone array estimates the direction, and Python software chooses which lights to turn on.",
   "context": "University of Michigan · Engineering Interactive Systems course project · Jan–Apr 2023",
-  "role": "I originated the idea and handled hardware assembly, Python software, interaction design, testing, and results analysis. I did not lead the participant study sessions.",
+  "role": "I came up with the idea and worked on hardware assembly, Python software, interaction design, testing, and results analysis. I didn't lead the participant study sessions.",
   "hero": {
     "type": "image",
     "src": "/media/projects/soundaround/prototype-study.webp",
     "alt": "The original SoundAround helmet prototype with microphone array, Raspberry Pi, battery pack, and LED wiring, positioned in the five-direction study setup.",
-    "caption": "The working course prototype in the direction-identification setup. The numbered positions defined five front-direction targets.",
+    "caption": "The course prototype during direction-identification testing. The five numbered positions marked sound sources in front of the wearer.",
     "credit": "Original course report, Figure 3 · Le Qin and Jeremy Zhengqi Huang"
   },
   "metrics": [
@@ -16,41 +16,41 @@
     { "value": "93.3%", "label": "rear-direction identification", "note": "14 of 15 trials; approximate pointing counted" }
   ],
   "question": {
-    "title": "Can peripheral light communicate a sound's location?",
-    "text": "Sound can originate outside the field of view. Motivated by accessibility for deaf and hard-of-hearing people, I explored visual cues that convey its direction while allowing the wearer to keep looking at their surroundings."
+    "title": "Keeping the cues in view",
+    "text": "I proposed SoundAround with deaf and hard-of-hearing people in mind. Placing the lights in peripheral vision would let someone check a sound's direction while still looking at their surroundings."
   },
   "steps": [
-    { "title": "Acquire direction", "text": "Connect a ReSpeaker four-microphone array to a Raspberry Pi. The microphone device supplies direction estimates to a Python acquisition process." },
-    { "title": "Map to peripheral light", "text": "Share readings with a display process and map direction to LED position. Red and green distinguish front and rear sources." },
-    { "title": "Refine from feedback", "text": "Retune directional mappings, reduce brightness, add diffusion, and dim idle LEDs after preliminary feedback exposed interpretation and comfort issues." }
+    { "title": "Read the microphone array", "text": "A ReSpeaker four-microphone array sends direction estimates to a Python process on a Raspberry Pi." },
+    { "title": "Choose the lights", "text": "A separate display process reads those estimates and lights the corresponding LED positions. Red and green distinguish sounds in front from sounds behind the wearer." },
+    { "title": "Adjust the display", "text": "Early feedback led to changes in how directions mapped to LEDs. The revised display used lower brightness, added diffusion, and dimmer idle lights to make the cues easier to read and the device more comfortable to wear." }
   ],
   "gallery": [
     {
       "type": "image",
       "src": "/media/projects/soundaround/hardware-flow.webp",
       "alt": "System diagram connecting a four-microphone array, Raspberry Pi 4, programmable LED strip, and portable power supply.",
-      "caption": "Sensing, concurrent software, and wearable output form one system. The microphone supplies direction; the application makes it interpretable.",
+      "caption": "The microphone array sends direction readings to the Raspberry Pi, which controls the LED strip. A portable battery powers the prototype.",
       "credit": "Original course report, Figure 1"
     },
     {
       "type": "image",
       "src": "/media/projects/soundaround/directional-interface.webp",
       "alt": "Original interface sketch showing light position and color indicating front and rear sound directions around a wearer.",
-      "caption": "The interaction sketch uses both LED position and color to distinguish where a sound originates.",
+      "caption": "The original sketch shows how LED position and color represent sound direction.",
       "credit": "Original course report, Figure 2"
     }
   ],
   "finding": {
-    "title": "Interpretability mattered as much as sensing.",
-    "text": "The quiet-lab tasks showed that participants could interpret the cues. Outdoor tests exposed a different challenge: ambient noise could destabilize the indication and slow interpretation. That gap shaped the next questions about filtering and evaluation in everyday environments."
+    "title": "Background noise made the lights harder to read",
+    "text": "Participants could read the cues in the quiet lab. Outdoors, background noise could make the lights unstable and increase the time needed to interpret them. Further work would need to address noise filtering and test the display in everyday settings."
   },
   "details": [
-    "The reported percentages measure participant direction-identification tasks, not angular localization accuracy. Rear trials accepted pointing at or very near the target.",
-    "Noise-cancelling headphones limited auditory input; this condition does not reproduce or validate the deaf or hard-of-hearing experience.",
-    "The original source preserves experimental hardware/software variants. It documents the course prototype rather than a verified, reproducible product release."
+    "The percentages describe how often participants identified the tested direction. They don't measure the microphone's angular accuracy. Rear trials counted pointing at or very near the target as correct.",
+    "Participants wore noise-cancelling headphones to limit what they could hear. This doesn't reproduce the experience of being deaf or hard of hearing, or establish how well the device would work for those users.",
+    "The source archive contains experimental hardware and software variants with known defects. It records the course prototype and hasn't been verified as a reproducible release."
   ],
   "credits": [
-    "A collaboration with Jeremy Zhengqi Huang; we coauthored the course report.",
-    "Direction estimation came from the ReSpeaker device. My engineering connected its output to the wearable interaction and evaluation."
+    "I worked with Jeremy Zhengqi Huang, and we wrote the course report together.",
+    "The ReSpeaker device supplied the direction estimates. My work connected those readings to the wearable display and examined how people interpreted it."
   ]
 }

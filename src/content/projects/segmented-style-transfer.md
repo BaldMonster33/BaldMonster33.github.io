@@ -1,9 +1,9 @@
 ---
 title: 'Interactive Segmented Style Transfer'
 description: >-
-  Designed and built an application that lets users select an object with
-  positive and negative clicks, apply an artistic style, and preserve the
-  background. Evaluated four style-transfer models for quality and speed.
+  I built an application for selecting an object in a photo and applying an
+  artistic style while keeping the original background. I compared four
+  style-transfer models for quality and speed.
 period: 'Sept 2022 – Dec 2022'
 stack: ['Python', 'Computer vision', 'FocalClick', 'Style transfer', 'ArtFID']
 links:
@@ -17,24 +17,24 @@ featured: true
 order: 23
 ---
 
-Whole-image style transfer changes a scene even when someone only wants to
-restyle one object. This University of Michigan computer-vision course project
-combined interactive segmentation with neural style transfer so users could
-choose what changed and retain the surrounding image.
+I built an application for selecting an object in a photo and applying an
+artistic style to it. The selected area changes while the surrounding image
+stays the same. This was a University of Michigan computer-vision course
+project with Yu Peng, Christopher Yeh, and Yu-Ju Chiu.
 
-## My contribution
+## Selecting and styling an object
 
-I originated the idea and led the design, implementation, model evaluation,
-and application integration. The project was completed with Yu Peng,
-Christopher Yeh, and Yu-Ju Chiu, who are credited on the course report.
+I proposed the idea and led the design, implementation, model comparisons,
+and integration into the final application.
 
-The pipeline uses FocalClick to generate and refine a mask from positive and
-negative clicks. A style-transfer model processes the content and reference
-style images; mask-based compositing then combines the stylized region with
-the original background. This made object selection adjustable without
-requiring the user to draw a precise boundary by hand. The segmentation and
-stylization models were existing research implementations; my work was their
-integration into an interactive application and its evaluation.
+Positive and negative clicks guide FocalClick toward the object and away from
+areas to leave out. It produces a mask that marks the area to edit, so users
+can refine the selection without tracing the whole outline. A style-transfer
+model processes the photo and a reference style image. The application then
+uses the mask to combine the styled object with the original background.
+
+I used existing segmentation and style-transfer implementations. My work
+covered the interaction, integration, and evaluation.
 
 ## Comparing quality and speed
 
@@ -49,12 +49,11 @@ transfers per model.
 | IEContraAST | 27.946 | 10.1938 |
 | AdaIN | 27.955 | 4.9166 |
 
-The report's measurements expose a quality–speed tradeoff: AdaAttN has the
-lowest ArtFID, while AdaIN has the fastest stylization step. The timing
-excludes mask application and compositing, and the report does not specify
-hardware, so it does not establish end-to-end interaction latency. The table
-above preserves the numerical results while correcting the report's reversed
-ArtFID arrow and inconsistent summary.
+AdaAttN had the lowest ArtFID, while AdaIN had the shortest stylization time.
+The timings cover stylization only, excluding segmentation, mask application,
+and compositing. The report doesn't specify the hardware or measure how long
+the full application takes. This table keeps the reported numbers and
+corrects the report's reversed ArtFID arrow and inconsistent summary.
 
 ## Progress presentation
 
@@ -63,13 +62,13 @@ ArtFID arrow and inconsistent summary.
   <p><a href="/artifacts/segmented-style-transfer/progress-presentation-2022.mp4">Open the progress presentation</a>.</p>
 </video>
 
-The four-minute recording covers the pipeline (0:30), click-based selection
-and selective-styling examples (1:30), and an earlier ArtFID experiment (2:43).
-It captures a progress checkpoint before the unified application was finished;
-I completed that integration later. Its experimental scores differ from the
-report and are not combined with the table above.
+The four-minute recording shows the pipeline (0:30), click-based selection
+and styling examples (1:30), and an earlier ArtFID experiment (2:43). I
+finished combining the parts into one application after this presentation.
+Its experimental scores differ from the course report and are kept separate
+from the table above.
 
-The linked report preserves the final course write-up. The full application
-source has not been recovered; the linked ClickSEG repository is the upstream
-segmentation dependency. Examples in the report and recording use DAVIS and
-WikiArt material credited in the report.
+The linked report is the final course write-up. The full application source
+hasn't been recovered; the ClickSEG link points to the segmentation
+dependency. The report and recording use DAVIS and WikiArt images credited
+in the report.

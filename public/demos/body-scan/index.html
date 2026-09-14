@@ -13,13 +13,13 @@
     <header class="demo-head">
       <div>
         <h1>3D Joint Estimation</h1>
-        <p class="subhead">Synthetic browser reconstruction · Research project, May–September 2022</p>
+        <p class="subhead">Browser recreation with synthetic data · May–September 2022 research</p>
       </div>
       <p>Python · Tkinter · VTK · OpenPose · SciPy</p>
     </header>
 
     <main class="demo-main">
-      <section class="app-window panel" aria-label="Interactive reconstruction of the recovered UMTRI desktop application">
+      <section class="app-window panel" aria-label="Browser recreation of the UMTRI desktop application">
         <div class="titlebar">
           <span class="traffic" aria-hidden="true"><i></i><i></i><i></i></span>
           <strong>Joint Estimation · pipeline illustration</strong>
@@ -42,13 +42,13 @@
             </div>
 
             <label class="field-label" for="model-folder">Model Folder</label>
-            <div class="path-field"><input id="model-folder" value="/synthetic/scans" readonly><button type="button" data-toast="Folder picker replaced with synthetic files in this browser demo.">Browse</button></div>
+            <div class="path-field"><input id="model-folder" value="/synthetic/scans" readonly><button type="button" data-toast="Choose one of the sample files below for this demo.">Browse</button></div>
 
             <label class="field-label" for="output-folder">Output Folder</label>
-            <div class="path-field"><input id="output-folder" value="/synthetic/results" readonly><button type="button" data-toast="Exports download locally from your browser.">Browse</button></div>
+            <div class="path-field"><input id="output-folder" value="/synthetic/results" readonly><button type="button" data-toast="The CSV downloads to your computer.">Browse</button></div>
 
             <label class="field-label" for="openpose-folder">OpenPose Folder</label>
-            <div class="path-field"><input id="openpose-folder" value="/opt/openpose" readonly><button type="button" data-toast="The recovered app accepted an OpenPose root folder here.">Browse</button></div>
+            <div class="path-field"><input id="openpose-folder" value="/opt/openpose" readonly><button type="button" data-toast="The original app used this field to find OpenPose.">Browse</button></div>
 
             <div class="list-label"><span>Available Models</span><span id="selection-count">1 selected</span></div>
             <div class="model-list" id="model-list" role="group" aria-label="Synthetic PLY models">
@@ -107,14 +107,14 @@
               <div class="stage-card" id="stage-card">
                 <span id="stage-kicker">Input</span>
                 <strong id="stage-title">Read PLY mesh</strong>
-                <small id="stage-copy">VTK loads the scan as polygonal data.</small>
+                <small id="stage-copy">VTK reads the scan mesh.</small>
               </div>
             </div>
 
             <div class="camera-strip-wrap">
               <div class="strip-head"><span>Clothed surface → nine rendered camera views</span><span id="view-detail">0° · model_0.png</span></div>
               <div class="camera-strip" id="camera-strip" role="group" aria-label="Nine camera views"></div>
-              <p class="strip-note">Synthetic illustration of the original pipeline: VTK renders the clothed surface from nine angles, with 0° and 360° overlapping, before OpenPose detects joints in each image. This browser demo simulates those stages.</p>
+              <p class="strip-note">The original app used VTK to render nine views, with 0° and 360° showing the same angle. OpenPose then found joints in each image. This demo illustrates those steps with synthetic shapes and simulated detections.</p>
             </div>
 
             <div class="viewer-footer">
@@ -131,7 +131,7 @@
               <span class="status-dot" id="status-dot">idle</span>
             </div>
 
-            <div class="pipeline" id="pipeline" role="list" aria-label="Recovered processing stages">
+            <div class="pipeline" id="pipeline" role="list" aria-label="Steps in the original application">
               <button type="button" data-stage="scan" aria-pressed="true"><b>01</b><span><strong>Load scan</strong><small>VTK PLY reader</small></span><i></i></button>
               <button type="button" data-stage="render" aria-pressed="false"><b>02</b><span><strong>Render 9 views</strong><small>0–360° at 45°</small></span><i></i></button>
               <button type="button" data-stage="pose" aria-pressed="false"><b>03</b><span><strong>Detect BODY_25</strong><small>x, y, confidence</small></span><i></i></button>
@@ -150,7 +150,7 @@
               <div><strong>9</strong><span>renders</span></div>
               <div><strong>25</strong><span>joints</span></div>
               <div><strong id="threshold-stat">0.30</strong><span>filter</span></div>
-              <div><strong id="residual">2.8 mm</strong><span>ray residual</span></div>
+              <div><strong id="residual">2.8 mm</strong><span>example residual</span></div>
             </div>
 
             <div class="result-tabs" role="tablist" aria-label="Results">
@@ -171,14 +171,14 @@
                 <div><span>Hip breadth</span><strong id="hip">38.9 cm</strong></div>
                 <div><span>Estimated height</span><strong id="height">173.6 cm</strong></div>
               </div>
-              <p>These synthetic dimensions illustrate a possible use of joint coordinates. Body-dimension accuracy was not evaluated in this project.</p>
+              <p>These made-up dimensions show one possible use for joint coordinates. The project didn’t evaluate body-measurement accuracy.</p>
             </div>
 
             <div class="result-panel logs" data-result-panel="logs" hidden id="logs" aria-live="polite"></div>
 
             <button class="export-button" id="download-csv" type="button" disabled>Download synthetic joint CSV</button>
 
-            <p class="artifact-note">A browser reconstruction of the research workflow, using synthetic geometry and simulated detections. The original Python application used VTK, OpenPose, and SciPy and was packaged for macOS and Windows. This page explains that process; it does not run the original research executable or display participant scans.</p>
+            <p class="artifact-note">This browser demo uses synthetic shapes and simulated joint detections to show the steps in my research app. The original Python app used VTK, OpenPose, and SciPy and was packaged for macOS and Windows. It isn’t running here, and no participant scans are shown.</p>
           </aside>
         </div>
         <div class="toast" id="toast" role="status" aria-live="polite"></div>

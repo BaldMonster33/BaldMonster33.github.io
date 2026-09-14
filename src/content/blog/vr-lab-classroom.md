@@ -1,16 +1,16 @@
 ---
 title: 'VR portfolio: rebuilding a lab classroom'
 description: >-
-  A teammate and I recreated one of our university lab classrooms in VR for a
-  Michigan extended-reality course, then added interactive elements on top.
+  Maxwell Zuber and I rebuilt a university lab in Unreal Engine and added a
+  piano played with a motion controller.
 date: 2022-10-03
 tags: ['xr', 'portfolio']
 ---
 
-For my VR course at Michigan, a teammate and I recreated one of our lab
-classrooms and added some fun elements into it. The goal was to get the room
-recognisable first — proportions, fixtures, the layout you'd actually walk
-through — and only then start bending it.
+Maxwell Zuber and I recreated one of our university labs in Unreal Engine for
+our VR course at Michigan. We built the windows, computer stations, fixtures,
+and room layout, then added props including a violin, printer, discarded math
+book, and playable piano.
 
 <div class="video">
   <iframe
@@ -22,7 +22,12 @@ through — and only then start bending it.
   ></iframe>
 </div>
 
-The interesting problem turned out to be scale. A room modelled to correct
-real-world dimensions still feels wrong in a headset if the eye height is off by
-even a little, and no amount of texture work compensates for that. Getting the
-camera rig right did more for presence than anything else we tried.
+Touching a piano key with the motion controller played a default note, and
+controller buttons changed the selected note. The archived assets include
+C, D, E, and G. Our write-up describes playing *Mary Had a Little Lamb* with
+those four notes and credits the interaction to the team.
+
+The video shows the original Unreal prototype. The
+[project page](/projects/vr-lab-classroom) also has a browser reconstruction
+with new geometry and generated tones, so the piano interaction can be tried
+without the original build.

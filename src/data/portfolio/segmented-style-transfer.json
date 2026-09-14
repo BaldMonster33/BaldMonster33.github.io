@@ -1,14 +1,14 @@
 {
-  "headline": "Restyle the subject. Keep the scene.",
-  "intro": "An interactive computer-vision application that gives people control over where an artistic style appears: select an object, refine its mask, and preserve the surrounding image.",
+  "headline": "Applying an artistic style to a selected object",
+  "intro": "I built an application for selecting an object in a photo and applying an artistic style to it. The selected area changes while the surrounding image stays the same.",
   "context": "University of Michigan · Computer Vision course project · Sept–Dec 2022",
-  "role": "I originated the idea and led the pipeline design, implementation, model evaluation, and final application integration.",
+  "role": "I proposed the idea and led the design, implementation, model comparisons, and integration into the final application.",
   "hero": {
     "type": "video",
     "src": "/media/projects/segmented-style-transfer/selected-style-summary.mp4",
     "poster": "/media/projects/segmented-style-transfer/swan-styled.webp",
     "alt": "Six-second before-and-after sequence showing the original black swan transitioning into the AdaAttN segmented style-transfer result.",
-    "caption": "Before/after summary assembled from the course report; not a live inference recording. The selected swan changes while its surroundings remain visible.",
+    "caption": "A before-and-after sequence made from course-report images. It shows the selected swan changing style; it doesn't show the model running.",
     "credit": "Course report, Figure 2 · DAVIS585 / WikiArt"
   },
   "metrics": [
@@ -28,21 +28,21 @@
     }
   ],
   "question": {
-    "title": "What if a style changed only what you selected?",
-    "text": "Whole-image stylization can overwrite details a creator wants to retain. I connected interactive object selection to neural stylization so the boundary of the edit becomes part of the creative workflow."
+    "title": "Selecting the area to change",
+    "text": "The application uses clicks to select an object and refine its mask, which marks the area to edit. It then combines the styled object with the original background."
   },
   "steps": [
     {
       "title": "Select with clicks",
-      "text": "Use positive and negative clicks to guide FocalClick and refine a foreground mask without tracing the object's entire outline."
+      "text": "Positive and negative clicks guide FocalClick toward the object and away from areas to leave out, so users can adjust the mask without tracing the whole outline."
     },
     {
-      "title": "Compare stylizers",
-      "text": "Evaluate AdaIN, AdaAttN, IEContraAST, and PAMA using ArtFID and separate timing experiments to understand the quality–speed tradeoff."
+      "title": "Compare the models",
+      "text": "I compared AdaIN, AdaAttN, IEContraAST, and PAMA using ArtFID, then measured stylization time in a separate experiment."
     },
     {
-      "title": "Compose selectively",
-      "text": "Combine the stylized foreground with the original background through the mask, retaining the surrounding scene."
+      "title": "Keep the original background",
+      "text": "The mask determines which pixels come from the styled image and which come from the original."
     }
   ],
   "gallery": [
@@ -50,13 +50,13 @@
       "type": "image",
       "src": "/media/projects/segmented-style-transfer/selection-prototype.webp",
       "alt": "Progress presentation screenshot of a click-based object-selection interface, generated mask, and tower-styling example.",
-      "caption": "The progress checkpoint pairs the selection interface with a mask and styling example. The unified application was completed later.",
+      "caption": "The selection interface, a mask, and a styling example from the progress presentation. I finished combining them into one application later.",
       "credit": "Original team presentation, 1:35 · DAVIS / WikiArt imagery"
     }
   ],
   "finding": {
-    "title": "The fastest model was not the quality leader.",
-    "text": "AdaIN had the shortest measured stylization time; AdaAttN had the lowest ArtFID (27.419 versus AdaIN's 27.955). Separating those objectives made the model choice explicit instead of treating speed and visual quality as the same result."
+    "title": "Comparing ArtFID and speed",
+    "text": "AdaIN had the shortest measured stylization time. AdaAttN had the lowest ArtFID, at 27.419 compared with AdaIN's 27.955. Lower ArtFID is better on this measure."
   },
   "charts": [
     {
@@ -85,19 +85,19 @@
     }
   ],
   "details": [
-    "Timing describes only the stylization step. The report does not identify hardware or establish full-application latency.",
-    "The 1,000-input evaluation and timing chart come from the course report. Earlier presentation scores are a separate experimental snapshot.",
-    "The interface screenshot comes from a progress presentation, before the unified application was finished. The surviving code link is the upstream segmentation dependency."
+    "The timings cover stylization only, excluding segmentation and compositing. The report doesn't specify the hardware or measure how long the full application takes.",
+    "The 1,000-input evaluation and timing chart come from the course report. The progress presentation shows an earlier experiment with different scores.",
+    "The screenshot shows the interface before I finished the combined application. The full application source hasn't been recovered; the code link points to the segmentation dependency."
   ],
   "credits": [
     "Course team: Le Qin, Yu Peng, Christopher Yeh, and Yu-Ju Chiu.",
-    "Built with existing FocalClick and neural style-transfer implementations; my contribution was the interaction, integration, and evaluation.",
+    "I used existing FocalClick and neural style-transfer implementations. My work covered the interaction, integration, and evaluation.",
     "Image examples use DAVIS585 and WikiArt material credited in the original report."
   ],
   "comparison": {
     "before": "/media/projects/segmented-style-transfer/swan-original.webp",
     "after": "/media/projects/segmented-style-transfer/swan-styled.webp",
     "alt": "Reveal the original swan image and the selectively stylized AdaAttN result.",
-    "caption": "Drag to compare the original content and AdaAttN segmented result. Report images are resized for display; this is a qualitative example, not an interactive app recording."
+    "caption": "Drag to compare the original image with the AdaAttN result. These are resized images from the report, shown here as a saved example of the output."
   }
 }

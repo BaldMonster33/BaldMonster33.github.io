@@ -1,27 +1,30 @@
 ---
 title: AWS Observability Analytics
 description: >-
-  Day job. I work on services that ingest, store, and query telemetry at AWS
-  scale, and on the console surfaces engineers use to investigate incidents.
-  Specifics stay internal.
+  At AWS, I work on services that collect, store, and query system data, and
+  the console engineers use to investigate problems. The demo here uses a
+  made-up incident to show how those investigations work.
 period: '2023 – present'
 stack: ['Java', 'AWS', 'Distributed systems']
 demo:
   type: scene
   path: observability
-  cta: 'Investigate a synthetic incident'
-  controls: 'Scrub or play the incident timeline, filter by service or trace span, then test a working hypothesis.'
+  cta: 'Investigate an example incident'
+  controls: 'Move through the timeline, filter by service or trace span, then test a possible cause.'
 featured: true
 order: 10
 ---
 
-The public demo is intentionally synthetic: its service names, metric values,
-trace spans, deploy event, and failure mode are invented. It shows the shape of
-the work without describing internal architecture or exposing operational data.
+In this example, requests start taking longer even though traffic hasn't
+increased. Moving through the timeline lets you follow the problem from an
+overall latency chart to a service map, then to traces of individual requests.
+The traces show repeated calls, and a configuration change gives you a possible
+cause to test.
 
-Scrub through the incident and the same regression appears in three connected
-views. Aggregate latency rises while traffic remains flat; the service map
-localizes the change; representative traces reveal repeated calls; and a
-correlated configuration event gives the investigation a concrete hypothesis
-to test. This is the workflow I care about—turning telemetry from a pile of
-charts into evidence an engineer can act on.
+This is the part of observability I care about: helping engineers connect
+what they see in the data to a problem they can investigate. A chart can show
+that something changed; the next step is working out where and why.
+
+All services, measurements, traces, events, and causes in the demo are made up.
+It illustrates an investigation without using internal AWS architecture or
+operational data.

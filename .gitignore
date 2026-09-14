@@ -6,3 +6,6 @@ dist/
 *.log
 .env
 .env.*
+
+# Resume PDFs stay outside the public site.
+/public/artifacts/resume/

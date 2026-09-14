@@ -1,13 +1,13 @@
 {
-  "headline": "Correct answers can hide broken reasoning",
-  "intro": "I adapted a tiered reasoning pipeline to XLNet to ask a harder question than story classification: can a model identify the conflicting sentences and physical states that justify its choice?",
+  "headline": "Checking XLNet's answers against its explanations",
+  "intro": "I adapted the TRIP reasoning pipeline to XLNet to test whether it could identify why a short story was physically impossible. The evaluation checked its story choice, the conflicting sentences, and the physical states behind the conflict.",
   "context": "University of Michigan · Natural-language-processing course project · Sept–Dec 2021",
-  "role": "XLNet-base integration, fine-tuning, loss-function ablations, evaluation, and final report.",
+  "role": "I integrated XLNet-base, fine-tuned it, compared training losses, evaluated the results, and wrote the final report.",
   "hero": {
     "type": "image",
     "src": "/media/projects/xlnet-trip/reasoning-layers.svg",
     "alt": "An illustrative glass-breaking story is mapped to three evaluation levels: story choice, conflicting sentences, and physical states.",
-    "caption": "The three levels of TRIP reasoning. The short glass story is an illustrative explanation, not a dataset example or saved model prediction."
+    "caption": "The three levels of TRIP reasoning, explained with a glass-breaking story created for this diagram. It isn't a dataset example or a saved model prediction."
   },
   "metrics": [
     {
@@ -27,30 +27,30 @@
     }
   ],
   "question": {
-    "title": "What does a correct story choice actually prove?",
-    "text": "TRIP pairs plausible and implausible stories about physical situations. A useful evaluation should reveal whether the model understands the conflict, alongside whether it chooses the right story."
+    "title": "What the model had to explain",
+    "text": "TRIP pairs a plausible story with an implausible one. To explain the conflict, the model has to identify the relevant sentences and the physical states before and after an action."
   },
   "steps": [
     {
       "title": "Adapt the model",
-      "text": "Integrated Hugging Face XLNet-base-cased into the published TRIP pipeline, including its tokenizer, model configuration, and representations."
+      "text": "I added Hugging Face XLNet-base-cased to the published TRIP pipeline, adapting the tokenizer, model configuration, and representations."
     },
     {
-      "title": "Change supervision",
-      "text": "Fine-tuned the model and evaluated loss ablations across story choice, conflicting-sentence detection, and physical-state preconditions and effects."
+      "title": "Compare training losses",
+      "text": "During fine-tuning, I removed selected losses to examine how training on story choice, sentence conflicts, and physical states affected each result."
     },
     {
       "title": "Evaluate the explanation",
-      "text": "Compared validation accuracy with consistency and verifiability, which require progressively stronger evidence behind the story choice."
+      "text": "I compared story accuracy with consistency and verifiability. Those two measures also check the conflicting sentence pair and the physical states that explain it."
     }
   ],
   "finding": {
-    "title": "80% accuracy. 0% verifiable reasoning.",
-    "text": "Omitting state-classification losses increased reported story accuracy from 76.7% to 80.0%, while consistency fell from 12.7% to zero. Neither configuration produced verifiable reasoning in this validation table. Final-answer accuracy alone missed that failure."
+    "title": "Removing the state losses",
+    "text": "Without the state-classification losses, story accuracy rose from 76.7% to 80.0%, while consistency fell from 12.7% to zero. Verifiability was zero in both configurations: neither met the full requirements for explaining the conflict in this validation table."
   },
   "charts": [
     {
-      "title": "The answer–explanation gap",
+      "title": "Story choices and supporting explanations",
       "subtitle": "XLNet validation results from Table 1 of the December 2021 course report. Higher is better; the measures have different requirements.",
       "labels": [
         "Accuracy",
@@ -82,11 +82,11 @@
     }
   ],
   "details": [
-    "Accuracy counts correct story choices. Consistency also requires identifying the conflicting sentence pair; verifiability additionally requires the relevant physical-state predictions.",
-    "These are historical report results, not a new benchmark run. The archived notebook corroborates the XLNet adaptation; no statistical-significance claim is made from the two reported configurations."
+    "Accuracy counts correct story choices. Consistency also requires the correct conflicting sentence pair; verifiability adds the relevant physical-state predictions.",
+    "These results come from the original course report. The archived notebook records my XLNet adaptation, and the experiments haven't been rerun for this portfolio. The two configurations don't establish statistical significance."
   ],
   "credits": [
-    "The TRIP dataset, tiered reasoning framework, and original pipeline are by Storks and colleagues. My modified notebook is preserved in the linked public fork.",
-    "BERT, RoBERTa, and DeBERTa comparisons in my report are baselines reported by Storks et al., not independent reruns. The hero diagram is a new conceptual illustration of the evaluation task."
+    "Storks and colleagues created the TRIP dataset, reasoning framework, and original pipeline. My modified notebook is in the linked public fork.",
+    "The report's BERT, RoBERTa, and DeBERTa comparisons use baselines published by Storks et al.; I didn't rerun those models. The diagram above was created for this portfolio to explain the task."
   ]
 }

@@ -1,8 +1,8 @@
 {
-  "headline": "A familiar classroom, made interactive",
-  "intro": "We recreated a university lab in virtual reality, then added objects that respond to a motion controller. The project connected spatial reconstruction with playful, tangible interaction.",
+  "headline": "A classroom in VR, with a playable piano",
+  "intro": "Maxwell Zuber and I recreated a university lab in Unreal Engine. We added classroom props and a piano that responds to a motion controller.",
   "context": "University of Michigan · Extended-reality course project · Oct 2022",
-  "role": "Co-developed the Unreal classroom and interactive scene with teammate Maxwell Zuber.",
+  "role": "Maxwell Zuber and I built the classroom and its interactions together.",
   "hero": {
     "type": "video",
     "src": "/media/projects/vr-lab-classroom/classroom-excerpt.mp4",
@@ -14,36 +14,36 @@
   "metrics": [
     {
       "value": "2",
-      "label": "Student collaborators",
-      "note": "A shared Unreal Engine course build."
+      "label": "student collaborators",
+      "note": "We built the project together in Unreal Engine."
     },
     {
       "value": "4",
-      "label": "Piano tones",
+      "label": "piano tones",
       "note": "C, D, E, and G appear in the archived audio assets."
     },
     {
       "value": "Touch + buttons",
-      "label": "Controller interaction",
+      "label": "controller interaction",
       "note": "Contact plays a note; buttons change the selection."
     }
   ],
   "question": {
-    "title": "How does a room become a place to interact?",
-    "text": "Reconstructing the classroom established a recognizable setting. Adding controller-responsive objects gave visitors a reason to move through it, approach familiar props, and explore what they could do."
+    "title": "Rebuilding the room",
+    "text": "We recreated the lab's windows, computer stations, fixtures, and layout, then added objects such as a printer, violin, trash can, and discarded math book. The piano gave visitors something to play while exploring the room."
   },
   "steps": [
     {
-      "title": "Recreate the space",
-      "text": "Built a virtual version of a university lab with its windows, computer stations, fixtures, and room layout."
+      "title": "Touch a piano key",
+      "text": "Contact with the motion controller plays a default note."
     },
     {
-      "title": "Populate the scene",
-      "text": "Added classroom props and custom interactions. The recovered archive includes a printer, violin, trash can, discarded math book, and piano."
+      "title": "Change the note",
+      "text": "Controller buttons change the selected note. The archived audio assets include C, D, E, and G."
     },
     {
-      "title": "Connect action to feedback",
-      "text": "Implemented the team’s motion-controller piano interaction: touching a key plays a default note, while controller buttons select notes for a simple melody."
+      "title": "Play a melody",
+      "text": "The original write-up describes using those four notes to play Mary Had a Little Lamb."
     }
   ],
   "gallery": [
@@ -51,19 +51,19 @@
       "type": "image",
       "src": "/media/projects/vr-lab-classroom/piano-interaction.svg",
       "alt": "An illustrated controller points at a four-tone piano diagram beside contact, button selection, and sound-feedback steps.",
-      "caption": "A new interaction schematic based on the original write-up. The drawing explains the behavior; it does not reproduce the original piano geometry."
+      "caption": "A diagram made for this portfolio from the original write-up. It shows the controls; the piano's shape differs from the original model."
     }
   ],
   "finding": {
-    "title": "Spatial fidelity sets up the interaction.",
-    "text": "The project paired a recognizable classroom with responsive objects. Its most concrete interaction story is the piano: a familiar object translates controller contact and button input into immediate musical feedback."
+    "title": "Trying it in a browser",
+    "text": "The browser version rebuilds the room with new geometry and generated tones. It keeps the four-note piano interaction and a short tour of the props. The video shows the original Unreal prototype."
   },
   "details": [
-    "The original walkthrough remains linked. The lightweight browser demo is a later reconstruction using new geometry and generated oscillator tones; it is separate from the original Unreal build.",
-    "The recovered write-up documents the piano as a team contribution and describes playing Mary Had a Little Lamb. It does not divide individual component ownership."
+    "The original Unreal build survives in the project archive. The playable browser version is a later reconstruction.",
+    "The recovered write-up credits the piano to the team without assigning individual components to either of us."
   ],
   "credits": [
-    "Classroom project by Le Qin and Maxwell Zuber. Scene assets and interaction behaviors are preserved in the original project archive.",
-    "The short clip retains the original prototype visuals. Its audio is omitted; the browser reconstruction also avoids reusing the original build’s credited film audio."
+    "Classroom project by Le Qin and Maxwell Zuber. The archive contains the scene assets and interaction code.",
+    "The short clip uses the original prototype footage without audio. The browser version generates its own tones and doesn't reuse the film audio credited in the original build."
   ]
 }

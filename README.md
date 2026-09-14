@@ -130,16 +130,17 @@ implementation and the contract it satisfies.
 
 Carried over deliberately, so they stay visible:
 
-- `src/pages/resume.astro` has placeholder bullets marked for review, and the
-  skills list needs a pass.
-- The degree designation is unconfirmed: B.S.E. or B.S.
 - The home-page bio in `src/pages/index.astro` is a first draft.
 - `public/avatar.svg` is the monogram the photo replaced. Point `Sidebar.astro`
   back at it to undo that.
-- There is no downloadable resume. The previous site served a 2022 PDF
-  containing a phone number and a university address, which is not worth
-  republishing; `/resume` is the page that replaces it. If a PDF is wanted,
-  generate a fresh one with contact details you are happy to publish.
+
+## Public resume
+
+`/resume` is intentionally limited to school and degree, current employment
+title, official AWS launch links, and project titles linking to their detail
+pages. Do not add detailed work bullets, operational metrics, GPA, coursework,
+skills, or resume downloads without a new owner request. Keep resume PDFs and
+source archives outside this public repository.
 
 ## Note on history
 

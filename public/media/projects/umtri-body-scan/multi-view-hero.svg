@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
-<title id="title">From surface scans to spatial joints</title><desc id="desc">An original schematic showing a synthetic clothed mannequin, rendered viewpoints, and rays used to reconstruct joint coordinates. It does not show a research participant or measured output.</desc>
+<title id="title">Estimating joint positions from body scans</title><desc id="desc">An original schematic showing a synthetic clothed mannequin, rendered viewpoints, and rays used to reconstruct joint coordinates. It does not show a research participant or measured output.</desc>
 <defs>
 <radialGradient id="glow"><stop offset="0" stop-color="#184457"/><stop offset="1" stop-color="#101d2c"/></radialGradient>
 <linearGradient id="line" x2="1" y2="1"><stop stop-color="#90d9e7"/><stop offset="1" stop-color="#527483"/></linearGradient>
@@ -9,11 +9,11 @@
 </defs>
 <rect width="1600" height="1000" fill="#101d2c"/><ellipse cx="1070" cy="520" rx="640" ry="620" fill="url(#glow)"/><rect width="1600" height="1000" fill="url(#grid)"/>
 <path d="M74 72H148" stroke="#e7b566" stroke-width="5"/><text x="74" y="111" fill="#b4c5d1" font-size="19" letter-spacing="3">UMTRI / COMPUTER VISION</text>
-<text x="74" y="210" fill="#f4f3eb" font-size="66" font-weight="700" letter-spacing="-2">One scan.</text>
-<text x="74" y="290" fill="#f4f3eb" font-size="66" font-weight="700" letter-spacing="-2">Multiple views.</text>
-<text x="74" y="370" fill="#a5e3e1" font-size="66" font-weight="700" letter-spacing="-2">3D joints.</text>
-<text x="78" y="429" fill="#bdccd5" font-size="23">From a lab prototype to a</text>
-<text x="78" y="462" fill="#bdccd5" font-size="23">Python research application.</text>
+<text x="74" y="210" fill="#f4f3eb" font-size="66" font-weight="700" letter-spacing="-2">Estimating</text>
+<text x="74" y="290" fill="#f4f3eb" font-size="66" font-weight="700" letter-spacing="-2">joints from</text>
+<text x="74" y="370" fill="#a5e3e1" font-size="66" font-weight="700" letter-spacing="-2">body scans</text>
+<text x="78" y="429" fill="#bdccd5" font-size="23">A tool for inspecting</text>
+<text x="78" y="462" fill="#bdccd5" font-size="23">joint estimates in Python.</text>
 <rect x="76" y="554" width="338" height="157" rx="18" fill="#172b3a" stroke="#375264"/>
 <text x="100" y="594" fill="#91b8c6" font-size="16" letter-spacing="2">ESTIMATION PIPELINE</text>
 <text x="100" y="635" fill="#eef2ed" font-size="19">Render → detect → reconstruct</text>

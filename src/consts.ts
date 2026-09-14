@@ -15,13 +15,13 @@ export const SITE = {
   name: 'Le Qin',
   role: 'Software Development Engineer II',
   team: 'AWS Observability Analytics',
-  location: 'Vancouver, BC',
+  location: 'Seattle, WA',
   description:
     'Le Qin — software engineer working on observability at AWS. Notes on distributed systems, telemetry, and the occasional side project.',
   social: {
     github: 'https://github.com/BaldMonster33',
-    linkedin: 'https://www.linkedin.com/in/johnnyqin2002/',
-    email: 'johnnyqin10@gmail.com',
+    linkedin: 'https://www.linkedin.com/in/leqin8/',
+    email: 'leqin@umich.edu',
   },
 } as const;
 

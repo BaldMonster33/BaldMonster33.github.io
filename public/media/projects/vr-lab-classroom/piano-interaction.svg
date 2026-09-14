@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img">
 <rect width="1200" height="760" fill="#112333"/>
 <g font-family="Arial, Helvetica, sans-serif">
-<text x="52" y="60" fill="#85d8c6" font-size="17" font-weight="700" letter-spacing="2">VR CLASSROOM / TANGIBLE INTERACTION</text>
-<text x="52" y="120" fill="#f3f7fa" font-size="43" font-weight="700">A familiar object becomes playable.</text>
-<text x="52" y="160" fill="#b8cbd9" font-size="21">The recovered write-up describes a motion-controller piano.</text>
+<text x="52" y="60" fill="#85d8c6" font-size="17" font-weight="700" letter-spacing="2">VR CLASSROOM / PIANO CONTROLS</text>
+<text x="52" y="120" fill="#f3f7fa" font-size="43" font-weight="700">Playing a piano in VR</text>
+<text x="52" y="160" fill="#b8cbd9" font-size="21">Touch a key and choose a note with the controller.</text>
 <path d="M100 294 L604 248 L658 495 L132 549 Z" fill="#36516a" stroke="#7990a2" stroke-width="2"/>
 <path d="M132 549 L658 495 L658 528 L132 582 Z" fill="#1b3146" stroke="#7990a2" stroke-width="2"/>
 <path d="M112 340 L236 329 L255 540 L137 553 Z" fill="#f3f6f6" stroke="#183349" stroke-width="3"/>

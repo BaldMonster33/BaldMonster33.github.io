@@ -1,9 +1,9 @@
 ---
 title: 'ICA-SeFa: Interpretable Semantic Directions in GANs'
 description: >-
-  Co-implemented a GAN representation-analysis method and designed its human
-  evaluation, testing whether discovered editing directions produced consistent,
-  interpretable changes across generated images.
+  I helped implement a method for editing generated faces and ran a human study
+  to check whether each edit changed a recognizable feature consistently
+  across different faces.
 period: 'Jan 2021 – Sept 2021'
 stack: ['Python', 'FastICA', 'GANs', 'Human evaluation', 'CLIP']
 links:
@@ -15,47 +15,43 @@ featured: true
 order: 21
 ---
 
-Changing a GAN's latent code can alter an image's expression, hair color, pose,
-or other properties. Finding a useful editing direction requires more than a
-visible change: the direction should behave consistently across images and
-control an interpretable factor without changing several unrelated attributes.
+This project explored how to change one feature in a generated face, such as
+its hair color, without changing several others. I helped implement ICA-SeFa
+for a University of Michigan machine-learning course and ran its human
+evaluation.
 
-This University of Michigan machine-learning course research project explored
-that problem through ICA-SeFa. Building on Semantic Factorization (SeFa), the
-method applies FastICA to pretrained generator weights to discover semantic
-directions without training another neural network. Evaluation still requires
-generating images and measuring the resulting changes.
+An editing direction changes the inputs used to generate an image. ICA-SeFa
+finds these directions by applying FastICA to a pretrained generator's weights,
+building on Semantic Factorization (SeFa). It doesn't require training another
+neural network, though evaluating the directions still requires generating
+images and checking what changed.
 
 ## My contribution
 
-I co-implemented the method and owned the human-evaluation work: designing the
-experiments, recruiting annotators, conducting the evaluation, and analyzing the
-results. I also coauthored the report. My contribution focused on connecting the
-algorithm's proposed directions to observable, repeatable behavior across
-generated images.
+I helped implement the method, designed and ran the human study, recruited
+annotators, analyzed the results, and coauthored the report. The study checked
+whether each direction changed a recognizable feature consistently across
+different faces.
 
 Houming Chen proposed the idea, developed the theory and algorithm, and led its
 implementation. Dongyang Zhao implemented the CLIP-based analysis; Yutong Bi
-and Jiaxi Chen contributed literature review and theory development. The named
-course report preserves the team's full contribution statement.
+and Jiaxi Chen contributed to the literature review and theory development.
+The course report includes the team's full contribution statement.
 
-## Evaluation in the course report
+## Comparing the editing directions
 
-The course study compared ICA-SeFa with SeFa using StyleGAN2 pretrained on
-FFHQ. It combined qualitative image comparisons, an eight-annotator human
-evaluation, and CLIP-based semantic analysis. Human mean opinion scores
-captured judgments about the discovered directions; CLIP re-scoring examined
-how image edits related to named attributes.
+We compared ICA-SeFa with SeFa using StyleGAN2 pretrained on FFHQ. The
+experiment found 200 directions per method and manually selected 35 from each
+for eight annotators to rate. The report lists the ten highest-scoring
+directions. These mean opinion scores are averages of human ratings, rather
+than classification accuracy. The team also compared images side by side and
+used CLIP to measure how the edits correlated with named attributes.
 
-Together, these methods examined whether a direction represented a clear
-semantic change and how strongly it affected other attributes. This made
-evaluation central to the project: a visible image change alone was not enough
-to establish that a discovered direction was useful or interpretable.
+The selected ICA-SeFa examples showed clearer control over individual
+features, and its highest-rated directions received higher human scores than
+SeFa's. Because we rated a manually selected subset, these results don't
+describe the average across every discovered direction.
 
-The linked **2021 course report** includes the experiments, example edits, and
-the team's contribution statement.
-
-## Course presentation
-
-[Watch the team's four-minute course presentation](https://drive.google.com/file/d/1GoPQ-Sas7qviviR_hrQ4NSJF5p4nLFAA/view)
-alongside the report.
+The 2021 course report includes the experiments and example edits.
+[The team's four-minute presentation](https://drive.google.com/file/d/1GoPQ-Sas7qviviR_hrQ4NSJF5p4nLFAA/view)
+walks through the project.

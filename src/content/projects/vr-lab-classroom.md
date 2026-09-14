@@ -1,15 +1,14 @@
 ---
 title: VR Lab Classroom
 description: >-
-  Virtual reality recreation of a university lab classroom, built with a
-  teammate for a Michigan XR course, with interactive elements added on top of
-  the faithful reconstruction.
+  Maxwell Zuber and I recreated a university lab in Unreal Engine, with
+  classroom props and a piano that responds to a motion controller.
 period: 'Oct 2022'
 stack: ['Unreal Engine', 'Blueprints', 'VR']
 demo:
   type: scene
   path: vr-lab-classroom
-  cta: 'Enter the recovered classroom'
+  cta: 'Explore the browser classroom'
   controls: 'Use WASD or arrows to move, Q/E to turn, Space to interact, or use the on-screen controls and piano keys.'
 links:
   - label: 'Original walkthrough'
@@ -18,14 +17,18 @@ featured: false
 order: 40
 ---
 
-The private Unreal repository survived with 44 commits, two contributors, the
-classroom assets, and the original write-up. It confirms the room included
-custom props such as a printer, violin, trash can and discarded math book, plus
-a motion-controller piano.
+Maxwell Zuber and I rebuilt one of our university labs in virtual reality.
+Alongside the windows, computer stations, and fixtures, we added a printer,
+violin, trash can, discarded math book, and a piano played with a motion
+controller.
 
-Touching the piano's keys played a default note; controller buttons selected
-four notes arranged so the player could perform *Mary Had a Little Lamb*. The
-browser reconstruction keeps that four-note interaction and a small
-first-person artifact tour, while generating its own geometry and oscillator
-tones. It deliberately does not reuse the film audio credited in the original
-student build.
+Touching a piano key played a default note. Controller buttons changed the
+selection between C, D, E, and G, which the original write-up describes using
+to play *Mary Had a Little Lamb*. The write-up credits this interaction to the
+team without assigning individual components to either of us.
+
+The private Unreal repository survives with 44 commits, two contributors, the
+classroom assets, and the original write-up. The linked walkthrough shows that
+build. The browser version recreates the four-note piano interaction and a
+short tour of the props using new geometry and generated oscillator tones.
+It doesn't reuse the film audio credited in the original student build.

@@ -17,12 +17,12 @@
   ];
   const bones = [[0,1],[0,15],[0,16],[15,17],[16,18],[1,2],[2,3],[3,4],[1,5],[5,6],[6,7],[1,8],[8,9],[9,10],[10,11],[8,12],[12,13],[13,14],[11,22],[22,23],[11,24],[14,19],[19,20],[14,21]];
   const stages = {
-    scan:   {kicker:'Input',title:'Read PLY mesh',copy:'VTK loads the selected scan as polygonal data.'},
-    render: {kicker:'Nine viewpoints',title:'Generate offscreen renders',copy:'Rotate 0° through 360° at 45° intervals and save PNGs.'},
-    pose:   {kicker:'OpenPose',title:'Detect BODY_25 landmarks',copy:'Each view returns 25 × (x, y, confidence) values.'},
+    scan:   {kicker:'Input',title:'Read PLY mesh',copy:'VTK reads the scan mesh.'},
+    render: {kicker:'Nine viewpoints',title:'Render nine views',copy:'Rotate 0° through 360° at 45° intervals and save PNGs.'},
+    pose:   {kicker:'OpenPose',title:'Find 25 body landmarks',copy:'Each view returns 25 × (x, y, confidence) values.'},
     rays:   {kicker:'VTK point picker',title:'Map detections onto the scan',copy:'Each accepted 2D point becomes a ray through the 3D mesh.'},
-    solve:  {kicker:'SciPy optimization',title:'Reconstruct 3D joints',copy:'Inverse transforms align views; minimization finds the closest point to all rays.'},
-    export: {kicker:'Result',title:'Visualize and write coordinates',copy:'Render joints over the scan and export CSV or JSON output.'}
+    solve:  {kicker:'SciPy optimization',title:'Reconstruct 3D joints',copy:'Align the views, then find the point closest to the rays for each joint.'},
+    export: {kicker:'Result',title:'View and save joint coordinates',copy:'Render joints over the scan and export CSV or JSON output.'}
   };
   const stageOrder = Object.keys(stages);
   const variants = {
@@ -311,7 +311,7 @@
       state.model=input.value;$$('.model-row').forEach(row=>row.classList.toggle('active',row.contains(input)));buildModel(input.value);addLog(`Loading ${input.closest('.model-row').querySelector('strong').textContent}`);
       for(let index=0;index<stageOrder.length;index++){
         const stage=stageOrder[index],button=$(`[data-stage="${stage}"]`);button.classList.add('running');setStage(stage,true);
-        const messages={scan:'Read PLY polygon data',render:'Wrote 9 offscreen PNG renders',pose:'OpenPose returned BODY_25 arrays',rays:`Filtered at ${state.threshold.toFixed(2)} and picked mesh rays`,solve:'Aligned inverse transforms and minimized ray distance',export:$('#write-results').checked?'Wrote 25 joint coordinates to CSV':'Results held in memory'};
+        const messages={scan:'Simulated reading a PLY scan',render:'Simulated rendering 9 views',pose:'Simulated finding 25 body landmarks',rays:`Simulated filtering at ${state.threshold.toFixed(2)} and picking mesh rays`,solve:'Simulated aligning views and finding 3D joints',export:$('#write-results').checked?'Synthetic joint coordinates ready to download':'Synthetic results held in memory'};
         setProgress(Math.round((completed/total)*100),`${input.value} · ${index+1}/6`);await wait(stage==='render'?720:540);addLog(messages[stage],true);button.classList.remove('running');button.classList.add('done');completed++;setProgress(Math.round((completed/total)*100),`${input.value} · ${index+1}/6`);
       }
     }

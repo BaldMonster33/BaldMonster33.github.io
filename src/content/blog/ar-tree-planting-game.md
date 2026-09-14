@@ -1,14 +1,16 @@
 ---
 title: 'AR portfolio: a tree-planting game'
 description: >-
-  Built a two-person augmented reality game where you plant and tend trees
-  anchored to real surfaces around you, for a Michigan XR course.
+  Maxwell Zuber and I built Ann Arbor Go, a phone game for planting virtual
+  trees, exploring a map, and defending trees from squirrels.
 date: 2022-10-28
 tags: ['xr', 'portfolio']
 ---
 
-For the AR half of the course, a teammate and I built a tree-planting game. You
-point your phone at the ground, plant something, and come back to tend it.
+Maxwell Zuber and I built *Ann Arbor Go* for the AR half of our Michigan XR
+course. Players explore a map, switch to their phone's camera to plant seeds
+on detected surfaces, and throw acorns to defend the trees from squirrels.
+Inventory and planted-tree information carry between the map and AR scenes.
 
 <div class="video">
   <iframe
@@ -20,9 +22,18 @@ point your phone at the ground, plant something, and come back to tend it.
   ></iframe>
 </div>
 
-AR punishes you in ways VR doesn't. In VR you own the whole world; in AR you're
-a guest in someone else's, and that world has bad lighting, featureless carpet,
-and no reliable sense of where the floor is. Most of our effort went into
-handling the moments when plane detection simply gave up — which is a product
-problem as much as a technical one, because the player still has to be told
-something useful.
+I worked on the mode and navigation controls, camera setup, and acorn
+interactions. Maxwell proposed a drone mode that lets players scout the map
+before traveling. We shared the implementation, with both of us working across
+the game.
+
+Problems deploying to the iPhone delayed our device tests. Once we could try
+it on the phone, movement that had felt fast in the Unity Editor felt slow.
+That difference made regular device testing a lesson I recorded in the course
+postmortem.
+
+The video shows the original mobile game. The
+[project page](/projects/ar-tree-planting-game) has a browser demo with a
+generated park and simplified planting controls. Its water and boost actions
+and growth stages differ from the mobile version. The original deployable
+build hasn't been recovered.
