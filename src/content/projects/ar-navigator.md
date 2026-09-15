@@ -12,6 +12,8 @@ demo:
   cta: 'Explore the interaction'
   controls: 'Choose a mode and target, drag Phone heading, or use N to cycle, P to ping, and M to switch modes.'
 links:
+  - label: 'Visit project website'
+    href: '/virtual-navigator/'
   - label: 'Original team trailer'
     href: 'https://youtu.be/Xf8MJ09-pX8'
 featured: false
