@@ -14,6 +14,8 @@ interface Props {
   /** Set on article pages so crawlers get the right OG type. */
   ogType?: 'website' | 'article';
   wide?: boolean;
+  /** Product pages can keep the document shell without the portfolio sidebar. */
+  standalone?: boolean;
 }
 
 const {
@@ -21,6 +23,7 @@ const {
   description = SITE.description,
   ogType = 'website',
   wide = false,
+  standalone = false,
 } = Astro.props;
 
 const pageTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} — ${SITE.role}`;
@@ -83,12 +86,12 @@ const viewPath = normalizePath(Astro.url.pathname);
 
   <body data-view-path={viewPath} data-views-endpoint={VIEWS_ENDPOINT || undefined}>
     <a href="#main" class="skip-link">Skip to content</a>
-    <div class="shell">
+    {standalone ? <main id="main"><slot /></main> : <div class="shell">
       <Sidebar />
       <main id="main" class="content" style={wide ? '--content-w: 72rem' : undefined}>
         <slot />
       </main>
-    </div>
+    </div>}
 
     <!--
       One request per page load. It records this page and returns every count,

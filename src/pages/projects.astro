@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import FittsRevenge from '../components/FittsRevenge.astro';
 import PortfolioCard from '../components/PortfolioCard.astro';
+import CruxProjectTeaser from '../components/CruxProjectTeaser.astro';
 import { portfolioStories, academicOrder } from '../data/portfolio';
 
 const projects = (await getCollection('projects')).sort(
@@ -34,10 +35,10 @@ const needsFrontDoor = projects.some(
 
   <div class="portfolio-grid">{academic.map((project,index) => <PortfolioCard project={project} story={portfolioStories[project.id]} index={index} featured={index === 0 || (academic.length % 2 === 0 && index === academic.length - 1)} />)}</div>
 
-  <div class="other-heading"><h2>Work and side projects</h2><p>An example of the work I do at AWS, and a small experiment on this site.</p></div>
+  <div class="other-heading"><h2>Work and side projects</h2><p>An example of my work at AWS, an app I use for bouldering, and a small experiment on this site.</p></div>
   <div class="grid">
     {
-      otherProjects.map((project) => (
+      otherProjects.map((project) => project.id === 'crux' ? <CruxProjectTeaser project={project} /> : (
         <ProjectCard
           title={project.data.title}
           description={project.data.description}

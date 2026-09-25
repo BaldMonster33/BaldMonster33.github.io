@@ -7,6 +7,7 @@ import ProjectDemo from '../../components/ProjectDemo.astro';
 import FittsRevenge from '../../components/FittsRevenge.astro';
 import ViewCount from '../../components/ViewCount.astro';
 import PortfolioStory from '../../components/PortfolioStory.astro';
+import CruxLaunchPage from '../../components/CruxLaunchPage.astro';
 import { portfolioStories, academicOrder } from '../../data/portfolio';
 
 // getStaticPaths runs in an isolated scope, so its props are not inferred here.
@@ -33,12 +34,13 @@ const isFrontDoor = demo?.type === 'component' && demo.id === 'fitts-revenge';
 const story = portfolioStories[project.id];
 const nextId = academicOrder[(academicOrder.indexOf(project.id) + 1) % academicOrder.length];
 const nextStory = portfolioStories[nextId];
+const isCrux = project.id === 'crux';
 ---
 
-<BaseLayout title={title} description={description} ogType="article" wide={Boolean(story)}>
+<BaseLayout title={title} description={description} ogType={isCrux ? 'website' : 'article'} wide={Boolean(story)} standalone={isCrux}>
   {isFrontDoor && <FittsRevenge auto={false} />}
 
-  {story ? <PortfolioStory project={project} story={story} next={nextStory ? { href: `/projects/${nextId}/`, title: nextStory.headline } : undefined} /> : (
+  {isCrux ? <CruxLaunchPage project={project} /> : story ? <PortfolioStory project={project} story={story} next={nextStory ? { href: `/projects/${nextId}/`, title: nextStory.headline } : undefined} /> : (
   <article>
     <div class="page-head">
       <p class="eyebrow meta">{period}<ViewCount path={Astro.url.pathname} /></p>

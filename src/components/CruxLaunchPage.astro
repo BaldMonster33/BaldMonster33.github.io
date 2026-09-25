@@ -1,0 +1,201 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import ThemeToggle from './ThemeToggle.astro';
+import icon from '../assets/crux/app-icon.png';
+import journal from '../assets/crux/climb-journal.png';
+import moment from '../assets/crux/key-moment.png';
+import batch from '../assets/crux/batch-review.png';
+import compare from '../assets/crux/compare-attempts.png';
+
+interface Props { project: CollectionEntry<'projects'>; }
+const { project } = Astro.props;
+const store = project.data.links.find(link => new URL(link.href, Astro.site).hostname === 'apps.apple.com')?.href;
+const steps = await Promise.all([
+  { number: '01', title: 'Bring your tries together.', text: 'Record in CRUX or import a few clips. Preview each one and give it a Climb to belong to.', image: batch, alt: 'CRUX batch review with two video previews, each assigned to the Blue Overhang climb.' },
+  { number: '02', title: 'Keep the useful moment.', text: 'Pin the part you want to revisit. Next time, start there instead of scrubbing through the whole video.', image: moment, alt: 'An Attempt video with a saved Key moment and a Play from Key Moment button.' },
+  { number: '03', title: 'Look back. Try again.', text: 'Switch between an earlier Attempt and your latest one. Keep a short cue for your next go.', image: compare, alt: 'Attempt Review with Earlier and Latest controls and the reflection: Keep hips close before reaching left.' },
+].map(async step => ({ ...step, full: await getImage({src: step.image, width: 1320, format: 'webp'}) })));
+---
+
+<div class="crux-launch">
+  <header class="launch-nav wrap">
+    <a class="wordmark" href="#top" aria-label="CRUX, back to top">
+      <Image src={icon} width={40} height={40} format="webp" alt="" />
+      <span>CRUX<span class="wordmark-detail">MOVEMENT JOURNAL</span></span>
+    </a>
+    <nav aria-label="CRUX page">
+      <a class="portfolio-link" href="/projects">By Le Qin ↗</a>
+      <ThemeToggle />
+    </nav>
+  </header>
+
+  <section id="top" class="hero wrap" aria-labelledby="crux-title">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> A bouldering journal for iPhone</p>
+      <h1 id="crux-title">For your<br /><em>next go.</em></h1>
+      <p class="intro">The same climb. A different try.<br />Keep your videos, the moment that mattered,<br class="desktop-break" /> and a note to come back to.</p>
+      <div class="hero-actions">
+        <a class="download" href={store}>Get CRUX on the App Store <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="#how-it-works">Take a look <span aria-hidden="true">↓</span></a>
+      </div>
+      <p class="availability">Free · iPhone · No account needed</p>
+    </div>
+    <div class="hero-art">
+      <div class="orbit" aria-hidden="true"></div>
+      <figure class="phone phone-back">
+        <Image src={journal} width={660} widths={[330,660]} sizes="(max-width: 700px) 42vw, 240px" format="webp" alt="A Climb named Blue Overhang with three saved Attempts." loading="eager" />
+      </figure>
+      <figure class="phone phone-front">
+        <Image src={moment} width={660} widths={[330,660]} sizes="(max-width: 700px) 52vw, 280px" format="webp" alt="CRUX showing a saved climbing video, with a Key moment ready to revisit." loading="eager" fetchpriority="high" />
+      </figure>
+      <p class="photo-note"><span aria-hidden="true">↳</span> Your next cue starts here.</p>
+    </div>
+  </section>
+
+  <div class="chapter-line wrap" aria-hidden="true"><span>RECORD</span><span>REVISIT</span><span>TRY AGAIN</span></div>
+
+  <section id="how-it-works" class="walkthrough wrap" aria-labelledby="walkthrough-title">
+    <div class="section-heading">
+      <p class="eyebrow">A session, in three small steps</p>
+      <h2 id="walkthrough-title">Less searching your camera roll.<br /><em>More remembering the climb.</em></h2>
+    </div>
+    <div class="steps">
+      {steps.map(step => <figure class="step">
+        <figcaption>
+          <span class="step-number">{step.number}</span>
+          <h3>{step.title}</h3>
+          <p>{step.text}</p>
+        </figcaption>
+        <a class="screen-link" href={step.full.src} target="_blank" rel="noopener" aria-label={`Open full screenshot: ${step.title} (new tab)`}>
+          <Image src={step.image} width={660} widths={[330,660]} sizes="(max-width: 700px) 76vw, (max-width: 1100px) 27vw, 300px" format="webp" alt={step.alt} loading="lazy" />
+          <span class="enlarge">View full screen <span aria-hidden="true">↗</span></span>
+        </a>
+      </figure>)}
+    </div>
+    <p class="sample-note">Actual CRUX 1.4 App Store screenshots, using sample climbing media. Tap a screen for a closer look.</p>
+  </section>
+
+  <section class="field-note wrap" aria-labelledby="field-note-title">
+    <div class="field-heading"><p class="eyebrow">A note from the maker</p><h2 id="field-note-title">Built between<br /><em>attempts.</em></h2></div>
+    <div class="field-copy">
+      <p>I go bouldering, and a lot of my videos start the same way: the same wall, the same holds, another try. I wanted a place to remember what changed.</p>
+      <p>That's why I made CRUX. Using it at the gym and hearing from other climbers keeps shaping the little things—getting to Record quickly, telling similar clips apart, and leaving a useful cue for next time.</p>
+      <a class="text-link" href="/projects">Le Qin <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+
+  <section class="details wrap" aria-label="A few things to know">
+    <div><span class="detail-mark" aria-hidden="true">01 / LOCAL</span><h3>Your journal, on your phone.</h3><p>Works offline, without an account. No ads or public feed. Optional copies in Photos follow your Apple Photos and iCloud settings.</p></div>
+    <div><span class="detail-mark" aria-hidden="true">02 / OPTIONAL</span><h3>A little more room for Beta.</h3><p>Mark holds and pose a figure on a wall photo. Or use on-device Pose Analysis Beta to inspect one saved frame—not automatic coaching.</p></div>
+    <div><span class="detail-mark" aria-hidden="true">03 / YOUR PACE</span><h3>A video can be enough.</h3><p>Add a reflection when you have something to remember. Leave it out when you don't. Available in English and Simplified Chinese.</p></div>
+  </section>
+
+  <footer class="launch-footer wrap">
+    <Image src={icon} width={64} height={64} format="webp" alt="CRUX app icon" loading="lazy" />
+    <h2>Bring it to<br /><em>your next session.</em></h2>
+    <a class="download" href={store}>Get CRUX on the App Store <span aria-hidden="true">↗</span></a>
+    <p class="availability">Free for iPhone · iOS 17 or later</p>
+    <div class="footer-links"><a href="/projects">← Le Qin's projects</a><a href="https://crux-bouldering-beta.johnnyqin10.chatgpt.site/privacy">Privacy</a><a href="https://crux-bouldering-beta.johnnyqin10.chatgpt.site/support">Support</a></div>
+  </footer>
+</div>
+
+<style>
+  .crux-launch {
+    --chalk: #f1f0e8; --muted: #b0b4a9; --ink: #10130f; --panel: #191d16;
+    --lime: #ccf522; --label: #ccf522; --line: #363d2f; --focus: #e2ff7d;
+    --section-space: clamp(4rem, 8vw, 7rem);
+    background: var(--ink); color: var(--chalk); min-height: 100svh; overflow: clip;
+  }
+  :global([data-theme='light']) .crux-launch {
+    --chalk: #20271a; --muted: #526047; --ink: #f3f2e9; --panel: #e9ebdd;
+    --label: #4a5c0c; --line: #cbd0bc; --focus: #485c00;
+  }
+  .wrap { width: min(1160px, calc(100% - 6rem)); margin-inline: auto; }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: var(--label); }
+  a:focus-visible { outline: 3px solid var(--focus); outline-offset: 6px; }
+  .launch-nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1.6rem; border-bottom: 1px solid var(--line); }
+  .wordmark { display: flex; align-items: center; gap: .75rem; min-height: 44px; font: 600 1.6rem/1 var(--font-mono); letter-spacing: -.07em; }
+  .wordmark img { border-radius: 10px; }
+  .wordmark-detail { display: block; margin-top: .45rem; font-size: .55rem; font-weight: 400; letter-spacing: .13em; }
+  nav { display: flex; gap: 1.5rem; align-items: center; }
+  .portfolio-link { display: inline-flex; align-items: center; min-height: 44px; font-size: .8rem; white-space: nowrap; }
+  nav :global(button) { width: auto; flex-shrink: 0; min-height: 44px; color: var(--muted); }
+  .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; padding-block: 4.5rem 3rem; }
+  .hero-copy { padding-block: 2rem; }
+  .eyebrow, .availability, .photo-note, .sample-note, .detail-mark, .chapter-line { font-family: var(--font-mono); }
+  .eyebrow { font-size: .67rem; letter-spacing: .09em; text-transform: uppercase; color: var(--label); }
+  .status-dot { display: inline-block; width: 6px; height: 6px; background: currentColor; border-radius: 50%; margin-right: .5rem; }
+  h1, h2 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; letter-spacing: -.06em; text-wrap: initial; }
+  h1 { font-size: clamp(5.5rem, 9vw, 8.5rem); line-height: .93; margin-block: 1.7rem 1.9rem; }
+  h1 em { color: var(--label); }
+  h2 { font-size: clamp(2.4rem, 4.2vw, 4rem); line-height: 1.08; }
+  h2 em { font-weight: 400; }
+  .intro { font-size: 1.04rem; line-height: 1.85; color: var(--muted); }
+  .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem 1.6rem; margin-top: 2rem; }
+  .download { display: inline-flex; align-items: center; justify-content: center; gap: 1.2rem; padding: 1rem 1.15rem; min-height: 52px; border-radius: 7px; background: var(--lime); color: #171d09; font-size: .87rem; font-weight: 650; }
+  .download:hover { color: #171d09; background: #defa71; }
+  .text-link { display: inline-flex; gap: .8rem; align-items: center; min-height: 44px; font-size: .83rem; border-bottom: 1px solid var(--line); }
+  .availability { margin-top: 1rem; font-size: .75rem; color: var(--muted); }
+  .hero-art { position: relative; height: 650px; isolation: isolate; }
+  .orbit { position: absolute; inset: 10% -15% 7%; background: radial-gradient(ellipse, var(--panel), transparent 68%); border: 1px solid var(--line); border-radius: 50%; transform: rotate(-25deg); z-index: -1; }
+  .phone { padding: 6px; background: #080b08; border: 1px solid #46503e; border-radius: 32px; box-shadow: 0 22px 55px #0005; }
+  .phone img { width: 100%; height: auto; border-radius: 25px; }
+  .phone-back { position: absolute; width: 235px; left: 0; top: 35px; transform: rotate(-9deg); }
+  .phone-front { position: absolute; width: 280px; right: 4%; top: 55px; transform: rotate(6deg); }
+  .photo-note { position: absolute; bottom: 0; left: 10%; color: var(--muted); font-size: .68rem; }
+  .photo-note span { color: var(--label); font-size: 1.5rem; margin-right: .5rem; }
+  .chapter-line { display: flex; justify-content: space-between; border-block: 1px solid var(--line); padding-block: 1.1rem; color: var(--muted); font-size: .66rem; letter-spacing: .15em; }
+  .chapter-line span + span::before { content: '↗'; margin-right: 1rem; color: var(--label); }
+  .walkthrough { padding-block: var(--section-space); scroll-margin-top: 2rem; }
+  .section-heading .eyebrow { margin-bottom: 1.2rem; }
+  .steps { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: clamp(1.2rem,3vw,3rem); margin-top: 3rem; }
+  .step { display: flex; flex-direction: column; min-width: 0; }
+  figcaption { flex: 1; margin-bottom: 1.6rem; }
+  .step-number { font: .65rem var(--font-mono); color: var(--label); }
+  h3 { font-size: 1.07rem; font-weight: 550; letter-spacing: -.025em; }
+  .step h3 { margin-block: .7rem; }
+  .step p, .details p { color: var(--muted); font-size: .88rem; line-height: 1.8; }
+  .screen-link { display: block; background: #0b0e0b; border: 1px solid #434b3c; border-radius: 24px; padding: 7px; }
+  .screen-link img { border-radius: 17px; width: 100%; height: auto; }
+  .enlarge { display: flex; justify-content: space-between; align-items: center; min-height: 44px; padding: .6rem .7rem; font: .65rem var(--font-mono); color: #d5dbc9; }
+  .screen-link:hover { border-color: var(--label); }
+  .sample-note { color: var(--muted); font-size: .75rem; line-height: 1.8; margin-top: 1.5rem; }
+  .field-note { display: grid; grid-template-columns: 1fr 1.05fr; gap: 4rem; padding-block: var(--section-space); border-block: 1px solid var(--line); }
+  .field-heading .eyebrow { margin-bottom: 1.4rem; }
+  .field-copy p { color: var(--muted); font-size: 1.02rem; line-height: 1.85; margin-bottom: 1rem; }
+  .field-copy .text-link { color: var(--chalk); }
+  .details { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 3rem; padding-block: 4rem; }
+  .detail-mark { color: var(--label); font-size: .6rem; letter-spacing: .1em; }
+  .details h3 { margin-block: 1rem .75rem; }
+  .launch-footer { text-align: center; padding-top: var(--section-space); border-top: 1px solid var(--line); }
+  .launch-footer > img { margin: 0 auto 1.4rem; border-radius: 15px; }
+  .launch-footer h2 { margin-bottom: 2rem; }
+  .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem 2rem; padding-block: 3.5rem 1.5rem; color: var(--muted); font-size: .75rem; }
+  .footer-links a { display: inline-flex; align-items: center; min-height: 44px; }
+  @media (min-width: 1450px) { .hero-art { height: 690px; } }
+  @media (max-width: 1050px) and (min-width: 701px) {
+    .hero { gap: 1rem; } .hero-art { height: 550px; } .phone-front { width: 230px; right: -2%; } .phone-back { width: 190px; left: -3%; }
+    h1 { font-size: 6rem; } .desktop-break { display: none; }
+  }
+  @media (max-width: 700px) {
+    .wrap { width: calc(100% - 2.5rem); } .launch-nav { padding-block: 1rem; } nav { gap: .9rem; }
+    .wordmark { font-size: 1.25rem; } .wordmark-detail { display: none; } .wordmark img { width: 34px; height: 34px; }
+    .portfolio-link { font-size: .68rem; }
+    .hero { grid-template-columns: 1fr; gap: 0; padding-block: 1.5rem 2rem; }
+    .hero-copy { padding-block: 1rem; } h1 { font-size: clamp(4.7rem, 18vw, 7rem); }
+    .intro { font-size: .95rem; } .desktop-break { display: none; }
+    .hero-actions { gap: .7rem 1.3rem; } .download { font-size: .8rem; }
+    .hero-art { height: min(128vw,640px); max-width: 460px; width: 100%; margin: 2rem auto 0; }
+    .phone { padding: 4px; border-radius: 25px; } .phone img { border-radius: 20px; }
+    .phone-front { width: 57%; right: 4%; top: 16px; } .phone-back { width: 48%; left: 2%; top: 0; }
+    .photo-note { left: 10%; bottom: 0; font-size: .6rem; }
+    .chapter-line { font-size: .55rem; letter-spacing: .07em; } .chapter-line span + span::before { margin-right: .4rem; }
+    .steps { grid-template-columns: 1fr; gap: 3rem; } .step { display: grid; grid-template-columns: 1fr; gap: .5rem; }
+    .step p { max-width: 38ch; } .screen-link { width: min(100%,320px); margin-inline: auto; } figcaption { margin-bottom: .7rem; }
+    .field-note { grid-template-columns: 1fr; gap: 1.8rem; }
+    .details { grid-template-columns: 1fr; gap: 2.5rem; padding-block: 3rem; }
+    .details > div + div { padding-top: 2rem; border-top: 1px solid var(--line); }
+  }
+</style>
