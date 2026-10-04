@@ -16,6 +16,8 @@ interface Props {
   wide?: boolean;
   /** Product pages can keep the document shell without the portfolio sidebar. */
   standalone?: boolean;
+  ogImage?: string;
+  ogImageAlt?: string;
 }
 
 const {
@@ -24,10 +26,13 @@ const {
   ogType = 'website',
   wide = false,
   standalone = false,
+  ogImage,
+  ogImageAlt,
 } = Astro.props;
 
 const pageTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} — ${SITE.role}`;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
+const socialImage = ogImage ? new URL(ogImage, Astro.site ?? SITE.url).href : undefined;
 
 // Rendered at build time rather than read from location.pathname at runtime, so
 // the only paths that can ever be counted are pages this site actually built.
@@ -58,7 +63,13 @@ const viewPath = normalizePath(Astro.url.pathname);
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={SITE.name} />
-    <meta name="twitter:card" content="summary" />
+    {socialImage && <>
+      <meta property="og:image" content={socialImage} />
+      <meta property="og:image:alt" content={ogImageAlt ?? title ?? SITE.name} />
+      <meta name="twitter:image" content={socialImage} />
+      <meta name="twitter:image:alt" content={ogImageAlt ?? title ?? SITE.name} />
+    </>}
+    <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
 
     <meta name="generator" content={Astro.generator} />
 

@@ -1,0 +1,66 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import room from '../assets/virtual-navigator/room.jpg';
+
+interface Props { project: CollectionEntry<'projects'>; }
+const { project } = Astro.props;
+---
+
+<article class="navigator-teaser">
+  <a class="teaser-link" href={`/projects/${project.id}/`}>
+    <div class="preview">
+      <Image
+        src={room}
+        width={1000}
+        widths={[480, 760, 1000]}
+        sizes="(max-width: 640px) calc(100vw - 48px), (max-width: 1000px) 50vw, 640px"
+        format="webp"
+        alt="Virtual Navigator's living room, with a cleaning robot, two-color lamp, curtains, and projected artwork."
+        loading="lazy"
+      />
+    </div>
+    <div class="copy">
+      <p class="eyebrow">In development · 2026</p>
+      <h3>{project.data.title}</h3>
+      <p class="description">What if a room's controls lived beside the things they belong to?</p>
+      <span class="follow">See the room take shape <span aria-hidden="true">→</span></span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .navigator-teaser {
+    --card-bg: #20271f;
+    --card-ink: #eeeede;
+    --card-dim: #b8c0af;
+    --card-accent: #c0d1a1;
+    --card-border: #46513d;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--card-bg);
+    color: var(--card-ink);
+  }
+  :global([data-theme='light']) .navigator-teaser {
+    --card-bg: #f3f1e7;
+    --card-ink: #252c22;
+    --card-dim: #555e4d;
+    --card-accent: #4c603c;
+    --card-border: #cdd2bf;
+  }
+  .teaser-link { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); color: inherit; text-decoration: none; }
+  .teaser-link:focus-visible { outline: 3px solid var(--card-accent); outline-offset: -5px; }
+  .preview { display: grid; align-items: center; min-width: 0; background: #343833; }
+  .preview img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+  .copy { align-self: center; padding: 1.8rem; }
+  .eyebrow { color: var(--card-accent); font: .65rem/1.6 var(--font-mono); margin-bottom: .9rem; }
+  h3 { font: 400 clamp(1.9rem, 3vw, 2.5rem)/1.1 Georgia, serif; letter-spacing: -.035em; margin-bottom: .9rem; }
+  .description { color: var(--card-dim); font-size: .9rem; line-height: 1.75; }
+  .follow { display: inline-flex; align-items: center; gap: .7rem; margin-top: 1.1rem; min-height: 44px; font-size: .77rem; color: var(--card-accent); }
+  .teaser-link:hover .follow { text-decoration: underline; text-underline-offset: .2em; }
+  @media (max-width: 640px) {
+    .teaser-link { grid-template-columns: 1fr; }
+    .copy { padding: 1.5rem; }
+  }
+</style>

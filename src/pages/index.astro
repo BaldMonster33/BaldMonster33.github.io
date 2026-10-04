@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import FittsRevenge from '../components/FittsRevenge.astro';
+import VirtualNavigatorProjectTeaser from '../components/VirtualNavigatorProjectTeaser.astro';
 import { SITE } from '../consts';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
@@ -20,20 +21,15 @@ const featured = (await getCollection('projects', ({ data }) => data.featured))
   <section class="intro">
     <p class="eyebrow meta">{SITE.location}</p>
     <h1>
-      I work on observability tools at&nbsp;AWS.
+      I'm a software engineer at&nbsp;AWS.
     </h1>
     <p>
-      I'm {SITE.name}, a software engineer on {SITE.team}, where I work on the
-      services engineers use to collect and query logs and other system data.
-      Before Amazon, I studied computer science at the University of
-      Michigan and spent a summer at UMTRI doing research on estimating 3D joint
-      positions from body scans.
+      I'm {SITE.name}. I studied computer science at the University of Michigan.
     </p>
     <p>
-      I'm interested in how people use these tools to work out what went wrong
-      in a system. At Michigan, I also worked on accessibility, virtual reality,
-      and augmented reality projects. You can find those projects and some of
-      their demos here.
+      Here are some projects I've been building and trying out, from spatial
+      interaction to sensors and climbing. You can watch the demos, look around,
+      and see what's still taking shape.
     </p>
     <p class="links">
       <a href="/resume">Resume</a>
@@ -78,9 +74,11 @@ const featured = (await getCollection('projects', ({ data }) => data.featured))
         <ul class="compact">
           {featured.map((project) => (
             <li>
-              <a href={`/projects/${project.id}`}>{project.data.title}</a>
-              <span class="meta">{project.data.period}</span>
-              <p>{project.data.description}</p>
+              {project.id === 'virtual-navigator' ? <VirtualNavigatorProjectTeaser project={project} /> : <>
+                <a href={`/projects/${project.id}`}>{project.data.title}</a>
+                <span class="meta">{project.data.period}</span>
+                <p>{project.data.description}</p>
+              </>}
             </li>
           ))}
         </ul>

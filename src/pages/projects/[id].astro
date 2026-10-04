@@ -8,6 +8,8 @@ import FittsRevenge from '../../components/FittsRevenge.astro';
 import ViewCount from '../../components/ViewCount.astro';
 import PortfolioStory from '../../components/PortfolioStory.astro';
 import CruxLaunchPage from '../../components/CruxLaunchPage.astro';
+import CareOpsProgressPage from '../../components/CareOpsProgressPage.astro';
+import VirtualNavigatorLaunchPage from '../../components/VirtualNavigatorLaunchPage.astro';
 import { portfolioStories, academicOrder } from '../../data/portfolio';
 
 // getStaticPaths runs in an isolated scope, so its props are not inferred here.
@@ -35,12 +37,23 @@ const story = portfolioStories[project.id];
 const nextId = academicOrder[(academicOrder.indexOf(project.id) + 1) % academicOrder.length];
 const nextStory = portfolioStories[nextId];
 const isCrux = project.id === 'crux';
+const isVirtualNavigator = project.id === 'virtual-navigator';
+const isCareOps = project.id === 'careops';
+const isStandalone = isCrux || isVirtualNavigator || isCareOps;
 ---
 
-<BaseLayout title={title} description={description} ogType={isCrux ? 'website' : 'article'} wide={Boolean(story)} standalone={isCrux}>
+<BaseLayout
+  title={title}
+  description={description}
+  ogType={isStandalone ? 'website' : 'article'}
+  ogImage={isVirtualNavigator ? '/media/virtual-navigator/0.5.0-7/room.jpg' : undefined}
+  ogImageAlt={isVirtualNavigator ? 'Virtual Navigator living room with layered curtains, a floor lamp, cleaning robot, and projected artwork.' : undefined}
+  wide={Boolean(story)}
+  standalone={isStandalone}
+>
   {isFrontDoor && <FittsRevenge auto={false} />}
 
-  {isCrux ? <CruxLaunchPage project={project} /> : story ? <PortfolioStory project={project} story={story} next={nextStory ? { href: `/projects/${nextId}/`, title: nextStory.headline } : undefined} /> : (
+  {isCareOps ? <CareOpsProgressPage /> : isVirtualNavigator ? <VirtualNavigatorLaunchPage project={project} /> : isCrux ? <CruxLaunchPage project={project} /> : story ? <PortfolioStory project={project} story={story} next={nextStory ? { href: `/projects/${nextId}/`, title: nextStory.headline } : undefined} /> : (
   <article>
     <div class="page-head">
       <p class="eyebrow meta">{period}<ViewCount path={Astro.url.pathname} /></p>

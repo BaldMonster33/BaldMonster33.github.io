@@ -1,0 +1,140 @@
+---
+import { Image, getImage } from 'astro:assets';
+import ThemeToggle from './ThemeToggle.astro';
+import workspace from '../assets/careops/product-workspace.png';
+import earlyPrototype from '../assets/careops/early-prototype.png';
+
+const workspaceFull = await getImage({ src: workspace, width: 1425, format: 'webp' });
+const earlyFull = await getImage({ src: earlyPrototype, width: 1425, format: 'webp' });
+const progress = [
+  { label: 'On the bench', title: 'A real signal, from a real button.', text: 'A small set of Zigbee sensors talks to a Raspberry Pi. The setup page lets me press a button and check that this press—not an old message—arrived.' },
+  { label: 'In the code', title: 'A place for messages to wait.', text: 'The receiver keeps a local queue when an upload fails. Messages stay there for another try, including after the collector restarts.' },
+  { label: 'In the prototype', title: 'A problem stays open until it is checked.', text: 'The repair flow keeps the issue, the person handling it, and the re-check together. Clicking “done” alone is not enough to close it.' },
+  { label: 'On my phone', title: 'A smaller view of the same setup.', text: 'A private iPhone app brings together receiver status, device alerts and a button test. The setup screens also work in Chinese and English.' },
+];
+---
+
+<div class="careops-page">
+  <header class="careops-nav wrap">
+    <a class="wordmark" href="#careops-top">CareOps <span lang="zh-CN">照序</span></a>
+    <nav aria-label="CareOps page"><a href="#progress">Progress</a><a href="/projects">Le Qin's projects ↗</a><ThemeToggle /></nav>
+  </header>
+
+  <section id="careops-top" class="hero wrap" aria-labelledby="careops-title">
+    <div class="hero-heading"><p class="eyebrow"><span aria-hidden="true"></span> In development · September 2026</p><h1 id="careops-title">Did the signal<br /><em>actually get through?</em></h1></div>
+    <div class="hero-copy"><p>I started CareOps with a Raspberry Pi and a handful of sensors. I wanted to press a button, see its message arrive, and know where to look when it didn’t.</p><a class="text-link" href="#inside">Here’s what I’m working on <span aria-hidden="true">↓</span></a></div>
+  </section>
+
+  <figure id="inside" class="workspace wrap">
+    <div class="screen-bar"><span>Inside the prototype</span><span>Sample data, not a live household</span></div>
+    <a href={workspaceFull.src} target="_blank" rel="noopener" aria-label="Open the full CareOps prototype screenshot in a new tab"><Image src={workspace} width={1425} widths={[640, 1000, 1425]} sizes="(max-width: 700px) 100vw, min(1120px, 94vw)" format="webp" loading="eager" fetchpriority="high" alt="Early CareOps interface in Chinese: a sample device is selected, with separate observed, received and evaluated times and a configuration mismatch explanation." /></a>
+    <figcaption><span>An early screen, August 2026. The selected example shows a configuration mismatch and the evidence behind it.</span><a href={workspaceFull.src} target="_blank" rel="noopener">Open full screen ↗</a></figcaption>
+  </figure>
+
+  <section class="why wrap" aria-labelledby="why-title"><p class="eyebrow">The question behind it</p><div><h2 id="why-title">“Online” only tells<br />part of the story.</h2><p>A device can still be connected while its messages arrive late, go quiet, or belong to the wrong setup. If someone is going to rely on that information, I want those gaps to be visible.</p><p>That’s the part CareOps checks: the path from the sensor to the screen.</p></div></section>
+
+  <section class="path-section wrap" aria-labelledby="path-title">
+    <div class="section-head"><h2 id="path-title">Follow one button press.</h2><p>A simple view of the setup I’m building.</p></div>
+    <ol class="signal-path">
+      <li><span class="step-number">01 / SENSOR</span><h3>A button is pressed.</h3><p>A Zigbee message leaves the device.</p><span class="path-next" aria-hidden="true">→</span></li>
+      <li><span class="step-number">02 / RECEIVER</span><h3>The Pi keeps a copy.</h3><p>A local queue holds it for upload.</p><span class="path-next" aria-hidden="true">→</span></li>
+      <li><span class="step-number">03 / CHECK</span><h3>The evidence is checked.</h3><p>Which device? How recent? Does the information agree?</p><span class="path-next" aria-hidden="true">→</span></li>
+      <li><span class="step-number">04 / FOLLOW-UP</span><h3>Someone can act on the issue.</h3><p>See what needs attention, then check again after a repair.</p></li>
+    </ol>
+    <p class="path-note">The hardware path and follow-up workflow are being tested separately. This diagram brings them together; it isn’t a live readout.</p>
+  </section>
+
+  <section id="progress" class="progress wrap" aria-labelledby="progress-title">
+    <div class="section-head"><div><p class="eyebrow">Where it is now</p><h2 id="progress-title">More than a screen.<br />Still a work in progress.</h2></div><p>Working pieces from the bench,<br class="desktop-break" /> the browser and the phone.</p></div>
+    <div class="progress-grid">{progress.map((item, index) => <article><span class="progress-index">0{index + 1}</span><div><p class="progress-label">{item.label}</p><h3>{item.title}</h3><p>{item.text}</p></div></article>)}</div>
+  </section>
+
+  <section class="detail wrap" aria-labelledby="detail-title">
+    <div class="detail-copy"><p class="eyebrow">The part I keep coming back to</p><h2 id="detail-title">Sometimes the right answer<br />is “we don’t know yet.”</h2><p>A quiet sensor isn’t always broken. A new packet doesn’t always mean a problem is fixed. I’m combining direct device checks with timing-based experiments, while keeping the reason for each result visible.</p><p>The next step is testing those decisions against controlled interruptions—and seeing whether another person can understand what to do next.</p></div>
+    <div class="evidence-note" aria-label="Example of how CareOps describes uncertainty"><span class="note-label">AN EXAMPLE, NOT A LIVE ALERT</span><span class="state-label">Not enough information</span><p class="note-title">No recent message<br />isn’t the same as<br /><em>nothing happened.</em></p><p class="note-body">Show the last known evidence. Keep uncertainty visible. Ask for a fresh check.</p></div>
+  </section>
+
+  <section class="starting-point wrap" aria-labelledby="starting-title">
+    <figure><a href={earlyFull.src} target="_blank" rel="noopener" aria-label="Open the early CareOps landing screen in a new tab"><Image src={earlyPrototype} width={900} widths={[480, 900, 1425]} sizes="(max-width: 800px) 90vw, 48vw" format="webp" loading="lazy" alt="August CareOps landing screen, with an explicitly simulated night-shift example beside the question of whether connected devices still provide useful information." /></a><figcaption>August 2026 prototype · simulated scenarios throughout.</figcaption></figure>
+    <div><p class="eyebrow">What comes next</p><h2 id="starting-title">Can someone else<br />set it up?</h2><p>I’ve spent plenty of time making the pieces talk to each other. Now I want to make the setup understandable without me standing beside it.</p><p>That means clearer instructions, recovery checks after a restart, and trying the flow with people who didn’t build it. I’m also exploring simple everyday tools, starting with what someone wants to do—not a diagnosis.</p><p class="development-note">CareOps is a private prototype. It checks device information, not a person’s health or safety, and it isn’t an emergency call service.</p></div>
+  </section>
+
+  <footer class="careops-footer wrap"><div><span class="wordmark">CareOps <span lang="zh-CN">照序</span></span><p>A project by Le Qin. Still building, testing, and changing my mind about the details.</p></div><a href="/projects">Back to all projects ↗</a></footer>
+</div>
+
+<style>
+  .careops-page { --paper: #f5f2eb; --raised: #fffcf6; --ink: #252720; --muted: #5e6155; --line: #d0d0bf; --orange: #974c32; --tint: #e6e9dc; --inverse: #242820; --inverse-text: #f3f2e8; background: var(--paper); color: var(--ink); min-height: 100svh; overflow: clip; }
+  :global([data-theme='dark']) .careops-page, :global(html:not([data-theme='light'])) .careops-page { --paper: #20221e; --raised: #282c25; --ink: #f0f0e7; --muted: #bec3b3; --line: #525748; --orange: #e7ae8f; --tint: #30372b; --inverse: #151812; --inverse-text: #f3f2e8; }
+  .wrap { width: min(1160px, calc(100% - 5rem)); margin-inline: auto; }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: var(--orange); }
+  a:focus-visible { outline: 3px solid var(--orange); outline-offset: 5px; }
+  .careops-nav { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding-block: 1.4rem; border-bottom: 1px solid var(--line); }
+  .wordmark { font: 600 1.65rem/1.2 Georgia, serif; letter-spacing: -.04em; }
+  .wordmark span { margin-left: .5rem; font: 400 1rem var(--font-sans); letter-spacing: 0; color: var(--muted); }
+  nav { display: flex; align-items: center; gap: 1.5rem; }
+  nav a, .text-link { min-height: 44px; display: inline-flex; align-items: center; gap: .9rem; font-size: .95rem; }
+  nav :global(button) { min-height: 44px; width: auto; color: var(--muted); }
+  .hero { display: grid; grid-template-columns: 1.5fr 1fr; gap: 3rem; align-items: end; padding-block: clamp(3rem, 7vw, 6rem) 3.5rem; }
+  .eyebrow { font: .875rem/1.6 var(--font-mono); color: var(--orange); }
+  .eyebrow > span { display: inline-block; width: 6px; height: 6px; margin-right: .5rem; background: currentColor; border-radius: 50%; }
+  h1, h2 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; letter-spacing: -.045em; text-wrap: initial; }
+  h1 { font-size: clamp(3.2rem, 5.7vw, 5.3rem); line-height: 1.02; margin-top: 1.1rem; }
+  h1 em { font-weight: 400; color: var(--orange); }
+  h2 { font-size: clamp(2.05rem, 3.5vw, 3.4rem); line-height: 1.12; }
+  h3 { font-size: 1.2rem; line-height: 1.45; font-weight: 550; letter-spacing: -.025em; }
+  .hero-copy p, .why p:not(.eyebrow), .detail-copy > p:not(.eyebrow), .starting-point > div > p:not(.eyebrow) { color: var(--muted); font-size: 1.05rem; line-height: 1.85; }
+  .hero-copy { padding-bottom: .15rem; }
+  .text-link { border-bottom: 1px solid var(--line); margin-top: 1.3rem; }
+  .workspace { scroll-margin-top: 1rem; }
+  .screen-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1rem; background: var(--inverse); color: var(--inverse-text); padding: .9rem 1.2rem; border-radius: .6rem .6rem 0 0; font: .875rem/1.6 var(--font-mono); }
+  .workspace > a { display: block; background: #f6f5ef; border: 1px solid var(--line); border-top: 0; }
+  .workspace img { width: 100%; height: auto; }
+  figcaption { display: flex; justify-content: space-between; gap: .6rem 1.5rem; flex-wrap: wrap; margin-top: .75rem; color: var(--muted); font-size: .875rem; line-height: 1.7; }
+  .workspace figcaption span { max-width: 76ch; }
+  figcaption a { text-decoration: underline; text-underline-offset: .2em; }
+  .why { display: grid; grid-template-columns: 1fr 2fr; gap: 3rem; padding-block: 4.5rem; }
+  .why h2 { margin-bottom: 1.5rem; }
+  .why > div p { max-width: 58ch; }
+  .why p + p { margin-top: .8rem; }
+  .path-section { border-block: 1px solid var(--line); padding-block: 2.5rem; }
+  .section-head { display: flex; align-items: end; justify-content: space-between; gap: 1.5rem; }
+  .section-head h2 { font: 400 clamp(2.05rem, 3.5vw, 3.4rem)/1.12 Georgia, 'Times New Roman', serif; letter-spacing: -.045em; text-transform: none; }
+  .section-head > p { color: var(--muted); font-size: 1rem; }
+  .signal-path { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); list-style: none; padding: 0; margin-block: 2rem 1.4rem; gap: 1rem; }
+  .signal-path li { position: relative; padding: 1.25rem 1.2rem; background: var(--tint); border: 1px solid var(--line); border-radius: .4rem; }
+  .step-number { display: block; font: .875rem var(--font-mono); color: var(--muted); margin-bottom: 1.5rem; }
+  .signal-path h3 { margin-bottom: .6rem; }
+  .signal-path p { color: var(--muted); font-size: 1rem; line-height: 1.7; }
+  .path-next { position: absolute; z-index: 1; right: -1.1rem; top: 50%; width: 1.3rem; text-align: center; background: var(--paper); color: var(--orange); font-size: 1.2rem; }
+  .path-note { color: var(--muted); font-size: .875rem; max-width: 92ch; }
+  .progress { padding-block: 4.5rem; scroll-margin-top: 2rem; }
+  .section-head .eyebrow { margin-bottom: .9rem; }
+  .progress-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; margin-top: 2rem; }
+  .progress-grid article { display: flex; gap: 1.2rem; padding-block: 2rem; border-top: 1px solid var(--line); }
+  .progress-index { font: .9rem var(--font-mono); color: var(--orange); padding-top: .2rem; }
+  .progress-label { font-size: .875rem; color: var(--orange); margin-bottom: .7rem; }
+  .progress-grid h3 { margin-bottom: .7rem; }
+  .progress-grid article p:last-child { color: var(--muted); font-size: 1rem; line-height: 1.8; }
+  .detail { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; padding-block: 3rem 4.5rem; }
+  .detail-copy h2 { margin-block: 1rem 1.5rem; }
+  .detail-copy > p + p { margin-top: 1rem; }
+  .evidence-note { align-self: center; background: var(--inverse); color: var(--inverse-text); border-top: 4px solid #d49a79; padding: 2rem; }
+  .note-label { font: .75rem var(--font-mono); color: #c4c9bb; }
+  .state-label { display: block; width: fit-content; font-size: .9rem; color: #efc5a9; border: 1px solid #756652; border-radius: 3px; padding: .3rem .6rem; margin-top: 1.4rem; }
+  .note-title { margin-block: 1.2rem; font: 400 clamp(1.8rem,3vw,2.6rem)/1.25 Georgia, serif; letter-spacing: -.02em; }
+  .note-title em { color: #efc5a9; }
+  .note-body { font-size: 1rem; line-height: 1.8; color: #c4c9bb; }
+  .starting-point { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: 3rem; padding-block: 3.5rem 5rem; border-top: 1px solid var(--line); }
+  .starting-point img { border: 1px solid var(--line); border-radius: .4rem; width: 100%; height: auto; }
+  .starting-point h2 { margin-block: 1rem 1.4rem; }
+  .starting-point > div p + p { margin-top: .9rem; }
+  .starting-point > div > p.development-note { font-size: .9rem; border-top: 1px solid var(--line); padding-top: 1.1rem; margin-top: 1.4rem; }
+  .careops-footer { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding-block: 2rem 3rem; border-top: 1px solid var(--line); }
+  .careops-footer p { font-size: .9rem; color: var(--muted); margin-top: 1rem; max-width: 54ch; }
+  .careops-footer > a { display: inline-flex; align-items: center; min-height: 44px; font-size: .95rem; text-decoration: underline; }
+  @media (max-width: 1050px) { .hero { grid-template-columns: 1.3fr 1fr; gap: 2rem; } h1 { font-size: clamp(3rem,5.5vw,4.5rem); } .signal-path { grid-template-columns: repeat(2,minmax(0,1fr)); } .signal-path li:nth-child(2) .path-next { display: none; } .detail { gap: 2rem; } .starting-point { grid-template-columns: 1fr; } .starting-point figure { order: 1; } .starting-point img { max-width: 900px; } }
+  @media (max-width: 700px) { .wrap { width: calc(100% - 2.5rem); } .careops-nav { align-items: start; flex-wrap: wrap; gap: .5rem 1rem; } .wordmark { padding-block: .5rem; } nav { gap: 1rem; } nav a { font-size: .875rem; } .hero { grid-template-columns: 1fr; gap: 1.7rem; padding-block: 2.5rem 2rem; } h1 { font-size: clamp(2.8rem, 9vw, 4.4rem); } .hero-copy p { max-width: 45ch; } .screen-bar { font-size: .75rem; padding: .75rem; } .why { grid-template-columns: 1fr; gap: 1rem; padding-block: 3rem; } .section-head { display: grid; gap: 1rem; } .progress-grid { grid-template-columns: 1fr; } .progress { padding-block: 3rem 1.5rem; } .detail { grid-template-columns: 1fr; padding-block: 2rem 3rem; } .careops-footer { flex-direction: column; align-items: start; gap: 1rem; } .starting-point { padding-block: 2.5rem 3rem; } .desktop-break { display: none; } }
+  @media (max-width: 440px) { .signal-path { grid-template-columns: 1fr; } .path-next { display: none; } .signal-path li { padding: 1rem; } .step-number { margin-bottom: .8rem; } .evidence-note { padding: 1.5rem; } }
+  @media (prefers-reduced-motion: reduce) { :global(html) { scroll-behavior: auto; } }
+</style>

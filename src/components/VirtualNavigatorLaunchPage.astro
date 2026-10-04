@@ -1,0 +1,242 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import ThemeToggle from './ThemeToggle.astro';
+import room from '../assets/virtual-navigator/room.jpg';
+import dock from '../assets/virtual-navigator/dock.jpg';
+import lamp from '../assets/virtual-navigator/lamp.jpg';
+import curtains from '../assets/virtual-navigator/curtains.jpg';
+import projector from '../assets/virtual-navigator/projector.jpg';
+
+interface Props { project: CollectionEntry<'projects'>; }
+const { project } = Astro.props;
+const media = '/media/virtual-navigator/0.5.0-7';
+const poster = await getImage({ src: room, width: 1600, format: 'webp' });
+const moments = await Promise.all([
+  { number: '01', title: 'The robot has a task. The dock needs care.', copy: 'Start or pause cleaning from the robot. At the dock, check the water levels, refill a tank, or clean the station.', image: dock, alt: 'A cleaning robot and its dock remain visible beside a glass panel showing clean water, dirty tank, and tray cleanliness.' },
+  { number: '02', title: 'Change the light, right by the lamp.', copy: 'Choose two colors, adjust the brightness, or turn it off. The lamp stays in view while you change it.', image: lamp, alt: 'The floor lamp glows blue and rose, with brightness and two color palettes in a panel beside it.' },
+  { number: '03', title: 'A little light. A little privacy.', copy: 'Move the sheer and blackout curtains separately. Leave either layer open, halfway, or closed.', image: curtains, alt: 'Closed blackout curtains with a nearby panel showing the separate sheer layer halfway open.' },
+  { number: '04', title: 'The wall becomes a place to watch.', copy: 'The media console opens the projector controls. An animated landscape appears on the wall, leaving the rest of the room around it.', image: projector, alt: 'An animated mountain, moon, and water scene is projected above the media console in the virtual living room.' },
+].map(async moment => ({ ...moment, full: await getImage({src: moment.image, width: 1600, format: 'webp'}) })));
+const chapters = [
+  { time: 0, stamp: '00:00', label: 'The dock' },
+  { time: 9, stamp: '00:09', label: 'Lighting' },
+  { time: 18, stamp: '00:18', label: 'Curtains' },
+  { time: 25, stamp: '00:25', label: 'Projection' },
+  { time: 34, stamp: '00:34', label: 'Moving around' },
+];
+const history = [
+  { version: '2022', title: 'Finding an object', text: 'A four-person XR course project at Michigan explored phone guidance through an arrow, spatial sound, and vibration.' },
+  { version: '2026 · v0.1–0.2', title: 'Remembering a place', text: 'The Vision Pro experiment began with a known image. Losing its location when I moved away led to work on saved spatial anchors.' },
+  { version: 'v0.3', title: 'A room to try things in', text: 'The question grew from finding things to interacting with them. A furnished virtual room gave those ideas somewhere to take shape.' },
+  { version: 'v0.4', title: 'Learning from the headset', text: 'Testing exposed reopening and sound issues, and led to an experiment with movable system windows.' },
+  { version: 'v0.5 · now', title: 'Back beside the object', text: 'Glass controls return to their objects, with quieter labels, separate dock actions, lighting, curtains, and room exploration.' },
+];
+---
+
+<div class="navigator-page" id="top">
+  <header class="page-nav wrap">
+    <a class="wordmark" href="#top"><span class="nav-symbol" aria-hidden="true">↗</span>{project.data.title}</a>
+    <nav aria-label="Virtual Navigator page">
+      <a href="#progress">Progress</a>
+      <a href="/projects" class="byline">By Le Qin ↗</a>
+      <ThemeToggle />
+    </nav>
+  </header>
+
+  <section class="hero wrap" aria-labelledby="navigator-title">
+    <div class="hero-heading">
+      <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> In development <span class="eyebrow-divider">/</span> Version 0.5</p>
+      <h1 id="navigator-title">A room you can<br /><em>interact with.</em></h1>
+    </div>
+    <div class="hero-note">
+      <p>I’m exploring how we could understand and interact with the things around us. Select the robot to check its task. Adjust a light beside the lamp. Close the curtains where they hang.</p>
+      <a class="text-link" href="#review">Watch the latest build <span aria-hidden="true">↓</span></a>
+    </div>
+  </section>
+
+  <section id="review" class="review wrap" aria-label="Latest video">
+    <figure>
+      <div class="video-frame">
+        <video id="navigator-video" controls playsinline preload="none" poster={poster.src} width="1920" height="1080" aria-label="Virtual Navigator version 0.5, a 40-second tour of the room" aria-describedby="review-caption">
+          <source src={`${media}/environment-review.mp4`} type="video/mp4" />
+          <track kind="captions" src={`${media}/environment-review.vtt`} srclang="en" label="Scene descriptions" />
+          <p><a href={`${media}/environment-review.mp4`}>Open the 40-second video</a>.</p>
+        </video>
+        <button type="button" class="play-review" hidden aria-label="Play the 40-second room tour"><span class="play-circle" aria-hidden="true">▶</span><span>Take a look <small>40 seconds</small></span></button>
+      </div>
+      <figcaption id="review-caption"><span>Inside the latest build <span class="caption-version">v0.5</span></span><span>September 2026 · visionOS Simulator · Silent</span></figcaption>
+    </figure>
+    <div class="chapters" role="group" aria-label="Jump to a moment in the video" hidden>
+      {chapters.map(chapter => <button type="button" data-seek={chapter.time} aria-pressed="false"><span class="chapter-time">{chapter.stamp}</span>{chapter.label}<span class="chapter-arrow" aria-hidden="true">↗</span></button>)}
+    </div>
+    <details class="video-description"><summary>Read what happens in the video</summary><ol>
+      <li>The cleaning station empties its dirty tank, refills clean water, and completes a cleaning cycle.</li>
+      <li>The lamp changes to blue and rose at 65% brightness, switches off, then comes back on.</li>
+      <li>The sheer curtains move halfway across the window while the blackout layer closes.</li>
+      <li>The projector brings a moving landscape onto the wall. Its controls close to leave the picture visible.</li>
+      <li>The viewpoint steps forward, turns, moves sideways, and returns to a wider view of the room.</li>
+    </ol></details>
+  </section>
+
+  <section id="room" class="moments wrap" aria-labelledby="moments-title">
+    <div class="section-heading"><div><p class="eyebrow">In the room</p><h2 id="moments-title">A few everyday<br /><em>moments.</em></h2></div><p>The object is the starting point.<br />Its controls stay close by.</p></div>
+    <div class="moments-grid">
+      {moments.map(moment => <figure class="moment">
+        <a class="image-link" href={moment.full.src} target="_blank" rel="noopener" aria-label={`View full screenshot: ${moment.title} (new tab)`}>
+          <Image src={moment.image} width={1600} widths={[480,800,1200,1600]} sizes="(max-width: 700px) 92vw, 46vw" format="webp" alt={moment.alt} loading="lazy" />
+          <span class="enlarge" aria-hidden="true">View full image ↗</span>
+        </a>
+        <figcaption><span class="moment-number">{moment.number}</span><div><h3>{moment.title}</h3><p>{moment.copy}</p></div></figcaption>
+      </figure>)}
+    </div>
+    <div class="interaction-note"><span class="note-mark" aria-hidden="true">↳</span><p><strong>Keeping the room in view.</strong> Active mode shows what’s happening. Focus makes the room quieter. Home keeps every device within reach. On Mac, WASD and Q/E let me move through the scene and check it from different angles.</p></div>
+  </section>
+
+  <section id="progress" class="progress wrap" aria-labelledby="progress-title">
+    <div class="progress-heading"><p class="eyebrow">How it got here</p><h2 id="progress-title">It started with<br /><em>“Where is it?”</em></h2><p>Finding an object was the first question. What we could do once we found it became the next one.</p><a class="text-link" href="/virtual-navigator/">Visit the 2022 project <span aria-hidden="true">↗</span></a></div>
+    <ol class="timeline">{history.map((item,index) => <li class:list={{current: index === history.length - 1}}><span class="timeline-dot" aria-hidden="true"></span><p class="version">{item.version}</p><h3>{item.title}</h3><p>{item.text}</p></li>)}</ol>
+  </section>
+
+  <section class="workbench wrap" aria-labelledby="workbench-title">
+    <div><p class="eyebrow">On the workbench</p><h2 id="workbench-title">Working, and<br /><em>still taking shape.</em></h2></div>
+    <div class="workbench-copy"><p>This is a native prototype for Mac and Vision Pro. The room and device responses are built into the app; connecting a real home is a later step. The video shows a scripted sequence running in the native app.</p><p>I’m working toward interactions that can combine visual cues, sound, and clear text. The next headset review is about readability, comfort, and sound. Testing with people who have different access needs is still ahead.</p><details class="build-note"><summary>About this build</summary><p>The September 21 build passed 112 automated checks and a manual Mac interaction review. Earlier versions were tried on Vision Pro; this video shows version 0.5 in Apple’s simulator. It demonstrates the interaction design in a room created for the prototype.</p></details></div>
+  </section>
+
+  <footer class="page-footer wrap">
+    <div><a class="footer-name" href="/projects">Le Qin <span aria-hidden="true">↗</span></a><p>The 2022 project was a team effort. I proposed the concept and contributed to the mobile interaction design and Unity prototype. For the current work, I set the direction, review builds, and refine the interactions. The native implementation was developed with AI coding assistance.</p></div>
+    <div class="footer-end"><a class="text-link" href="/projects">More projects <span aria-hidden="true">↗</span></a><span>Virtual Navigator<br />Development notes · September 2026</span></div>
+  </footer>
+</div>
+
+<script>
+  const video = document.querySelector<HTMLVideoElement>('#navigator-video');
+  const play = document.querySelector<HTMLButtonElement>('.play-review');
+  const chapters = document.querySelector<HTMLElement>('.chapters');
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-seek]'));
+  if (video && play && chapters) {
+    play.hidden = false;
+    chapters.hidden = false;
+    const start = async (time?: number) => {
+      play.hidden = true;
+      if (time !== undefined) {
+        if (video.readyState >= 1) video.currentTime = time;
+        else video.addEventListener('loadedmetadata', () => { video.currentTime = time; }, { once: true });
+      }
+      try { await video.play(); }
+      catch { play.hidden = false; }
+    };
+    play.addEventListener('click', () => { void start(); });
+    buttons.forEach(button => button.addEventListener('click', () => {
+      void start(Number(button.dataset.seek));
+      video.scrollIntoView({ block: 'center', behavior: 'instant' });
+    }));
+    video.addEventListener('play', () => { play.hidden = true; });
+    video.addEventListener('ended', () => { buttons.forEach(button => button.setAttribute('aria-pressed', 'false')); });
+    video.addEventListener('timeupdate', () => {
+      buttons.forEach((button, index) => {
+        const begin = Number(button.dataset.seek);
+        const end = buttons[index + 1] ? Number(buttons[index + 1].dataset.seek) : video.duration;
+        button.setAttribute('aria-pressed', String(!video.ended && video.currentTime >= begin && video.currentTime < end));
+      });
+    });
+  }
+</script>
+
+<style>
+  .navigator-page { --paper: #f4f3ed; --ink: #273e35; --muted: #5d6b62; --moss: #3c6850; --line: #d4dbce; --wash: #e8ece1; --panel: #fbfcf6; background: var(--paper); color: var(--ink); overflow: clip; }
+  :global([data-theme='dark']) .navigator-page, :global(:root:not([data-theme='light'])) .navigator-page { --paper: #19231e; --ink: #eceee4; --muted: #b2bdb0; --moss: #b3d3a2; --line: #3a4a3d; --wash: #253329; --panel: #233026; }
+  .wrap { width: min(1200px, calc(100% - 6rem)); margin-inline: auto; }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: var(--moss); }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--moss); outline-offset: 5px; }
+  button { font: inherit; }
+  .page-nav { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding-block: 1.5rem; border-bottom: 1px solid var(--line); }
+  .wordmark { display: flex; align-items: center; gap: .7rem; font-size: 1rem; font-weight: 600; letter-spacing: -.035em; }
+  .nav-symbol { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 50%; font-size: 1.25rem; }
+  nav { display: flex; align-items: center; gap: 1.6rem; font-size: .8rem; }
+  nav a { display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; flex-shrink: 0; }
+  nav :global(button) { width: auto; min-height: 44px; flex-shrink: 0; color: var(--muted); }
+  .hero { display: grid; grid-template-columns: 1.5fr 1fr; gap: 4rem; align-items: end; padding-block: 4rem 3rem; }
+  .eyebrow { font: .68rem/1.7 var(--font-mono); letter-spacing: .09em; text-transform: uppercase; color: var(--moss); }
+  .status-dot { display: inline-block; width: 6px; height: 6px; background: currentColor; border-radius: 50%; margin-right: .5rem; vertical-align: 1px; }
+  .eyebrow-divider { margin-inline: .65rem; opacity: .5; }
+  h1, h2 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; letter-spacing: -.055em; text-wrap: initial; }
+  h1 { font-size: clamp(3.4rem, 6.2vw, 5.8rem); line-height: 1.03; margin-block: 1.2rem 0; }
+  h1 em, h2 em { color: var(--moss); font-weight: 400; }
+  h2 { font-size: clamp(2.5rem, 4.3vw, 4.1rem); line-height: 1.1; }
+  .hero-note { max-width: 38ch; padding-bottom: .3rem; }
+  .hero-note p { color: var(--muted); font-size: .96rem; line-height: 1.9; }
+  .text-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: 44px; font-size: .82rem; border-bottom: 1px solid var(--line); }
+  .hero-note .text-link { margin-top: 1.15rem; }
+  #review, #room, #progress { scroll-margin-top: 1.5rem; }
+  .video-frame { position: relative; overflow: hidden; border-radius: 18px; background: #27362e; box-shadow: 0 12px 40px #263a2b12; }
+  video { width: 100%; height: auto; aspect-ratio: 16 / 9; }
+  .play-review { position: absolute; inset: 0; margin: auto; width: max-content; height: max-content; display: flex; align-items: center; gap: .8rem; border: 1px solid #fff9; background: #fcfff3ed; color: #20382c; border-radius: 100px; padding: .75rem 1.5rem .75rem .75rem; cursor: pointer; box-shadow: 0 6px 24px #0002; font-size: .86rem; text-align: left; }
+  .play-review[hidden], .chapters[hidden] { display: none; }
+  .play-circle { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #35563e; color: #f7f8ef; font-size: .85rem; padding-left: 2px; }
+  .play-review small { display: block; font: .65rem/1.6 var(--font-mono); color: #516252; }
+  .review figcaption { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .4rem 1rem; align-items: center; padding-block: 1.1rem; font-size: .78rem; }
+  .review figcaption > span:last-child { color: var(--muted); font-size: .66rem; font-family: var(--font-mono); }
+  .caption-version { margin-left: .65rem; font-family: var(--font-mono); color: var(--muted); font-size: .64rem; }
+  .chapters { display: grid; grid-template-columns: repeat(5,1fr); border-block: 1px solid var(--line); }
+  .chapters button { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .15rem .7rem; background: transparent; border: 0; padding: .85rem 1rem; color: var(--ink); text-align: left; cursor: pointer; font-size: .75rem; }
+  .chapters button + button { border-left: 1px solid var(--line); }
+  .chapters button:hover, .chapters button[aria-pressed='true'] { background: var(--wash); }
+  .chapter-time { grid-column: 1 / -1; color: var(--muted); font: .58rem var(--font-mono); }
+  .chapter-arrow { color: var(--moss); }
+  details { font-size: .8rem; color: var(--muted); }
+  summary { cursor: pointer; width: fit-content; padding-block: .8rem; min-height: 44px; }
+  details p, details ol { padding-bottom: 1rem; max-width: 74ch; }
+  .video-description { margin-top: .2rem; }
+  .video-description li { padding-left: .2rem; margin-top: .5rem; }
+  .moments { padding-block: 5.5rem 4.5rem; }
+  .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 2rem; margin-bottom: 2.8rem; }
+  .section-heading h2, .progress h2, .workbench h2 { margin-top: .9rem; }
+  .section-heading > p { color: var(--muted); font-size: .9rem; padding-bottom: .3rem; }
+  .moments-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 3rem 1.6rem; }
+  .image-link { display: block; position: relative; border-radius: 12px; overflow: hidden; background: var(--wash); }
+  .image-link img { width: 100%; height: auto; }
+  .enlarge { position: absolute; bottom: .6rem; right: .6rem; border: 1px solid #fff8; background: #f3f7e9eb; color: #243a2d; border-radius: 5px; padding: .3rem .5rem; font: .57rem var(--font-mono); }
+  .moment figcaption { display: flex; gap: 1.2rem; margin-top: 1.3rem; padding-right: .6rem; }
+  .moment-number { color: var(--moss); font: .65rem var(--font-mono); margin-top: .35rem; }
+  h3 { font-size: 1.03rem; line-height: 1.45; font-weight: 550; letter-spacing: -.02em; }
+  .moment figcaption p { font-size: .85rem; line-height: 1.8; color: var(--muted); margin-top: .5rem; max-width: 49ch; }
+  .interaction-note { display: flex; align-items: start; gap: 1.7rem; border-top: 1px solid var(--line); padding-top: 2rem; margin-top: 3.5rem; }
+  .note-mark { font-size: 2rem; line-height: 1.2; color: var(--moss); }
+  .interaction-note p { max-width: 85ch; font-size: .88rem; color: var(--muted); }
+  .interaction-note strong { color: var(--ink); font-weight: 550; }
+  .progress { display: grid; grid-template-columns: 1fr 1.15fr; gap: 5rem; border-top: 1px solid var(--line); padding-block: 5rem; }
+  .progress-heading > p:not(.eyebrow) { color: var(--muted); font-size: .88rem; margin-top: 1.4rem; max-width: 31ch; }
+  .progress-heading .text-link { margin-top: 1.1rem; }
+  .timeline { list-style: none; padding: 0; }
+  .timeline li { position: relative; border-left: 1px solid var(--line); padding: 0 0 2rem 2rem; }
+  .timeline li:last-child { padding-bottom: 0; border-color: transparent; }
+  .timeline-dot { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: var(--paper); border: 1px solid var(--moss); top: .4rem; left: -4px; }
+  .current .timeline-dot { background: var(--moss); box-shadow: 0 0 0 4px var(--wash); }
+  .version { font: .65rem/1.8 var(--font-mono); color: var(--moss); margin-bottom: .5rem; }
+  .timeline h3 { margin-bottom: .45rem; }
+  .timeline li > p:last-child { font-size: .84rem; color: var(--muted); max-width: 52ch; }
+  .workbench { display: grid; grid-template-columns: 1fr 1.15fr; gap: 5rem; background: var(--wash); border-radius: 16px; padding: 3rem; }
+  .workbench-copy > p { color: var(--muted); font-size: .87rem; }
+  .workbench-copy > p + p { margin-top: 1rem; }
+  .build-note { border-top: 1px solid var(--line); margin-top: 1.3rem; }
+  .page-footer { display: flex; justify-content: space-between; gap: 4rem; padding-block: 4rem 2.5rem; }
+  .footer-name { display: inline-flex; align-items: center; gap: .7rem; font-size: .85rem; font-weight: 550; min-height: 44px; }
+  .page-footer p { max-width: 71ch; font-size: .74rem; line-height: 1.9; color: var(--muted); margin-top: .4rem; }
+  .footer-end { flex-shrink: 0; display: flex; flex-direction: column; align-items: end; }
+  .footer-end > span { display: block; font: .6rem/1.8 var(--font-mono); text-align: right; color: var(--muted); margin-top: 1rem; }
+  @media(max-width: 1000px) { .wrap { width: calc(100% - 3rem); } .hero { gap: 2rem; grid-template-columns: 1.3fr 1fr; } h1 { font-size: 4.4rem; } .progress, .workbench { gap: 2rem; } .workbench { padding: 2rem; } }
+  @media(max-width: 700px) {
+    .wrap { width: calc(100% - 2rem); } .page-nav { padding-block: .8rem; } .wordmark { font-size: .88rem; gap: .45rem; } .nav-symbol { width: 26px; height: 26px; } nav { gap: .75rem; } nav > a:first-child { display: none; } .byline { font-size: .7rem; }
+    .hero { display: block; padding-block: 2.6rem 2rem; } h1 { font-size: clamp(3.2rem, 12vw, 4.5rem); margin-top: 1rem; } .hero-note { margin-top: 1.4rem; max-width: 42ch; } .hero-note p { font-size: .9rem; line-height: 1.8; } .hero-note .text-link { margin-top: .7rem; } .eyebrow { font-size: .6rem; }
+    .video-frame { border-radius: 10px; } .play-review { transform: scale(.9); } .review figcaption { align-items: start; flex-direction: column; gap: .3rem; padding-block: .8rem; } .review figcaption > span:last-child { font-size: .57rem; }
+    .chapters { grid-template-columns: repeat(3,1fr); } .chapters button { padding: .7rem .5rem; font-size: .68rem; } .chapters button:nth-child(4) { border-left: 0; } .chapters button:nth-child(n+4) { border-top: 1px solid var(--line); } .chapter-time { font-size: .52rem; } .video-description { font-size: .75rem; }
+    .moments { padding-block: 3.5rem 3rem; } .section-heading { display: block; margin-bottom: 1.8rem; } .section-heading > p { margin-top: 1rem; font-size: .85rem; } h2 { font-size: 2.65rem; } .moments-grid { grid-template-columns: 1fr; gap: 2rem; } .moment figcaption { gap: .8rem; margin-top: 1rem; } .moment figcaption p { font-size: .82rem; }
+    .interaction-note { margin-top: 2.5rem; gap: .8rem; padding-top: 1.5rem; } .interaction-note p { font-size: .82rem; }
+    .progress { grid-template-columns: 1fr; padding-block: 3rem; gap: 2.5rem; } .progress-heading > p:not(.eyebrow) { max-width: 40ch; } .timeline { margin-left: .3rem; } .timeline li { padding-left: 1.5rem; }
+    .workbench { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.5rem; border-radius: 12px; } .workbench-copy > p { font-size: .83rem; }
+    .page-footer { flex-direction: column; gap: 1.5rem; padding-block: 2.5rem 2rem; } .page-footer p { font-size: .72rem; } .footer-end { flex-direction: row; justify-content: space-between; align-items: center; gap: 1rem; } .footer-end > span { margin-top: 0; font-size: .52rem; }
+  }
+  @media(prefers-reduced-motion: reduce) { :global(html) { scroll-behavior: auto; } }
+</style>
